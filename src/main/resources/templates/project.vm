@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Cucumber Project Reports</title>
+<link rel="stylesheet" href="main.css" type="text/css" media="screen" />
+<script  type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script>	
+jQuery(document).ready(function() {              
+    jQuery('#projectgraph').highcharts({
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'Project Performance'
+        },
+        xAxis: {
+            title: {
+                text: 'Build Number'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Time taken (seconds)'
+            }
+        },
+        series: [{
+			data: $perfData
+		}]
+    });
+});
+</script>
+<noscript>
+   	<P>This content requires JavaScript.</P>
+</noscript>
+</head>
+<body>
+<h1>Cucumber Project Reports</h1>
+<p />
+<div><a href="${jenkins_base}job/$build_project/$build_number">Back To Jenkins Project</a></div>
+<p />
+<div id="projectgraph" style="width:90%; height:400px;"></div>
+<p />
+<div>generated on: $genDate</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Basic Performance Report</title>
+</head>
+<body>
+<div>Basic Performance Report</div>
+<div><a href="${jenkins_base}job/$build_project/$build_number">Back To Job</a></div>
+<div>
+  #foreach( $scenario in $scenarios )
+    <h3>$scenario.name</h3>
+	#foreach( $element in $scenario.elements )
+		<h5>$element.name</h5>
+		<table>
+		#foreach($step in $element.steps)			
+			<tr><td>$step.name</td><td>$step.result.status</td></tr>			
+		#end
+		</table>
+	#end
+  #end
+
+</div>
+</body>
+</html>

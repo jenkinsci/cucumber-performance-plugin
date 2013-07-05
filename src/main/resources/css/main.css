@@ -1,0 +1,10 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	font-family: Georgia, Trebuchet MS, Arial, Helvetica, sans-serif;
+}
+
+#projectgraph {
+	text-align: center;
+	border: solid 1px black;
+}
