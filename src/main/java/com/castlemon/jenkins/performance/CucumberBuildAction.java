@@ -31,7 +31,7 @@ public class CucumberBuildAction implements Action {
 	}
 
 	public String getIconFileName() {
-		return "/plugins/cucumber-perf/cuke.png";
+		return "/plugins/cucumber-perf/performance.png";
 	}
 
 	public String getUrlName() {

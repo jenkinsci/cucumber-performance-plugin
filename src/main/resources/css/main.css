@@ -2,9 +2,66 @@
 
 body {
 	font-family: Georgia, Trebuchet MS, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	background: rgba(226, 226, 226, 1);
+	background: -moz-linear-gradient(top, rgba(226, 226, 226, 1) 0%,
+		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
+		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(226, 226,
+		226, 1)), color-stop(14%, rgba(219, 219, 219, 1)),
+		color-stop(14%, rgba(209, 209, 209, 1)),
+		color-stop(21%, rgba(254, 254, 254, 1)),
+		color-stop(100%, rgba(254, 254, 254, 1)));
+	background: -webkit-linear-gradient(top, rgba(226, 226, 226, 1) 0%,
+		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
+		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
+	background: -o-linear-gradient(top, rgba(226, 226, 226, 1) 0%,
+		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
+		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
+	background: -ms-linear-gradient(top, rgba(226, 226, 226, 1) 0%,
+		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
+		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
+	background: linear-gradient(to bottom, rgba(226, 226, 226, 1) 0%,
+		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
+		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(   startColorstr='#e2e2e2',
+		endColorstr='#fefefe', GradientType=0);
+}
+
+#pageHeader {
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	text-align: center;
+	font-size: 16px;
+	font-weight: normal;
+	font-style: italic;
+	color: white;
+	height: 21%;
 }
 
 #projectgraph {
-	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
 	border: solid 1px black;
+	text-align: center;
+	height: 400px;
+}
+
+#pageFooter {
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	text-align: center;
+	font-size: 12px;
+	font-weight: normal;
+	font-style: italic;
+}
+
+#pageHeader #imageArea {
+	/* width: 100%; 
+	*/
+	
 }

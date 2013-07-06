@@ -29,7 +29,7 @@ public class CucumberProjectAction implements ProminentProjectAction {
 	}
 
 	public String getIconFileName() {
-		return "/plugin/cucumber-perf/cuke.png";
+		return "/plugin/cucumber-perf/performance.png";
 	}
 
 	public String getUrlName() {
