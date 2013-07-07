@@ -2,5 +2,5 @@ target/**
 work/**
 .classpath
 .project
-velocity.log
+velocity.*
 .settings/**

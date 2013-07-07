@@ -37,7 +37,15 @@ jQuery(document).ready(function() {
 </head>
 <body>
 <div id="pageHeader">Cucumber Project Reports</div>
-<div><a href="${jenkins_base}job/$build_project/$build_number">Back To Jenkins Project</a></div>
+<div id="returnLink"><a href="${jenkins_base}job/$build_project/$build_number">Back To Jenkins Project</a></div>
+<p />
+<div id="summaryTable">
+<table>
+    <tr><td>Passed Builds:</td><td>$projectSummary.passedBuilds</td></tr>
+	<tr><td>Failed Builds:</td><td>$projectSummary.failedBuilds</td></tr>
+	<tr><td>Total Builds:</td><td>$projectSummary.totalBuilds</td></tr>
+</table>
+</div>
 <p />
 <div id="projectgraph"></div>
 <p />

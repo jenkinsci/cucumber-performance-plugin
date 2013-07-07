@@ -11,6 +11,7 @@ import org.joda.time.Duration;
 
 import com.castlemon.jenkins.performance.domain.Scenario;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -20,24 +21,23 @@ public class CucumberPerfUtils {
 
 	private static int nanosInAMilli = 1000000;
 
-	public static String buildProjectGraphData(
-			List<ProjectPerformanceEntry> runs) {
+	public static String buildProjectGraphData(ProjectSummary projectSummary) {
 		StringBuilder output = new StringBuilder();
 		output.append("[");
 		int i = 1;
-		for (ProjectPerformanceEntry run : runs) {
+		for (ProjectPerformanceEntry run : projectSummary
+				.getPerformanceEntries()) {
 			output.append("["
 					+ run.getBuildNumber()
 					+ ", "
 					+ getDurationInSeconds(run.getElapsedTime() / nanosInAMilli)
 					+ "]");
-			if (i < runs.size()) {
+			if (i < projectSummary.getPerformanceEntries().size()) {
 				output.append(",");
 			}
 			i++;
 		}
 		output.append("]");
-		System.out.println("data: " + output.toString());
 		return output.toString();
 	}
 

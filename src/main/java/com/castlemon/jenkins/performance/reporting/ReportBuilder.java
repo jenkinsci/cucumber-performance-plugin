@@ -18,6 +18,7 @@ import org.apache.velocity.app.VelocityEngine;
 import com.castlemon.jenkins.performance.domain.Scenario;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ReportBuilder {
@@ -28,7 +29,7 @@ public class ReportBuilder {
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
 		copyCSSFile(reportDirectory);
-		List<ProjectPerformanceEntry> perfEntries = getPerformanceData(projectRuns);
+		ProjectSummary projectSummary = getPerformanceData(projectRuns);
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty("resource.loader", "class");
 		velocityEngine
@@ -38,9 +39,9 @@ public class ReportBuilder {
 		Template template = velocityEngine.getTemplate("/templates/project.vm");
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
-		context.put("perfEntries", perfEntries);
+		context.put("projectSummary", projectSummary);
 		context.put("perfData",
-				CucumberPerfUtils.buildProjectGraphData(perfEntries));
+				CucumberPerfUtils.buildProjectGraphData(projectSummary));
 		context.put("build_project", buildProject);
 		context.put("build_number", buildNumber);
 		context.put("jenkins_base", getPluginUrlPath(pluginUrlPath));
@@ -67,13 +68,32 @@ public class ReportBuilder {
 				context));
 	}
 
-	private List<ProjectPerformanceEntry> getPerformanceData(
-			List<ProjectRun> runs) {
+	private ProjectSummary getPerformanceData(List<ProjectRun> runs) {
+		ProjectSummary projectSummary = new ProjectSummary();
 		List<ProjectPerformanceEntry> entries = new ArrayList<ProjectPerformanceEntry>();
+		int passedSteps = 0;
+		int failedSteps = 0;
+		int skippedSteps = 0;
+		int passedBuilds = 0;
+		int failedBuilds = 0;
 		for (ProjectRun run : runs) {
-			entries.add(reporter.generateBasicProjectPerformanceData(run));
+			ProjectPerformanceEntry performanceEntry = reporter
+					.generateBasicProjectPerformanceData(run);
+			passedSteps += performanceEntry.getPassedSteps();
+			failedSteps += performanceEntry.getFailedSteps();
+			skippedSteps += performanceEntry.getSkippedSteps();
+			if (performanceEntry.isPassedBuild()) {
+				passedBuilds++;
+			} else {
+				failedBuilds++;
+			}
+			entries.add(performanceEntry);
 		}
-		return entries;
+		projectSummary.setPassedBuilds(passedBuilds);
+		projectSummary.setFailedBuilds(failedBuilds);
+		projectSummary.setTotalBuilds(passedBuilds + failedBuilds);
+		projectSummary.setPerformanceEntries(entries);
+		return projectSummary;
 	}
 
 	private boolean generateReport(String fileName, File reportDirectory,

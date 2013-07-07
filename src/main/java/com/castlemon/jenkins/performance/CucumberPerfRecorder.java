@@ -67,7 +67,7 @@ public class CucumberPerfRecorder extends Recorder {
 				buildProject);
 		generateProjectReport(build, listener, targetBuildDirectory,
 				buildNumber, buildProject);
-		build.addAction(new CucumberBuildAction(build));
+		// build.addAction(new CucumberBuildAction(build));
 		return true;
 	}
 
