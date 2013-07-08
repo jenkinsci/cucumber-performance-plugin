@@ -12,6 +12,9 @@ jQuery(document).ready(function() {
         chart: {
             type: 'line'
         },
+		legend: {
+            enabled: false
+        },        
         title: {
             text: 'Project Performance'
         },
