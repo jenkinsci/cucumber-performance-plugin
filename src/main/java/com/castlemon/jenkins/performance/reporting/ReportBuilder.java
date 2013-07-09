@@ -15,7 +15,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import com.castlemon.jenkins.performance.domain.Scenario;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
@@ -46,25 +45,6 @@ public class ReportBuilder {
 		context.put("build_number", buildNumber);
 		context.put("jenkins_base", getPluginUrlPath(pluginUrlPath));
 		return (generateReport("projectview.html", reportDirectory, template,
-				context));
-	}
-
-	public boolean generateBuildReports(List<Scenario> scenarios,
-			File reportDirectory, String buildProject, String buildNumber,
-			String pluginUrlPath) {
-		VelocityEngine velocityEngine = new VelocityEngine();
-		velocityEngine.setProperty("resource.loader", "class");
-		velocityEngine
-				.setProperty("class.resource.loader.class",
-						"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-		velocityEngine.init();
-		Template template = velocityEngine.getTemplate("/templates/basic.vm");
-		VelocityContext context = new VelocityContext();
-		context.put("scenarios", scenarios);
-		context.put("build_project", buildProject);
-		context.put("build_number", buildNumber);
-		context.put("jenkins_base", getPluginUrlPath(pluginUrlPath));
-		return (generateReport("basicview.html", reportDirectory, template,
 				context));
 	}
 

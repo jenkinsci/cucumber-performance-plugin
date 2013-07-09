@@ -67,7 +67,6 @@ public class CucumberPerfRecorder extends Recorder {
 				buildProject);
 		generateProjectReport(build, listener, targetBuildDirectory,
 				buildNumber, buildProject);
-		// build.addAction(new CucumberBuildAction(build));
 		return true;
 	}
 
@@ -148,15 +147,6 @@ public class CucumberPerfRecorder extends Recorder {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-
-		// generate the reports from the targetBuildDirectory
-		String[] jsonReportFiles = CucumberPerfUtils.findJsonFiles(
-				targetBuildDirectory, "cucumber-perf.json");
-		if (jsonReportFiles.length != 0) {
-			generator.generateBuildReports(listener, jsonReportFiles,
-					targetBuildDirectory, buildProject, buildNumber,
-					pluginUrlPath, build.getRootDir());
 		}
 	}
 

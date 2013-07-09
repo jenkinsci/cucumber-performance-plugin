@@ -1,17 +1,27 @@
 package com.castlemon.jenkins.performance.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.rules.TemporaryFolder;
 
+import com.castlemon.jenkins.performance.TestUtils;
+import com.castlemon.jenkins.performance.domain.Scenario;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 
 public class CucumberPerfUtilsTest {
+
+	private TestUtils testUtils = new TestUtils();
+
+	@Rule
+	public TemporaryFolder testFolder = new TemporaryFolder();
 
 	@Test
 	public void testBuildProjectGraphData() {
@@ -36,27 +46,57 @@ public class CucumberPerfUtilsTest {
 		Assert.assertEquals(3, CucumberPerfUtils.getDurationInMinutes(180000l));
 	}
 
-	/*@Test
-	public void testFindJsonFiles() {
-		File rootDir = newMockFile("root", true);
-		File blahTxt = newMockFile("blah.txt");
-		File fooTxt = newMockFile("foo.txt");
-		File pigJava = newMockFile("pig.java");
-		Mockito.when(rootDir.listFiles()).thenReturn(
-				new File[] { blahTxt, fooTxt, pigJava });
-		String[] results = CucumberPerfUtils.findJsonFiles(rootDir, ".txt");
-		Assert.assertEquals(1, results.length);
+	@Test
+	public void testGetDataSingle() throws IOException {
+		String jsonString = testUtils.loadJsonFile("/cucumber-success.json");
+		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonString);
+		Assert.assertEquals(2, scenarios.size());
 	}
 
-	private File newMockFile(String name) {
-		return newMockFile(name, false);
+	@Test
+	public void testGetDataSingleJsonParseException() throws IOException {
+		String jsonString = "fred";
+		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonString);
+		Assert.assertEquals(0, scenarios.size());
 	}
 
-	private File newMockFile(String name, boolean isDirectory) {
-		File result = Mockito.mock(File.class);
-		Mockito.when(result.getName()).thenReturn(name);
-		Mockito.when(result.isDirectory()).thenReturn(isDirectory);
-		return result;
-	}*/
+	@Test
+	public void testGetDataSingleJsonMappingException() throws IOException {
+		String jsonString = "[1,4{}";
+		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonString);
+		Assert.assertEquals(0, scenarios.size());
+	}
 
+	@Test
+	public void testFindJsonFiles() throws IOException {
+		File f = FileUtils.toFile(this.getClass().getResource(
+				"/cucumber-success.json"));
+		String[] results = CucumberPerfUtils.findJsonFiles(f.getParentFile(),
+				".json");
+		Assert.assertEquals(2, results.length);
+		Assert.assertEquals("cucumber-failure.json", results[0]);
+		Assert.assertEquals("cucumber-success.json", results[1]);
+	}
+
+	@Test
+	public void testGetDataMultiple() throws IOException {
+		String[] jsonReportFiles = { "cucumber-success.json",
+				"cucumber-failure.json" };
+		File f = FileUtils.toFile(this.getClass().getResource(
+				"/cucumber-success.json"));
+		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonReportFiles,
+				f.getParentFile());
+		Assert.assertEquals(4, scenarios.size());
+	}
+	
+	@Test
+	public void testGetDataMultipleIOException() throws IOException {
+		String[] jsonReportFiles = { "cucumber-success.json",
+				"nonexist.json" };
+		File f = FileUtils.toFile(this.getClass().getResource(
+				"/cucumber-success.json"));
+		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonReportFiles,
+				f.getParentFile());
+		Assert.assertEquals(2, scenarios.size());
+	}
 }

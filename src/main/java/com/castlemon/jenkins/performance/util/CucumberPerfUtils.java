@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.joda.time.Duration;
 
@@ -60,9 +61,21 @@ public class CucumberPerfUtils {
 		return scanner.getIncludedFiles();
 	}
 
+	public static List<Scenario> getData(String[] jsonReportFiles,
+			File targetBuildDirectory) {
+		List<Scenario> overallScenarios = new ArrayList<Scenario>();
+		for (String fileName : jsonReportFiles) {
+			String jsonInput = loadJsonFile(targetBuildDirectory, fileName);
+			if (StringUtils.isNotEmpty(jsonInput)) {
+				overallScenarios.addAll(getData(jsonInput));
+			}
+		}
+		return overallScenarios;
+	}
+
 	public static List<Scenario> getData(String jsonInput) {
 		ObjectMapper mapper = new ObjectMapper();
-		List<Scenario> scenarios = null;
+		List<Scenario> scenarios = new ArrayList<Scenario>();
 		try {
 			JavaType type = mapper.getTypeFactory().constructCollectionType(
 					List.class, Scenario.class);
@@ -77,31 +90,8 @@ public class CucumberPerfUtils {
 		return scenarios;
 	}
 
-	public static List<Scenario> getData(String[] jsonReportFiles,
-			File targetBuildDirectory) {
-		ObjectMapper mapper = new ObjectMapper();
-		List<Scenario> overallScenarios = new ArrayList<Scenario>();
-		for (String fileName : jsonReportFiles) {
-			List<Scenario> scenarios = new ArrayList<Scenario>();
-			try {
-				JavaType type = mapper.getTypeFactory()
-						.constructCollectionType(List.class, Scenario.class);
-				scenarios = mapper.readValue(
-						loadJsonFile(targetBuildDirectory, fileName), type);
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			overallScenarios.addAll(scenarios);
-		}
-		return overallScenarios;
-	}
-
 	private static String loadJsonFile(File targetBuildDirectory,
-			String fileName) throws IOException {
+			String fileName) {
 		String content = null;
 
 		File file = new File(targetBuildDirectory, fileName);
