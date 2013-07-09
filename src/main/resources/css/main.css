@@ -1,48 +1,38 @@
 @CHARSET "ISO-8859-1";
 
 body {
-	font-family: Georgia, Trebuchet MS, Arial, Helvetica, sans-serif;
-	font-size: 14px;
-	font-weight: normal;
-	/* background: rgba(226, 226, 226, 1);
-	background: -moz-linear-gradient(top, rgba(226, 226, 226, 1) 0%,
-		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
-		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
-	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(226, 226,
-		226, 1)), color-stop(14%, rgba(219, 219, 219, 1)),
-		color-stop(14%, rgba(209, 209, 209, 1)),
-		color-stop(21%, rgba(254, 254, 254, 1)),
-		color-stop(100%, rgba(254, 254, 254, 1)));
-	background: -webkit-linear-gradient(top, rgba(226, 226, 226, 1) 0%,
-		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
-		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
-	background: -o-linear-gradient(top, rgba(226, 226, 226, 1) 0%,
-		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
-		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
-	background: -ms-linear-gradient(top, rgba(226, 226, 226, 1) 0%,
-		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
-		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
-	background: linear-gradient(to bottom, rgba(226, 226, 226, 1) 0%,
-		rgba(219, 219, 219, 1) 14%, rgba(209, 209, 209, 1) 14%,
-		rgba(254, 254, 254, 1) 21%, rgba(254, 254, 254, 1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(    startColorstr='#e2e2e2',
-		endColorstr='#fefefe', GradientType=0); */
+	font-family: Arial, Arial, sans-serif;
+	font-size: 13px;
+	font-weight: normal;	
+	
+}
+
+#content {
+width: 960px;
+margin-left: auto;
+	margin-right: auto;
 }
 
 #pageHeader {
-	margin-left: auto;
-	margin-right: auto;
 	width: 100%;
-	text-align: center;
 	font-size: 16px;
 	font-weight: normal;
 	font-style: italic;
 	color: white;
-	height: 21%;
+	background-color: #EDEFF2;
+	border-bottom: 2px solid #AD0000;
+}
+
+#titleArea {
+	background-color: #ffffff;
+	color: #000000;
+	font-size: 27px;	
 }
 
 #returnLink {
-	float: right;
+	font-size: 12px;
+	font-weight: bold;
+	color: #4D6EBA;
 }
 
 #projectgraph {
@@ -55,13 +45,16 @@ body {
 }
 
 #pageFooter {
+	font-family: Trebuchet, Arial, sans-serif;
 	margin-left: auto;
 	margin-right: auto;
 	width: 100%;
+	color: 12px #8C8C8C;
 	text-align: center;
 	font-size: 12px;
 	font-weight: normal;
 	font-style: italic;
+	background-color: #EDEFF2;
 }
 
 #pageHeader #imageArea {
