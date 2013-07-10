@@ -1,38 +1,82 @@
-@CHARSET "ISO-8859-1";
-
 body {
-	font-family: Arial, Arial, sans-serif;
+	font-family: Arial, sans-serif;
 	font-size: 13px;
-	font-weight: normal;	
-	
+	font-weight: normal;
+	margin: 0;
+}
+
+h1 {
+	font-family: Trebuchet, Arial, sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+	color: #AD0000;
+}
+
+h3 {
+	font-family: Trebuchet, Arial, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #AD0000;
+}
+
+th .coloured {
+	font-size: 13px;
+	font-weight: bold;
+	color: #AD0000;
+	background-color: #FAEEEE;
+}
+
+td {
+	font-size: 12px;
+	font-weight: normal;
+	color: #5C5C5C;
+}
+
+tr:nth-child(even) {
+	background-color: #EBEBEB;
+}
+
+.clear {
+	clear: both;
 }
 
 #content {
-width: 960px;
-margin-left: auto;
+	width: 960px;
+	margin-left: auto;
 	margin-right: auto;
 }
 
 #pageHeader {
+	margin: 0;
+	padding: 5px 5px 5px 5px;
 	width: 100%;
-	font-size: 16px;
-	font-weight: normal;
-	font-style: italic;
-	color: white;
 	background-color: #EDEFF2;
 	border-bottom: 2px solid #AD0000;
 }
 
 #titleArea {
-	background-color: #ffffff;
-	color: #000000;
-	font-size: 27px;	
+	width: 30%;
+	font-size: 27px;
+	float: left;
 }
 
-#returnLink {
+#linkArea {
+	width: 50%;
 	font-size: 12px;
 	font-weight: bold;
 	color: #4D6EBA;
+	float: left;
+	text-align: right;
+}
+
+#jenkinsLink {
+	padding-top: 10px;
+}
+
+#summaryArea {
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
 }
 
 #projectgraph {
@@ -55,10 +99,4 @@ margin-left: auto;
 	font-weight: normal;
 	font-style: italic;
 	background-color: #EDEFF2;
-}
-
-#pageHeader #imageArea {
-	/* width: 100%; 
-	*/
-	
 }
