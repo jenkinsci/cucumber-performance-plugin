@@ -8,12 +8,16 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script>
+	/* project-level graph */
 	jQuery(document).ready(function() {
 		jQuery('#projectgraph').highcharts({
 			chart : {
 				type : 'line'
 			},
 			legend : {
+				enabled : false
+			},
+			tooltip : {
 				enabled : false
 			},
 			title : {
@@ -44,9 +48,10 @@
 				<a href="${jenkins_base}job/$build_project/$build_number">Back
 					To Jenkins</a>
 			</div>
-		</div><div class="clear"></div>
+		</div>
+		<div class="clear"></div>
 	</div>
-	
+
 	<p />
 	<div id="content">
 		<h3>Build Summary</h3>
@@ -66,7 +71,8 @@
 				</tr>
 			</table>
 		</div>
-		<p /><h3>Overall Project Performance</h3>
+		<p />
+		<h3>Overall Project Performance</h3>
 		<div id="projectgraph">
 			<noscript>
 				<p>This content requires JavaScript.</p>
