@@ -12,9 +12,9 @@
 	<packaging>hpi</packaging>
 
 	<scm>
-		<connection>scm:git:git@github.com:jenkinsci/cucumber-performance-plugin.git</connection>
-		<developerConnection>scm:git:git@github.com:jenkinsci/cucumber-performance-plugin.git</developerConnection>
-		<url>http://github.com/jenkinsci/cucumber-performance-plugin</url>
+		<connection>scm:git:ssh://github.com/jenkinsci/cucumber-performance-plugin.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/cucumber-performance-plugin.git</developerConnection>
+		<url>https://github.com/jenkinsci/cucumber-performance-plugin</url>
 	</scm>
 	
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/Cucumber+Performance+Reports+Plugin</url>
@@ -42,6 +42,13 @@
 			<url>http://repo.jenkins-ci.org/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
+	
+	<distributionManagement>
+    <repository>
+      <id>maven.jenkins-ci.org</id>
+      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+    </repository>
+  </distributionManagement>
 
 	<build>
 		<plugins>
