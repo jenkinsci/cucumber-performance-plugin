@@ -8,11 +8,11 @@
 
 	<groupId>com.castlemon.hudson</groupId>
 	<artifactId>cucumber-perf</artifactId>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 
 	<scm>
-		<connection>scm:git:github.com/jenkinsci/cucumber-performance-plugin.git</connection>
+		<connection>scm:git:git:github.com/jenkinsci/cucumber-performance-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com/jenkinsci/cucumber-performance-plugin.git</developerConnection>
 		<url>http://github.com/jenkinsci/cucumber-performance-plugin</url>
 	</scm>
