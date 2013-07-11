@@ -8,7 +8,7 @@
 
 	<groupId>com.castlemon.hudson</groupId>
 	<artifactId>cucumber-perf</artifactId>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 
 	<scm>
