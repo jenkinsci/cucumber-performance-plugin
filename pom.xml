@@ -16,6 +16,8 @@
 		<developerConnection>scm:git:https://git@github.com/jenkinsci/cucumber-performance-plugin.git</developerConnection>
 		<url>https://github.com/jenkinsci/cucumber-performance-plugin</url>
 	</scm>
+	
+	<url>http://wiki.jenkins-ci.org/display/JENKINS/Cucumber+Performance+Reports+Plugin</url>
 
 	<developers>
 		<developer>
