@@ -8,12 +8,12 @@
 
 	<groupId>com.castlemon.hudson</groupId>
 	<artifactId>cucumber-perf</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 
 	<scm>
-		<connection>scm:git:git:github.com/jenkinsci/cucumber-performance-plugin.git</connection>
-		<developerConnection>scm:git:git@github.com/jenkinsci/cucumber-performance-plugin.git</developerConnection>
+		<connection>scm:git:ssh://github.com/jenkinsci/cucumber-performance-plugin.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/cucumber-performance-plugin.git</developerConnection>
 		<url>http://github.com/jenkinsci/cucumber-performance-plugin</url>
 	</scm>
 	
@@ -42,6 +42,13 @@
 			<url>http://repo.jenkins-ci.org/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
+	
+	<distributionManagement>
+    <repository>
+      <id>maven.jenkins-ci.org</id>
+      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+    </repository>
+  </distributionManagement>
 
 	<build>
 		<plugins>
