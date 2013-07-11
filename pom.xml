@@ -12,19 +12,17 @@
 	<version>1.0-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 
-	<organization>
-		<name>Castlemon</name>
-		<url>http://www.castlemon.com</url>
-	</organization>
+	<scm>
+		<connection>scm:git:ssh://github.com/jenkinsci/cucumber-performance-plugin.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/cucumber-performance-plugin.git</developerConnection>
+		<url>https://github.com/jenkinsci/cucumber-performance-plugin</url>
+	</scm>
+
 	<developers>
 		<developer>
+			<id>truedub</id>
 			<name>Jim Gallagher</name>
-			<url>>http://www.castlemon.com</url>
-			<organization>Castlemon</organization>
-			<organizationUrl>>http://www.castlemon.com</organizationUrl>
-			<roles>
-				<role>Developer</role>
-			</roles>
+			<email>jegallagher@gmail.com</email>
 		</developer>
 	</developers>
 
@@ -43,6 +41,13 @@
 			<url>http://repo.jenkins-ci.org/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<id>maven.jenkins-ci.org</id>
+			<url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+		</repository>
+	</distributionManagement>
 
 	<build>
 		<plugins>
