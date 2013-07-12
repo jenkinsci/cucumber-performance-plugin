@@ -7,21 +7,11 @@ import com.castlemon.jenkins.performance.domain.Scenario;
 
 public class ProjectRun {
 
-	private String projectName;
-
 	private int buildNumber;
 
 	private Date runDate;
 
 	private List<Scenario> scenarios;
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
 
 	public Date getRunDate() {
 		return runDate;

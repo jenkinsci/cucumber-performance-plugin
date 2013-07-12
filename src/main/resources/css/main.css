@@ -19,17 +19,21 @@ h3 {
 	color: #AD0000;
 }
 
-th .coloured {
+th.coloured {
 	font-size: 13px;
 	font-weight: bold;
 	color: #AD0000;
 	background-color: #FAEEEE;
+	text-align: center;
 }
 
 td {
 	font-size: 12px;
 	font-weight: normal;
 	color: #5C5C5C;
+	padding-left: 15px;
+	padding-right: 15px;
+	border: 1px solid black;
 }
 
 tr:nth-child(even) {
@@ -79,6 +83,16 @@ tr:nth-child(even) {
 	width: 90%;
 }
 
+#buildSummary {
+	width: 50%;
+	float: left;
+}
+
+#stepSummary {
+	width: 50%;
+	float: left;
+}
+
 #projectgraph {
 	margin-left: auto;
 	margin-right: auto;
@@ -99,4 +113,12 @@ tr:nth-child(even) {
 	font-weight: normal;
 	font-style: italic;
 	background-color: #EDEFF2;
+}
+
+.summaryTable {
+	border: 1px solid black;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+	border-collapse: collapse;
 }

@@ -26,7 +26,8 @@
 			xAxis : {
 				title : {
 					text : 'Build Number'
-				}
+				},
+				tickInterval : 1
 			},
 			yAxis : {
 				title : {
@@ -45,8 +46,7 @@
 		<div id="titleArea">Cucumber Project Reports</div>
 		<div id="linkArea">
 			<div id="jenkinsLink">
-				<a href="${jenkins_base}job/$build_project/$build_number">Back
-					To Jenkins</a>
+				<a href="${jenkins_base}job/$build_project">Back To Jenkins</a>
 			</div>
 		</div>
 		<div class="clear"></div>
@@ -54,22 +54,49 @@
 
 	<p />
 	<div id="content">
-		<h3>Build Summary</h3>
+		<h1>Performance Report for $projectSummary.projectName</h1>
+		<h3>Summary</h3>
+		<p />
 		<div id="summaryArea">
-			<table>
-				<tr>
-					<td>Passed Builds:</td>
-					<td>$projectSummary.passedBuilds</td>
-				</tr>
-				<tr>
-					<td>Failed Builds:</td>
-					<td>$projectSummary.failedBuilds</td>
-				</tr>
-				<tr>
-					<td>Total Builds:</td>
-					<td>$projectSummary.totalBuilds</td>
-				</tr>
-			</table>
+			<div id="buildSummary">
+				<table class="summaryTable">
+					<tr>
+						<th id="coloured" colspan="2">Build Summary</th>
+					</tr>
+					<tr>
+						<td>Number of Passed Builds:</td>
+						<td>$projectSummary.passedBuilds</td>
+					</tr>
+					<tr>
+						<td>Number of Failed Builds:</td>
+						<td>$projectSummary.failedBuilds</td>
+					</tr>
+					<tr>
+						<td>Number of Total Builds:</td>
+						<td>$projectSummary.totalBuilds</td>
+					</tr>
+				</table>
+			</div>
+			<div id="stepSummary">
+				<table class="summaryTable">
+					<tr>
+						<th id="coloured" colspan="2">Step Summary</th>
+					</tr>
+					<tr>
+						<td>Number of Passed Steps:</td>
+						<td>$projectSummary.passedSteps</td>
+					</tr>
+					<tr>
+						<td>Number of Failed Steps:</td>
+						<td>$projectSummary.failedSteps</td>
+					</tr>
+					<tr>
+						<td>Number of Skipped Steps:</td>
+						<td>$projectSummary.skippedSteps</td>
+					</tr>
+				</table>
+			</div>
+			<div class="clear"></div>
 		</div>
 		<p />
 		<h3>Overall Project Performance</h3>

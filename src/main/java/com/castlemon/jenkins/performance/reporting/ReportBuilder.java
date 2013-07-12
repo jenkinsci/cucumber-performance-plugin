@@ -29,6 +29,7 @@ public class ReportBuilder {
 			String pluginUrlPath) {
 		copyCSSFile(reportDirectory);
 		ProjectSummary projectSummary = getPerformanceData(projectRuns);
+		projectSummary.setProjectName(buildProject);
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty("resource.loader", "class");
 		velocityEngine
@@ -72,6 +73,9 @@ public class ReportBuilder {
 		projectSummary.setPassedBuilds(passedBuilds);
 		projectSummary.setFailedBuilds(failedBuilds);
 		projectSummary.setTotalBuilds(passedBuilds + failedBuilds);
+		projectSummary.setPassedSteps(passedSteps);
+		projectSummary.setFailedSteps(failedSteps);
+		projectSummary.setSkippedSteps(skippedSteps);
 		projectSummary.setPerformanceEntries(entries);
 		return projectSummary;
 	}

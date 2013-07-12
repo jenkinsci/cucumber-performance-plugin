@@ -28,8 +28,6 @@ public class ProjectReporterTest {
 		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonString);
 		Assert.assertFalse(scenarios.isEmpty());
 		ProjectRun run = new ProjectRun();
-		String projectName = "Dummy Project 1";
-		run.setProjectName(projectName);
 		run.setScenarios(scenarios);
 		Date date = new Date();
 		run.setRunDate(date);
@@ -49,8 +47,6 @@ public class ProjectReporterTest {
 		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonString);
 		Assert.assertFalse(scenarios.isEmpty());
 		ProjectRun run = new ProjectRun();
-		String projectName = "Dummy Project 1";
-		run.setProjectName(projectName);
 		run.setScenarios(scenarios);
 		Date date = new Date();
 		run.setRunDate(date);
@@ -65,8 +61,6 @@ public class ProjectReporterTest {
 	public void testGenerateBasicProjectPerformanceDataSkippedSteps()
 			throws IOException {
 		ProjectRun run = testUtils.generateRun("skipped");
-		String projectName = "Dummy Project 1";
-		run.setProjectName(projectName);
 		Date date = new Date();
 		run.setRunDate(date);
 		ProjectPerformanceEntry jobOutput = jobReporter
