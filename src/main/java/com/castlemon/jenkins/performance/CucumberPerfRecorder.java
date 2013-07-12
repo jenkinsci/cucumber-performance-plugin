@@ -86,7 +86,7 @@ public class CucumberPerfRecorder extends Recorder {
 					.getParentFile();
 			projectRun.setScenarios(CucumberPerfUtils.getData(CucumberPerfUtils
 					.findJsonFiles(workspaceJsonReportDirectory,
-							"**/cucumber-perf.json"),
+							"**/cucumber-perf*.json"),
 					workspaceJsonReportDirectory));
 			projectRuns.add(projectRun);
 		}
@@ -138,15 +138,17 @@ public class CucumberPerfRecorder extends Recorder {
 		// rename the json file in the performance report directory
 		String[] oldJsonReportFiles = CucumberPerfUtils.findJsonFiles(
 				targetBuildDirectory, "*.json");
+		int i = 0;
 		for (String fileName : oldJsonReportFiles) {
 			File file = new File(targetBuildDirectory, fileName);
-			String newFileName = "cucumber-perf.json";
+			String newFileName = "cucumber-perf" + i + ".json";
 			File newFile = new File(targetBuildDirectory, newFileName);
 			try {
 				FileUtils.moveFile(file, newFile);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			i++;
 		}
 	}
 

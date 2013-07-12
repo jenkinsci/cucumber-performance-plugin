@@ -28,7 +28,9 @@ public class ReportBuilder {
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
 		copyCSSFile(reportDirectory);
-		ProjectSummary projectSummary = getPerformanceData(projectRuns);
+		reporter.initialiseScenarioEntries();
+		ProjectSummary projectSummary = getPerformanceData(projectRuns,
+				buildNumber);
 		projectSummary.setProjectName(buildProject);
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty("resource.loader", "class");
@@ -42,6 +44,7 @@ public class ReportBuilder {
 		context.put("projectSummary", projectSummary);
 		context.put("perfData",
 				CucumberPerfUtils.buildProjectGraphData(projectSummary));
+		context.put("scenarioData", reporter.getScenarioEntries());
 		context.put("build_project", buildProject);
 		context.put("build_number", buildNumber);
 		context.put("jenkins_base", getPluginUrlPath(pluginUrlPath));
@@ -49,7 +52,8 @@ public class ReportBuilder {
 				context));
 	}
 
-	private ProjectSummary getPerformanceData(List<ProjectRun> runs) {
+	private ProjectSummary getPerformanceData(List<ProjectRun> runs,
+			String buildNumber) {
 		ProjectSummary projectSummary = new ProjectSummary();
 		List<ProjectPerformanceEntry> entries = new ArrayList<ProjectPerformanceEntry>();
 		int passedSteps = 0;
@@ -57,6 +61,7 @@ public class ReportBuilder {
 		int skippedSteps = 0;
 		int passedBuilds = 0;
 		int failedBuilds = 0;
+
 		for (ProjectRun run : runs) {
 			ProjectPerformanceEntry performanceEntry = reporter
 					.generateBasicProjectPerformanceData(run);
