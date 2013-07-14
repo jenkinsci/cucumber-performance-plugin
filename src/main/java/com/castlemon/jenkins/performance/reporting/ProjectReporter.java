@@ -11,6 +11,7 @@ import com.castlemon.jenkins.performance.domain.Step;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.ScenarioPerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.ScenarioSummary;
 
 public class ProjectReporter {
 
@@ -18,7 +19,7 @@ public class ProjectReporter {
 	private static final String STEP_FAILED = "failed";
 	private static final String STEP_SKIPPED = "skipped";
 
-	Map<String, List<ScenarioPerformanceEntry>> scenarioEntries;
+	Map<String, ScenarioSummary> scenarioEntries;
 
 	public ProjectPerformanceEntry generateBasicProjectPerformanceData(
 			ProjectRun projectRun) {
@@ -30,8 +31,9 @@ public class ProjectReporter {
 		int projectFailedSteps = 0;
 		int projectSkippedSteps = 0;
 		for (Scenario scenario : projectRun.getScenarios()) {
+			ScenarioSummary scenarioSummary = getRelevantScenarioSummary(scenario);
 			ScenarioPerformanceEntry scenarioPerformanceEntry = createScenarioPerformanceEntry(
-					scenario, projectRun.getBuildNumber());
+					scenario.getId(), projectRun.getBuildNumber());
 			long scenarioDuration = 0;
 			int scenarioPassedSteps = 0;
 			int scenarioFailedSteps = 0;
@@ -56,7 +58,7 @@ public class ProjectReporter {
 			scenarioPerformanceEntry.setFailedSteps(scenarioFailedSteps);
 			scenarioPerformanceEntry.setSkippedSteps(scenarioSkippedSteps);
 			scenarioPerformanceEntry.setElapsedTime(scenarioDuration);
-			addScenarioPerformanceDataToList(scenarioPerformanceEntry);
+			updateScenarioData(scenarioSummary, scenarioPerformanceEntry);
 			projectDuration += scenarioDuration;
 			projectPassedSteps += scenarioPassedSteps;
 			projectFailedSteps += scenarioFailedSteps;
@@ -75,37 +77,50 @@ public class ProjectReporter {
 	}
 
 	public void initialiseScenarioEntries() {
-		scenarioEntries = new HashMap<String, List<ScenarioPerformanceEntry>>();
+		scenarioEntries = new HashMap<String, ScenarioSummary>();
 	}
 
-	public Map<String, List<ScenarioPerformanceEntry>> getScenarioEntries() {
+	public Map<String, ScenarioSummary> getScenarioEntries() {
 		return scenarioEntries;
 	}
 
+	private void updateScenarioData(ScenarioSummary summary,
+			ScenarioPerformanceEntry entry) {
+		// check the duration fields
+		if (entry.getElapsedTime() < summary.getShortestDuration()) {
+			summary.setShortestDuration(entry.getElapsedTime());
+		}
+		if (entry.getElapsedTime() > summary.getLongestDuration()) {
+			summary.setLongestDuration(entry.getElapsedTime());
+		}
+		// add the entry to the list
+		summary.getEntries().add(entry);
+	}
+
 	private ScenarioPerformanceEntry createScenarioPerformanceEntry(
-			Scenario scenario, int buildNumber) {
+			String scenarioId, int buildNumber) {
 		ScenarioPerformanceEntry scenarioPerformanceEntry = new ScenarioPerformanceEntry();
-		scenarioPerformanceEntry.setScenarioId(scenario.getId());
+		scenarioPerformanceEntry.setScenarioId(scenarioId);
 		scenarioPerformanceEntry.setBuildNumber(buildNumber);
 		return scenarioPerformanceEntry;
 	}
 
-	private void addScenarioPerformanceDataToList(
-			ScenarioPerformanceEntry scenarioPerformanceEntry) {
-		// firstly, find the right scenario list to update
-		List<ScenarioPerformanceEntry> entries = null;
-		if (scenarioEntries.containsKey(scenarioPerformanceEntry
-				.getScenarioId())) {
+	private ScenarioSummary getRelevantScenarioSummary(Scenario scenario) {
+		// find the right scenario summary to use
+		ScenarioSummary scenarioSummary = null;
+		if (scenarioEntries.containsKey(scenario.getId())) {
 			// exists - use it
-			entries = scenarioEntries.get(scenarioPerformanceEntry
-					.getScenarioId());
+			scenarioSummary = scenarioEntries.get(scenario.getId());
 		} else {
 			// doesn't exist - create it
-			entries = new ArrayList<ScenarioPerformanceEntry>();
-			scenarioEntries.put(scenarioPerformanceEntry.getScenarioId(),
-					entries);
+			scenarioSummary = new ScenarioSummary();
+			scenarioSummary.setScenarioId(scenario.getId());
+			scenarioSummary.setScenarioName(scenario.getName());
+			List<ScenarioPerformanceEntry> entries = new ArrayList<ScenarioPerformanceEntry>();
+			scenarioSummary.setEntries(entries);
+			scenarioEntries.put(scenario.getId(), scenarioSummary);
 		}
 		// add the new entry to the list
-		entries.add(scenarioPerformanceEntry);
+		return scenarioSummary;
 	}
 }

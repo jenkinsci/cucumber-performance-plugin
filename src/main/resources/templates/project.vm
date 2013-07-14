@@ -61,7 +61,7 @@
 			<div id="buildSummary">
 				<table class="summaryTable">
 					<tr>
-						<th id="coloured" colspan="2">Build Summary</th>
+						<th class="coloured" colspan="2">Build Summary</th>
 					</tr>
 					<tr>
 						<td>Number of Passed Builds:</td>
@@ -80,7 +80,7 @@
 			<div id="stepSummary">
 				<table class="summaryTable">
 					<tr>
-						<th id="coloured" colspan="2">Step Summary</th>
+						<th class="coloured" colspan="2">Step Summary</th>
 					</tr>
 					<tr>
 						<td>Number of Passed Steps:</td>
@@ -108,10 +108,19 @@
 		<p />
 		<h3>Scenario details</h3>
 		<div id="scenarioArea">
-			<table>
-				#foreach ($entry in $scenarioData)
+			<table class="summaryTable">
 				<tr>
-					<td>$entry.key</td>
+					<th class="coloured">Scenario Name</th>
+					<th class="coloured">Shortest Duration</th>
+					<th class="coloured">Longest Duration</th>
+					<th class="coloured">Average Duration</th>
+				</tr>
+				#foreach ($summary in $scenarioData)
+				<tr>
+					<td>$summary.scenarioName</td>
+					<td>$summary.FormattedShortestDuration</td>
+					<td>$summary.FormattedLongestDuration</td>
+					<td>$summary.FormattedAverageDuration</td>
 				</tr>
 				#end
 			</table>

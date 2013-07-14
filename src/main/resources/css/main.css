@@ -25,6 +25,7 @@ th.coloured {
 	color: #AD0000;
 	background-color: #FAEEEE;
 	text-align: center;
+	border: 1px solid black;
 }
 
 td {
@@ -100,6 +101,12 @@ tr:nth-child(even) {
 	border: solid 1px black;
 	text-align: center;
 	height: 400px;
+}
+
+#scenarioArea {
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
 }
 
 #pageFooter {

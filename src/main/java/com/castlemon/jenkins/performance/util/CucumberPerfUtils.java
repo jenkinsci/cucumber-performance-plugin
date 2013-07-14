@@ -9,6 +9,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.joda.time.Duration;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import com.castlemon.jenkins.performance.domain.Scenario;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
@@ -89,6 +92,26 @@ public class CucumberPerfUtils {
 		}
 		return scenarios;
 	}
+	
+	public static String formatDuration(Long duration) {
+        PeriodFormatter formatter = new PeriodFormatterBuilder()
+                .appendDays()
+                .appendSuffix(" day", " days")
+                .appendSeparator(" and ")
+                .appendHours()
+                .appendSuffix(" hour", " hours")
+                .appendSeparator(" and ")
+                .appendMinutes()
+                .appendSuffix(" min", " mins")
+                .appendSeparator(" and ")
+                .appendSeconds()
+                .appendSuffix(" sec", " secs")
+                .appendSeparator(" and ")
+                .appendMillis()
+                .appendSuffix(" ms", " ms")
+                .toFormatter();
+        return formatter.print(new Period(0, duration / 1000000));
+    }
 
 	private static String loadJsonFile(File targetBuildDirectory,
 			String fileName) {

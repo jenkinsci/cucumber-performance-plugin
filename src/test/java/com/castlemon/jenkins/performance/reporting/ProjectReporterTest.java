@@ -13,6 +13,7 @@ import com.castlemon.jenkins.performance.domain.Scenario;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.ScenarioPerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.ScenarioSummary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ProjectReporterTest {
@@ -95,13 +96,13 @@ public class ProjectReporterTest {
 		Assert.assertEquals(date, jobOutput.getRunDate());
 		Assert.assertEquals(expectedDuration, jobOutput.getElapsedTime());
 		Assert.assertTrue(jobOutput.isPassedBuild());
-		Map<String, List<ScenarioPerformanceEntry>> scenarioEntries = jobReporter
+		Map<String, ScenarioSummary> scenarioEntries = jobReporter
 				.getScenarioEntries();
 		Assert.assertEquals(2, scenarioEntries.size());
 		for (Scenario scenario : scenarios) {
 			Assert.assertEquals("error on count of scenarios called "
 					+ scenario.getId(), 1, scenarioEntries
-					.get(scenario.getId()).size());
+					.get(scenario.getId()).getEntries().size());
 		}
 	}
 
