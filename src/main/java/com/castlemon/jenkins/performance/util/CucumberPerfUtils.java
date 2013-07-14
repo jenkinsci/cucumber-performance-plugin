@@ -45,6 +45,30 @@ public class CucumberPerfUtils {
 		return output.toString();
 	}
 
+	public static String buildProjectAverageData(ProjectSummary projectSummary) {
+		long totalDuration = 0l;
+		StringBuilder output = new StringBuilder();
+		for (ProjectPerformanceEntry run : projectSummary
+				.getPerformanceEntries()) {
+			totalDuration += run.getElapsedTime();
+		}
+		long average = totalDuration
+				/ projectSummary.getPerformanceEntries().size();
+		output.append("[");
+		int i = 1;
+		for (ProjectPerformanceEntry run : projectSummary
+				.getPerformanceEntries()) {
+			output.append("[" + run.getBuildNumber() + ", "
+					+ getDurationInSeconds(average / nanosInAMilli) + "]");
+			if (i < projectSummary.getPerformanceEntries().size()) {
+				output.append(",");
+			}
+			i++;
+		}
+		output.append("]");
+		return output.toString();
+	}
+
 	public static long getDurationInSeconds(Long duration) {
 		Duration minutes = new Duration(duration);
 		return minutes.getStandardSeconds();
@@ -92,26 +116,18 @@ public class CucumberPerfUtils {
 		}
 		return scenarios;
 	}
-	
+
 	public static String formatDuration(Long duration) {
-        PeriodFormatter formatter = new PeriodFormatterBuilder()
-                .appendDays()
-                .appendSuffix(" day", " days")
-                .appendSeparator(" and ")
-                .appendHours()
-                .appendSuffix(" hour", " hours")
-                .appendSeparator(" and ")
-                .appendMinutes()
-                .appendSuffix(" min", " mins")
-                .appendSeparator(" and ")
-                .appendSeconds()
-                .appendSuffix(" sec", " secs")
-                .appendSeparator(" and ")
-                .appendMillis()
-                .appendSuffix(" ms", " ms")
-                .toFormatter();
-        return formatter.print(new Period(0, duration / 1000000));
-    }
+		PeriodFormatter formatter = new PeriodFormatterBuilder().appendDays()
+				.appendSuffix(" day", " days").appendSeparator(" and ")
+				.appendHours().appendSuffix(" hour", " hours")
+				.appendSeparator(" and ").appendMinutes()
+				.appendSuffix(" min", " mins").appendSeparator(" and ")
+				.appendSeconds().appendSuffix(" sec", " secs")
+				.appendSeparator(" and ").appendMillis()
+				.appendSuffix(" ms", " ms").toFormatter();
+		return formatter.print(new Period(0, duration / 1000000));
+	}
 
 	private static String loadJsonFile(File targetBuildDirectory,
 			String fileName) {

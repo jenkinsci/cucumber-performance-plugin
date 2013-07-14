@@ -14,9 +14,6 @@
 			chart : {
 				type : 'line'
 			},
-			legend : {
-				enabled : false
-			},
 			tooltip : {
 				enabled : false
 			},
@@ -35,7 +32,11 @@
 				}
 			},
 			series : [ {
+				name : 'Time Taken',
 				data : $perfData
+			}, {
+				name : 'Average',
+				data : $averageData
 			} ]
 		});
 	});
@@ -97,6 +98,9 @@
 				</table>
 			</div>
 			<div class="clear"></div>
+			<p />
+			<div class="emphasised">Only successful builds are included in
+				the details below.</div>
 		</div>
 		<p />
 		<h3>Overall Project Performance</h3>

@@ -44,6 +44,8 @@ public class ReportBuilder {
 		context.put("projectSummary", projectSummary);
 		context.put("perfData",
 				CucumberPerfUtils.buildProjectGraphData(projectSummary));
+		context.put("averageData",
+				CucumberPerfUtils.buildProjectAverageData(projectSummary));
 		context.put("scenarioData", reporter.getScenarioEntries());
 		context.put("build_project", buildProject);
 		context.put("build_number", buildNumber);
@@ -70,10 +72,10 @@ public class ReportBuilder {
 			skippedSteps += performanceEntry.getSkippedSteps();
 			if (performanceEntry.isPassedBuild()) {
 				passedBuilds++;
+				entries.add(performanceEntry);
 			} else {
 				failedBuilds++;
 			}
-			entries.add(performanceEntry);
 		}
 		projectSummary.setPassedBuilds(passedBuilds);
 		projectSummary.setFailedBuilds(failedBuilds);
