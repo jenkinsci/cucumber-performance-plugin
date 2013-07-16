@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Cucumber Project Reports</title>
+<title>Cucumber Scenario Report</title>
 <link rel="stylesheet" href="main.css" type="text/css" media="screen" />
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script>
-	/* project-level graph */
+	/* scenario-level graph */
 	jQuery(document).ready(function() {
 		jQuery('#projectgraph').highcharts({
 			chart : {
@@ -18,7 +18,7 @@
 				enabled : false
 			},
 			title : {
-				text : 'Project Performance'
+				text : 'Scenario Performance'
 			},
 			xAxis : {
 				title : {
@@ -46,6 +46,9 @@
 	<div id="pageHeader">
 		<div id="titleArea">Cucumber Project Reports</div>
 		<div id="linkArea">
+			<div id="projectLink">
+				<a href="projectview.html">Back To Project View</a>
+			</div>
 			<div id="jenkinsLink">
 				<a href="${jenkins_base}job/$build_project">Back To Jenkins</a>
 			</div>
@@ -55,7 +58,7 @@
 
 	<p />
 	<div id="content">
-		<h1>Performance Report for $projectSummary.projectName</h1>
+		<h1>Scenario Report for $scenarioSummary.scenarioName</h1>
 		<h3>Summary</h3>
 		<p />
 		<div id="summaryArea">
@@ -66,15 +69,15 @@
 					</tr>
 					<tr>
 						<td>Number of Passed Builds:</td>
-						<td>$projectSummary.passedBuilds</td>
+						<td>$scenarioSummary.passedBuilds</td>
 					</tr>
 					<tr>
 						<td>Number of Failed Builds:</td>
-						<td>$projectSummary.failedBuilds</td>
+						<td>$scenarioSummary.failedBuilds</td>
 					</tr>
 					<tr>
 						<td>Number of Total Builds:</td>
-						<td>$projectSummary.totalBuilds</td>
+						<td>$scenarioSummary.totalBuilds</td>
 					</tr>
 				</table>
 			</div>
@@ -85,15 +88,15 @@
 					</tr>
 					<tr>
 						<td>Number of Passed Steps:</td>
-						<td>$projectSummary.passedSteps</td>
+						<td>$scenarioSummary.passedSteps</td>
 					</tr>
 					<tr>
 						<td>Number of Failed Steps:</td>
-						<td>$projectSummary.failedSteps</td>
+						<td>$scenarioSummary.failedSteps</td>
 					</tr>
 					<tr>
 						<td>Number of Skipped Steps:</td>
-						<td>$projectSummary.skippedSteps</td>
+						<td>$scenarioSummary.skippedSteps</td>
 					</tr>
 				</table>
 			</div>
@@ -103,25 +106,25 @@
 				the details below.</div>
 		</div>
 		<p />
-		<h3>Overall Project Performance</h3>
+		<h3>Scenario Performance</h3>
 		<div id="projectgraph">
 			<noscript>
 				<p>This content requires JavaScript.</p>
 			</noscript>
 		</div>
 		<p />
-		<h3>Scenario details</h3>
-		<div id="scenarioArea">
+		<h3>Step details</h3>
+		<div id="stepArea">
 			<table class="summaryTable">
 				<tr>
-					<th class="coloured">Scenario Name</th>
+					<th class="coloured">Step Name</th>
 					<th class="coloured">Shortest Duration</th>
 					<th class="coloured">Longest Duration</th>
 					<th class="coloured">Average Duration</th>
 				</tr>
-				#foreach ($summary in $scenarioData)
+				#foreach ($summary in $stepData)
 				<tr>
-					<td><a href="$summary.pageLink">$summary.scenarioName</a></td>
+					<td>$summary.stepName</td>
 					<td>$summary.FormattedShortestDuration</td>
 					<td>$summary.FormattedLongestDuration</td>
 					<td>$summary.FormattedAverageDuration</td>

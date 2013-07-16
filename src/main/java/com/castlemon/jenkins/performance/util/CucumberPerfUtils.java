@@ -16,6 +16,8 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import com.castlemon.jenkins.performance.domain.Scenario;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
+import com.castlemon.jenkins.performance.domain.reporting.ScenarioPerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.ScenarioSummary;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -61,6 +63,47 @@ public class CucumberPerfUtils {
 			output.append("[" + run.getBuildNumber() + ", "
 					+ getDurationInSeconds(average / nanosInAMilli) + "]");
 			if (i < projectSummary.getPerformanceEntries().size()) {
+				output.append(",");
+			}
+			i++;
+		}
+		output.append("]");
+		return output.toString();
+	}
+
+	public static String buildScenarioGraphData(ScenarioSummary scenarioSummary) {
+		StringBuilder output = new StringBuilder();
+		output.append("[");
+		int i = 1;
+		for (ScenarioPerformanceEntry run : scenarioSummary.getEntries()) {
+			output.append("["
+					+ run.getBuildNumber()
+					+ ", "
+					+ getDurationInSeconds(run.getElapsedTime() / nanosInAMilli)
+					+ "]");
+			if (i < scenarioSummary.getEntries().size()) {
+				output.append(",");
+			}
+			i++;
+		}
+		output.append("]");
+		return output.toString();
+	}
+
+	public static String buildScenarioAverageData(
+			ScenarioSummary scenarioSummary) {
+		long totalDuration = 0l;
+		StringBuilder output = new StringBuilder();
+		for (ScenarioPerformanceEntry run : scenarioSummary.getEntries()) {
+			totalDuration += run.getElapsedTime();
+		}
+		long average = totalDuration / scenarioSummary.getEntries().size();
+		output.append("[");
+		int i = 1;
+		for (ScenarioPerformanceEntry run : scenarioSummary.getEntries()) {
+			output.append("[" + run.getBuildNumber() + ", "
+					+ getDurationInSeconds(average / nanosInAMilli) + "]");
+			if (i < scenarioSummary.getEntries().size()) {
 				output.append(",");
 			}
 			i++;

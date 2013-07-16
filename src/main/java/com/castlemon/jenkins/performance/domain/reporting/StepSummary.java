@@ -4,25 +4,17 @@ import java.util.List;
 
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
-public class ScenarioSummary {
+public class StepSummary {
 
-	private String scenarioId;
+	private String stepId;
 
-	private String scenarioName;
+	private String stepName;
 
-	private List<ScenarioPerformanceEntry> entries;
+	private List<StepPerformanceEntry> entries;
 
 	private long shortestDuration;
 
 	private long longestDuration;
-
-	private int totalBuilds;
-
-	private int passedBuilds;
-
-	private int failedBuilds;
-
-	private int reportedBuilds;
 
 	private int passedSteps;
 
@@ -30,15 +22,13 @@ public class ScenarioSummary {
 
 	private int skippedSteps;
 
-	private List<StepSummary> stepSummaries;
-
 	public String getPageLink() {
-		return this.scenarioId + ".html";
+		return this.stepId + ".html";
 	}
 
 	public String getFormattedAverageDuration() {
 		long totalDuration = 0;
-		for (ScenarioPerformanceEntry entry : entries) {
+		for (StepPerformanceEntry entry : entries) {
 			totalDuration += entry.getElapsedTime();
 		}
 		long count = Long.valueOf(entries.size());
@@ -66,35 +56,27 @@ public class ScenarioSummary {
 		this.failedSteps += failedSteps;
 	}
 
-	public void incrementPassedBuilds() {
-		this.passedBuilds++;
+	public String getStepId() {
+		return stepId;
 	}
 
-	public void incrementFailedBuilds() {
-		this.failedBuilds++;
+	public void setStepId(String stepId) {
+		this.stepId = stepId;
 	}
 
-	public String getScenarioId() {
-		return scenarioId;
+	public String getStepName() {
+		return stepName;
 	}
 
-	public void setScenarioId(String scenarioId) {
-		this.scenarioId = scenarioId;
+	public void setStepName(String stepName) {
+		this.stepName = stepName;
 	}
 
-	public String getScenarioName() {
-		return scenarioName;
-	}
-
-	public void setScenarioName(String scenarioName) {
-		this.scenarioName = scenarioName;
-	}
-
-	public List<ScenarioPerformanceEntry> getEntries() {
+	public List<StepPerformanceEntry> getEntries() {
 		return entries;
 	}
 
-	public void setEntries(List<ScenarioPerformanceEntry> entries) {
+	public void setEntries(List<StepPerformanceEntry> entries) {
 		this.entries = entries;
 	}
 
@@ -112,38 +94,6 @@ public class ScenarioSummary {
 
 	public void setLongestDuration(long longestDuration) {
 		this.longestDuration = longestDuration;
-	}
-
-	public int getTotalBuilds() {
-		return totalBuilds;
-	}
-
-	public void setTotalBuilds(int totalBuilds) {
-		this.totalBuilds = totalBuilds;
-	}
-
-	public int getPassedBuilds() {
-		return passedBuilds;
-	}
-
-	public void setPassedBuilds(int passedBuilds) {
-		this.passedBuilds = passedBuilds;
-	}
-
-	public int getFailedBuilds() {
-		return failedBuilds;
-	}
-
-	public void setFailedBuilds(int failedBuilds) {
-		this.failedBuilds = failedBuilds;
-	}
-
-	public int getReportedBuilds() {
-		return reportedBuilds;
-	}
-
-	public void setReportedBuilds(int reportedBuilds) {
-		this.reportedBuilds = reportedBuilds;
 	}
 
 	public int getPassedSteps() {
@@ -168,14 +118,6 @@ public class ScenarioSummary {
 
 	public void setSkippedSteps(int skippedSteps) {
 		this.skippedSteps = skippedSteps;
-	}
-
-	public List<StepSummary> getStepSummaries() {
-		return stepSummaries;
-	}
-
-	public void setStepSummaries(List<StepSummary> stepSummaries) {
-		this.stepSummaries = stepSummaries;
 	}
 
 }
