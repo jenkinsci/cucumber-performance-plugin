@@ -67,7 +67,7 @@ public class ProjectReporter {
 					scenarioDuration += duration;
 					stepPerformanceEntry.setElapsedTime(duration);
 					updateStepData(stepSummary, stepPerformanceEntry);
-					scenarioSummary.getStepSummaries().add(stepSummary);
+					addStepDataToScenario(scenarioSummary, stepSummary);
 				}
 			}
 			scenarioPerformanceEntry.setPassedSteps(scenarioPassedSteps);
@@ -196,5 +196,32 @@ public class ProjectReporter {
 		}
 		// add the entry to the list
 		summary.getEntries().add(entry);
+	}
+
+	private void addStepDataToScenario(ScenarioSummary scenarioSummary,
+			StepSummary stepSummary) {
+
+		for (StepSummary existingSummary : scenarioSummary.getStepSummaries()) {
+			if (existingSummary.getStepId().equals(stepSummary.getStepId())) {
+				// update the existing version
+				existingSummary.getEntries().addAll(stepSummary.getEntries());
+				if (stepSummary.getShortestDuration() < existingSummary
+						.getShortestDuration()) {
+					existingSummary.setShortestDuration(stepSummary
+							.getShortestDuration());
+				}
+				if (stepSummary.getLongestDuration() > existingSummary
+						.getLongestDuration()) {
+					existingSummary.setLongestDuration(stepSummary
+							.getLongestDuration());
+				}
+				existingSummary.addToPassedSteps(stepSummary.getPassedSteps());
+				existingSummary.addToFailedSteps(stepSummary.getFailedSteps());
+				existingSummary.addToFailedSteps(stepSummary.getFailedSteps());
+				return;
+			}
+		}
+		// no existing version, so add to the list
+		scenarioSummary.getStepSummaries().add(stepSummary);
 	}
 }
