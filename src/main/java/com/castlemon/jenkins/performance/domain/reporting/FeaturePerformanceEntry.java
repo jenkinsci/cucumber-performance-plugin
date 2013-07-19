@@ -2,9 +2,9 @@ package com.castlemon.jenkins.performance.domain.reporting;
 
 import java.util.Date;
 
-public class ScenarioPerformanceEntry {
+public class FeaturePerformanceEntry {
 
-	private String scenarioId;
+	private String featureId;
 
 	private int buildNumber;
 
@@ -18,12 +18,12 @@ public class ScenarioPerformanceEntry {
 
 	private int skippedSteps;
 
-	public String getScenarioId() {
-		return scenarioId;
+	public String getFeatureId() {
+		return featureId;
 	}
 
-	public void setScenarioId(String scenarioId) {
-		this.scenarioId = scenarioId;
+	public void setFeatureId(String featureId) {
+		this.featureId = featureId;
 	}
 
 	public int getBuildNumber() {

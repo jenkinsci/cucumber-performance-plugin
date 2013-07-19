@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import com.castlemon.jenkins.performance.TestUtils;
-import com.castlemon.jenkins.performance.domain.Scenario;
+import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 
@@ -49,22 +49,22 @@ public class CucumberPerfUtilsTest {
 	@Test
 	public void testGetDataSingle() throws IOException {
 		String jsonString = testUtils.loadJsonFile("/cucumber-success.json");
-		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonString);
-		Assert.assertEquals(2, scenarios.size());
+		List<Feature> features = CucumberPerfUtils.getData(jsonString);
+		Assert.assertEquals(2, features.size());
 	}
 
 	@Test
 	public void testGetDataSingleJsonParseException() throws IOException {
 		String jsonString = "fred";
-		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonString);
-		Assert.assertEquals(0, scenarios.size());
+		List<Feature> features = CucumberPerfUtils.getData(jsonString);
+		Assert.assertEquals(0, features.size());
 	}
 
 	@Test
 	public void testGetDataSingleJsonMappingException() throws IOException {
 		String jsonString = "[1,4{}";
-		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonString);
-		Assert.assertEquals(0, scenarios.size());
+		List<Feature> features = CucumberPerfUtils.getData(jsonString);
+		Assert.assertEquals(0, features.size());
 	}
 
 	@Test
@@ -84,9 +84,9 @@ public class CucumberPerfUtilsTest {
 				"cucumber-failure.json" };
 		File f = FileUtils.toFile(this.getClass().getResource(
 				"/cucumber-success.json"));
-		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonReportFiles,
+		List<Feature> features = CucumberPerfUtils.getData(jsonReportFiles,
 				f.getParentFile());
-		Assert.assertEquals(4, scenarios.size());
+		Assert.assertEquals(4, features.size());
 	}
 	
 	@Test
@@ -95,8 +95,8 @@ public class CucumberPerfUtilsTest {
 				"nonexist.json" };
 		File f = FileUtils.toFile(this.getClass().getResource(
 				"/cucumber-success.json"));
-		List<Scenario> scenarios = CucumberPerfUtils.getData(jsonReportFiles,
+		List<Feature> features = CucumberPerfUtils.getData(jsonReportFiles,
 				f.getParentFile());
-		Assert.assertEquals(2, scenarios.size());
+		Assert.assertEquals(2, features.size());
 	}
 }

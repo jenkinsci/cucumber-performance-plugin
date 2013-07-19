@@ -4,13 +4,13 @@ import java.util.List;
 
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
-public class ScenarioSummary {
+public class FeatureSummary {
 
-	private String scenarioId;
+	private String featureId;
 
-	private String scenarioName;
+	private String featureName;
 
-	private List<ScenarioPerformanceEntry> entries;
+	private List<FeaturePerformanceEntry> entries;
 
 	private long shortestDuration;
 
@@ -33,12 +33,12 @@ public class ScenarioSummary {
 	private List<StepSummary> stepSummaries;
 
 	public String getPageLink() {
-		return this.scenarioId + ".html";
+		return this.featureId + ".html";
 	}
 
 	public String getFormattedAverageDuration() {
 		long totalDuration = 0;
-		for (ScenarioPerformanceEntry entry : entries) {
+		for (FeaturePerformanceEntry entry : entries) {
 			totalDuration += entry.getElapsedTime();
 		}
 		long count = Long.valueOf(entries.size());
@@ -74,27 +74,27 @@ public class ScenarioSummary {
 		this.failedBuilds++;
 	}
 
-	public String getScenarioId() {
-		return scenarioId;
+	public String getFeatureId() {
+		return featureId;
 	}
 
-	public void setScenarioId(String scenarioId) {
-		this.scenarioId = scenarioId;
+	public void setFeatureId(String featureId) {
+		this.featureId = featureId;
 	}
 
-	public String getScenarioName() {
-		return scenarioName;
+	public String getFeatureName() {
+		return featureName;
 	}
 
-	public void setScenarioName(String scenarioName) {
-		this.scenarioName = scenarioName;
+	public void setFeatureName(String featureName) {
+		this.featureName = featureName;
 	}
 
-	public List<ScenarioPerformanceEntry> getEntries() {
+	public List<FeaturePerformanceEntry> getEntries() {
 		return entries;
 	}
 
-	public void setEntries(List<ScenarioPerformanceEntry> entries) {
+	public void setEntries(List<FeaturePerformanceEntry> entries) {
 		this.entries = entries;
 	}
 

@@ -110,18 +110,18 @@
 			</noscript>
 		</div>
 		<p />
-		<h3>Scenario details</h3>
-		<div id="scenarioArea">
+		<h3>Feature details</h3>
+		<div id="featureArea">
 			<table class="summaryTable">
 				<tr>
-					<th class="coloured">Scenario Name</th>
+					<th class="coloured">Feature Name</th>
 					<th class="coloured">Shortest Duration</th>
 					<th class="coloured">Longest Duration</th>
 					<th class="coloured">Average Duration</th>
 				</tr>
-				#foreach ($summary in $scenarioData)
+				#foreach ($summary in $featureData)
 				<tr>
-					<td><a href="$summary.pageLink">$summary.scenarioName</a></td>
+					<td><a href="$summary.pageLink">$summary.featureName</a></td>
 					<td>$summary.FormattedShortestDuration</td>
 					<td>$summary.FormattedLongestDuration</td>
 					<td>$summary.FormattedAverageDuration</td>

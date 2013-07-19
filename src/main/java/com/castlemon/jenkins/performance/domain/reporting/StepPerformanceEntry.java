@@ -20,8 +20,8 @@ public class StepPerformanceEntry {
 		return stepName;
 	}
 
-	public void setStepName(String scenarioId) {
-		this.stepName = scenarioId;
+	public void setStepName(String stepName) {
+		this.stepName = stepName;
 	}
 
 	public int getBuildNumber() {

@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({ "id", "description", "name", "keyword", "line",
 		"elements", "uri" })
-public class Scenario {
+public class Feature {
 
 	@JsonProperty("id")
 	private String id;

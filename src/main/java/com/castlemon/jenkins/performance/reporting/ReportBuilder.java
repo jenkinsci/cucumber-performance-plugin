@@ -19,7 +19,7 @@ import org.apache.velocity.app.VelocityEngine;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
-import com.castlemon.jenkins.performance.domain.reporting.ScenarioSummary;
+import com.castlemon.jenkins.performance.domain.reporting.FeatureSummary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ReportBuilder {
@@ -30,7 +30,7 @@ public class ReportBuilder {
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
 		copyCSSFile(reportDirectory);
-		reporter.initialiseScenarioEntries();
+		reporter.initialiseFeatureEntries();
 		reporter.initialiseStepEntries();
 		ProjectSummary projectSummary = getPerformanceData(projectRuns,
 				buildNumber);
@@ -43,7 +43,7 @@ public class ReportBuilder {
 		velocityEngine.init();
 		Template template = velocityEngine.getTemplate("/templates/project.vm");
 		String fullPluginPath = getPluginUrlPath(pluginUrlPath);
-		generateScenarioReports(reporter.getScenarioEntries(), velocityEngine,
+		generateFeatureReports(reporter.getFeatureEntries(), velocityEngine,
 				fullPluginPath, reportDirectory);
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
@@ -52,7 +52,7 @@ public class ReportBuilder {
 				CucumberPerfUtils.buildProjectGraphData(projectSummary));
 		context.put("averageData",
 				CucumberPerfUtils.buildProjectAverageData(projectSummary));
-		context.put("scenarioData", reporter.getScenarioEntries());
+		context.put("featureData", reporter.getFeatureEntries());
 		context.put("build_project", buildProject);
 		context.put("build_number", buildNumber);
 		context.put("jenkins_base", fullPluginPath);
@@ -60,23 +60,22 @@ public class ReportBuilder {
 				context));
 	}
 
-	private void generateScenarioReports(
-			Map<String, ScenarioSummary> summaries,
+	private void generateFeatureReports(Map<String, FeatureSummary> summaries,
 			VelocityEngine velocityEngine, String pluginPath,
 			File reportDirectory) {
 		Template template = velocityEngine
-				.getTemplate("/templates/scenario.vm");
+				.getTemplate("/templates/feature.vm");
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
 		context.put("jenkins_base", pluginPath);
-		for (ScenarioSummary summary : summaries.values()) {
-			context.put("scenarioSummary", summary);
+		for (FeatureSummary summary : summaries.values()) {
+			context.put("featureSummary", summary);
 			context.put("stepData", summary.getStepSummaries());
 			context.put("perfData",
-					CucumberPerfUtils.buildScenarioGraphData(summary));
+					CucumberPerfUtils.buildFeatureGraphData(summary));
 			context.put("averageData",
-					CucumberPerfUtils.buildScenarioAverageData(summary));
-			writeReport(summary.getScenarioId() + ".html", reportDirectory,
+					CucumberPerfUtils.buildFeatureAverageData(summary));
+			writeReport(summary.getFeatureId() + ".html", reportDirectory,
 					template, context);
 		}
 

@@ -13,11 +13,11 @@ import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
-import com.castlemon.jenkins.performance.domain.Scenario;
+import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
-import com.castlemon.jenkins.performance.domain.reporting.ScenarioPerformanceEntry;
-import com.castlemon.jenkins.performance.domain.reporting.ScenarioSummary;
+import com.castlemon.jenkins.performance.domain.reporting.FeaturePerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.FeatureSummary;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -71,17 +71,17 @@ public class CucumberPerfUtils {
 		return output.toString();
 	}
 
-	public static String buildScenarioGraphData(ScenarioSummary scenarioSummary) {
+	public static String buildFeatureGraphData(FeatureSummary featureSummary) {
 		StringBuilder output = new StringBuilder();
 		output.append("[");
 		int i = 1;
-		for (ScenarioPerformanceEntry run : scenarioSummary.getEntries()) {
+		for (FeaturePerformanceEntry run : featureSummary.getEntries()) {
 			output.append("["
 					+ run.getBuildNumber()
 					+ ", "
 					+ getDurationInSeconds(run.getElapsedTime() / nanosInAMilli)
 					+ "]");
-			if (i < scenarioSummary.getEntries().size()) {
+			if (i < featureSummary.getEntries().size()) {
 				output.append(",");
 			}
 			i++;
@@ -90,20 +90,20 @@ public class CucumberPerfUtils {
 		return output.toString();
 	}
 
-	public static String buildScenarioAverageData(
-			ScenarioSummary scenarioSummary) {
+	public static String buildFeatureAverageData(
+			FeatureSummary featureSummary) {
 		long totalDuration = 0l;
 		StringBuilder output = new StringBuilder();
-		for (ScenarioPerformanceEntry run : scenarioSummary.getEntries()) {
+		for (FeaturePerformanceEntry run : featureSummary.getEntries()) {
 			totalDuration += run.getElapsedTime();
 		}
-		long average = totalDuration / scenarioSummary.getEntries().size();
+		long average = totalDuration / featureSummary.getEntries().size();
 		output.append("[");
 		int i = 1;
-		for (ScenarioPerformanceEntry run : scenarioSummary.getEntries()) {
+		for (FeaturePerformanceEntry run : featureSummary.getEntries()) {
 			output.append("[" + run.getBuildNumber() + ", "
 					+ getDurationInSeconds(average / nanosInAMilli) + "]");
-			if (i < scenarioSummary.getEntries().size()) {
+			if (i < featureSummary.getEntries().size()) {
 				output.append(",");
 			}
 			i++;
@@ -131,25 +131,25 @@ public class CucumberPerfUtils {
 		return scanner.getIncludedFiles();
 	}
 
-	public static List<Scenario> getData(String[] jsonReportFiles,
+	public static List<Feature> getData(String[] jsonReportFiles,
 			File targetBuildDirectory) {
-		List<Scenario> overallScenarios = new ArrayList<Scenario>();
+		List<Feature> overallFeatures = new ArrayList<Feature>();
 		for (String fileName : jsonReportFiles) {
 			String jsonInput = loadJsonFile(targetBuildDirectory, fileName);
 			if (StringUtils.isNotEmpty(jsonInput)) {
-				overallScenarios.addAll(getData(jsonInput));
+				overallFeatures.addAll(getData(jsonInput));
 			}
 		}
-		return overallScenarios;
+		return overallFeatures;
 	}
 
-	public static List<Scenario> getData(String jsonInput) {
+	public static List<Feature> getData(String jsonInput) {
 		ObjectMapper mapper = new ObjectMapper();
-		List<Scenario> scenarios = new ArrayList<Scenario>();
+		List<Feature> features = new ArrayList<Feature>();
 		try {
 			JavaType type = mapper.getTypeFactory().constructCollectionType(
-					List.class, Scenario.class);
-			scenarios = mapper.readValue(jsonInput, type);
+					List.class, Feature.class);
+			features = mapper.readValue(jsonInput, type);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -157,7 +157,7 @@ public class CucumberPerfUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return scenarios;
+		return features;
 	}
 
 	public static String formatDuration(Long duration) {

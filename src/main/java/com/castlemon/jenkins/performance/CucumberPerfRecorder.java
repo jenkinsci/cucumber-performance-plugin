@@ -27,7 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
-import com.castlemon.jenkins.performance.processor.ReportGenerator;
+import com.castlemon.jenkins.performance.reporting.ReportBuilder;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 @SuppressWarnings("unchecked")
@@ -36,7 +36,7 @@ public class CucumberPerfRecorder extends Recorder {
 	public final String jsonReportDirectory;
 	public final String pluginUrlPath;
 
-	private ReportGenerator generator;
+	private ReportBuilder reportBuilder;
 
 	// Fields in config.jelly must match the parameter names in the
 	// "DataBoundConstructor"
@@ -52,7 +52,7 @@ public class CucumberPerfRecorder extends Recorder {
 		listener.getLogger()
 				.println(
 						"[CucumberPerfRecorder] Starting Cucumber Performance Report generation...");
-		generator = new ReportGenerator();
+		reportBuilder = new ReportBuilder();
 		File targetBuildDirectory = new File(build.getRootDir(),
 				"cucumber-perf-reports");
 		if (!targetBuildDirectory.exists()) {
@@ -84,14 +84,19 @@ public class CucumberPerfRecorder extends Recorder {
 			projectRun.setBuildNumber(thisBuild.getNumber());
 			File workspaceJsonReportDirectory = thisBuild.getArtifactsDir()
 					.getParentFile();
-			projectRun.setScenarios(CucumberPerfUtils.getData(CucumberPerfUtils
+			projectRun.setFeatures(CucumberPerfUtils.getData(CucumberPerfUtils
 					.findJsonFiles(workspaceJsonReportDirectory,
 							"**/cucumber-perf*.json"),
 					workspaceJsonReportDirectory));
 			projectRuns.add(projectRun);
 		}
-		generator.generateProjectReports(projectRuns, listener,
+		listener.getLogger().println(
+				"[CucumberPerfRecorder] running project reports on " + projectRuns.size() + " builds");
+		boolean success = reportBuilder.generateProjectReports(projectRuns,
 				targetBuildDirectory, buildProject, buildNumber, pluginUrlPath);
+		listener.getLogger().println(
+				"[CucumberPerfRecorder] project report generation complete - "
+						+ success);
 	}
 
 	private void generateBuildReport(AbstractBuild<?, ?> build,

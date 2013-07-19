@@ -8,9 +8,9 @@
 <div>Basic Performance Report</div>
 <div><a href="${jenkins_base}job/$build_project/$build_number">Back To Job</a></div>
 <div>
-  #foreach( $scenario in $scenarios )
-    <h3>$scenario.name</h3>
-	#foreach( $element in $scenario.elements )
+  #foreach( $feature in $features )
+    <h3>$feature.name</h3>
+	#foreach( $element in $feature.elements )
 		<h5>$element.name</h5>
 		<table>
 		#foreach($step in $element.steps)			
