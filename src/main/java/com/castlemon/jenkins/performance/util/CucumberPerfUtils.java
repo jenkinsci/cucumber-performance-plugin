@@ -14,10 +14,8 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import com.castlemon.jenkins.performance.domain.Feature;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
-import com.castlemon.jenkins.performance.domain.reporting.FeaturePerformanceEntry;
-import com.castlemon.jenkins.performance.domain.reporting.FeatureSummary;
+import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -27,18 +25,17 @@ public class CucumberPerfUtils {
 
 	private static int nanosInAMilli = 1000000;
 
-	public static String buildProjectGraphData(ProjectSummary projectSummary) {
+	public static String buildProjectGraphData(Summary projectSummary) {
 		StringBuilder output = new StringBuilder();
 		output.append("[");
 		int i = 1;
-		for (ProjectPerformanceEntry run : projectSummary
-				.getPerformanceEntries()) {
+		for (PerformanceEntry run : projectSummary.getEntries()) {
 			output.append("["
 					+ run.getBuildNumber()
 					+ ", "
 					+ getDurationInSeconds(run.getElapsedTime() / nanosInAMilli)
 					+ "]");
-			if (i < projectSummary.getPerformanceEntries().size()) {
+			if (i < projectSummary.getEntries().size()) {
 				output.append(",");
 			}
 			i++;
@@ -47,22 +44,19 @@ public class CucumberPerfUtils {
 		return output.toString();
 	}
 
-	public static String buildProjectAverageData(ProjectSummary projectSummary) {
+	public static String buildProjectAverageData(Summary projectSummary) {
 		long totalDuration = 0l;
 		StringBuilder output = new StringBuilder();
-		for (ProjectPerformanceEntry run : projectSummary
-				.getPerformanceEntries()) {
+		for (PerformanceEntry run : projectSummary.getEntries()) {
 			totalDuration += run.getElapsedTime();
 		}
-		long average = totalDuration
-				/ projectSummary.getPerformanceEntries().size();
+		long average = totalDuration / projectSummary.getEntries().size();
 		output.append("[");
 		int i = 1;
-		for (ProjectPerformanceEntry run : projectSummary
-				.getPerformanceEntries()) {
+		for (PerformanceEntry run : projectSummary.getEntries()) {
 			output.append("[" + run.getBuildNumber() + ", "
 					+ getDurationInSeconds(average / nanosInAMilli) + "]");
-			if (i < projectSummary.getPerformanceEntries().size()) {
+			if (i < projectSummary.getEntries().size()) {
 				output.append(",");
 			}
 			i++;
@@ -71,11 +65,11 @@ public class CucumberPerfUtils {
 		return output.toString();
 	}
 
-	public static String buildFeatureGraphData(FeatureSummary featureSummary) {
+	public static String buildFeatureGraphData(Summary featureSummary) {
 		StringBuilder output = new StringBuilder();
 		output.append("[");
 		int i = 1;
-		for (FeaturePerformanceEntry run : featureSummary.getEntries()) {
+		for (PerformanceEntry run : featureSummary.getEntries()) {
 			output.append("["
 					+ run.getBuildNumber()
 					+ ", "
@@ -90,17 +84,16 @@ public class CucumberPerfUtils {
 		return output.toString();
 	}
 
-	public static String buildFeatureAverageData(
-			FeatureSummary featureSummary) {
+	public static String buildFeatureAverageData(Summary featureSummary) {
 		long totalDuration = 0l;
 		StringBuilder output = new StringBuilder();
-		for (FeaturePerformanceEntry run : featureSummary.getEntries()) {
+		for (PerformanceEntry run : featureSummary.getEntries()) {
 			totalDuration += run.getElapsedTime();
 		}
 		long average = totalDuration / featureSummary.getEntries().size();
 		output.append("[");
 		int i = 1;
-		for (FeaturePerformanceEntry run : featureSummary.getEntries()) {
+		for (PerformanceEntry run : featureSummary.getEntries()) {
 			output.append("[" + run.getBuildNumber() + ", "
 					+ getDurationInSeconds(average / nanosInAMilli) + "]");
 			if (i < featureSummary.getEntries().size()) {

@@ -10,9 +10,9 @@ import org.junit.Test;
 
 import com.castlemon.jenkins.performance.TestUtils;
 import com.castlemon.jenkins.performance.domain.Feature;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
-import com.castlemon.jenkins.performance.domain.reporting.FeatureSummary;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ProjectReporterTest {
@@ -36,11 +36,11 @@ public class ProjectReporterTest {
 		run.setBuildNumber(112);
 		jobReporter.initialiseFeatureEntries();
 		jobReporter.initialiseStepEntries();
-		ProjectPerformanceEntry jobOutput = jobReporter
-				.generateBasicProjectPerformanceData(run);
+		PerformanceEntry jobOutput = jobReporter
+				.generateProjectPerformanceData(run);
 		Assert.assertEquals(date, jobOutput.getRunDate());
 		Assert.assertEquals(expectedDuration, jobOutput.getElapsedTime());
-		Assert.assertTrue(jobOutput.isPassedBuild());
+		Assert.assertTrue(jobOutput.isPassed());
 	}
 
 	@Test
@@ -58,11 +58,11 @@ public class ProjectReporterTest {
 		run.setBuildNumber(113);
 		jobReporter.initialiseFeatureEntries();
 		jobReporter.initialiseStepEntries();
-		ProjectPerformanceEntry jobOutput = jobReporter
-				.generateBasicProjectPerformanceData(run);
+		PerformanceEntry jobOutput = jobReporter
+				.generateProjectPerformanceData(run);
 		Assert.assertEquals(date, jobOutput.getRunDate());
 		Assert.assertEquals(expectedDuration, jobOutput.getElapsedTime());
-		Assert.assertFalse(jobOutput.isPassedBuild());
+		Assert.assertFalse(jobOutput.isPassed());
 	}
 
 	@Test
@@ -74,10 +74,10 @@ public class ProjectReporterTest {
 		run.setBuildNumber(114);
 		jobReporter.initialiseFeatureEntries();
 		jobReporter.initialiseStepEntries();
-		ProjectPerformanceEntry jobOutput = jobReporter
-				.generateBasicProjectPerformanceData(run);
+		PerformanceEntry jobOutput = jobReporter
+				.generateProjectPerformanceData(run);
 		Assert.assertEquals(date, jobOutput.getRunDate());
-		Assert.assertFalse(jobOutput.isPassedBuild());
+		Assert.assertFalse(jobOutput.isPassed());
 	}
 
 	@Test
@@ -94,12 +94,12 @@ public class ProjectReporterTest {
 		run.setBuildNumber(112);
 		jobReporter.initialiseFeatureEntries();
 		jobReporter.initialiseStepEntries();
-		ProjectPerformanceEntry jobOutput = jobReporter
-				.generateBasicProjectPerformanceData(run);
+		PerformanceEntry jobOutput = jobReporter
+				.generateProjectPerformanceData(run);
 		Assert.assertEquals(date, jobOutput.getRunDate());
 		Assert.assertEquals(expectedDuration, jobOutput.getElapsedTime());
-		Assert.assertTrue(jobOutput.isPassedBuild());
-		Map<String, FeatureSummary> featureEntries = jobReporter
+		Assert.assertTrue(jobOutput.isPassed());
+		Map<String, Summary> featureEntries = jobReporter
 				.getFeatureEntries();
 		Assert.assertEquals(2, featureEntries.size());
 		for (Feature feature : features) {

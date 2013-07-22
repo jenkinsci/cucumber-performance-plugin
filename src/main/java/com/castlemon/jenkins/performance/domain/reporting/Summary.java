@@ -4,31 +4,41 @@ import java.util.List;
 
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
-public class StepSummary {
+public class Summary {
 
-	private String stepId;
+	private String id;
 
-	private String stepName;
+	private String name;
 
-	private List<StepPerformanceEntry> entries;
+	private List<PerformanceEntry> entries;
 
 	private long shortestDuration;
 
 	private long longestDuration;
+
+	private int totalBuilds;
+
+	private int passedBuilds;
+
+	private int failedBuilds;
+
+	private int reportedBuilds;
 
 	private int passedSteps;
 
 	private int failedSteps;
 
 	private int skippedSteps;
+	
+	private List<Summary> summaries;
 
 	public String getPageLink() {
-		return this.stepId + ".html";
+		return this.id + ".html";
 	}
 
 	public String getFormattedAverageDuration() {
 		long totalDuration = 0;
-		for (StepPerformanceEntry entry : entries) {
+		for (PerformanceEntry entry : entries) {
 			totalDuration += entry.getElapsedTime();
 		}
 		long count = Long.valueOf(entries.size());
@@ -55,28 +65,40 @@ public class StepSummary {
 	public void addToFailedSteps(int failedSteps) {
 		this.failedSteps += failedSteps;
 	}
-
-	public String getStepId() {
-		return stepId;
+	
+	public void incrementTotalBuilds() {
+		this.totalBuilds++;
 	}
 
-	public void setStepId(String stepId) {
-		this.stepId = stepId;
+	public void incrementPassedBuilds() {
+		this.passedBuilds++;
 	}
 
-	public String getStepName() {
-		return stepName;
+	public void incrementFailedBuilds() {
+		this.failedBuilds++;
 	}
 
-	public void setStepName(String stepName) {
-		this.stepName = stepName;
+	public String getId() {
+		return id;
 	}
 
-	public List<StepPerformanceEntry> getEntries() {
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<PerformanceEntry> getEntries() {
 		return entries;
 	}
 
-	public void setEntries(List<StepPerformanceEntry> entries) {
+	public void setEntries(List<PerformanceEntry> entries) {
 		this.entries = entries;
 	}
 
@@ -94,6 +116,38 @@ public class StepSummary {
 
 	public void setLongestDuration(long longestDuration) {
 		this.longestDuration = longestDuration;
+	}
+
+	public int getTotalBuilds() {
+		return totalBuilds;
+	}
+
+	public void setTotalBuilds(int totalBuilds) {
+		this.totalBuilds = totalBuilds;
+	}
+
+	public int getPassedBuilds() {
+		return passedBuilds;
+	}
+
+	public void setPassedBuilds(int passedBuilds) {
+		this.passedBuilds = passedBuilds;
+	}
+
+	public int getFailedBuilds() {
+		return failedBuilds;
+	}
+
+	public void setFailedBuilds(int failedBuilds) {
+		this.failedBuilds = failedBuilds;
+	}
+
+	public int getReportedBuilds() {
+		return reportedBuilds;
+	}
+
+	public void setReportedBuilds(int reportedBuilds) {
+		this.reportedBuilds = reportedBuilds;
 	}
 
 	public int getPassedSteps() {
@@ -118,6 +172,14 @@ public class StepSummary {
 
 	public void setSkippedSteps(int skippedSteps) {
 		this.skippedSteps = skippedSteps;
+	}
+
+	public List<Summary> getSummaries() {
+		return summaries;
+	}
+
+	public void setSummaries(List<Summary> summaries) {
+		this.summaries = summaries;
 	}
 
 }

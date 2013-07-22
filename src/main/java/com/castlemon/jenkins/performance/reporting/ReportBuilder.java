@@ -16,10 +16,9 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
-import com.castlemon.jenkins.performance.domain.reporting.FeatureSummary;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ReportBuilder {
@@ -32,9 +31,8 @@ public class ReportBuilder {
 		copyCSSFile(reportDirectory);
 		reporter.initialiseFeatureEntries();
 		reporter.initialiseStepEntries();
-		ProjectSummary projectSummary = getPerformanceData(projectRuns,
-				buildNumber);
-		projectSummary.setProjectName(buildProject);
+		Summary projectSummary = getPerformanceData(projectRuns, buildNumber);
+		projectSummary.setName(buildProject);
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty("resource.loader", "class");
 		velocityEngine
@@ -60,31 +58,29 @@ public class ReportBuilder {
 				context));
 	}
 
-	private void generateFeatureReports(Map<String, FeatureSummary> summaries,
+	private void generateFeatureReports(Map<String, Summary> summaries,
 			VelocityEngine velocityEngine, String pluginPath,
 			File reportDirectory) {
-		Template template = velocityEngine
-				.getTemplate("/templates/feature.vm");
+		Template template = velocityEngine.getTemplate("/templates/feature.vm");
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
 		context.put("jenkins_base", pluginPath);
-		for (FeatureSummary summary : summaries.values()) {
+		for (Summary summary : summaries.values()) {
 			context.put("featureSummary", summary);
-			context.put("stepData", summary.getStepSummaries());
+			//context.put("stepData", summary.getStepSummaries());
 			context.put("perfData",
 					CucumberPerfUtils.buildFeatureGraphData(summary));
 			context.put("averageData",
 					CucumberPerfUtils.buildFeatureAverageData(summary));
-			writeReport(summary.getFeatureId() + ".html", reportDirectory,
-					template, context);
+			writeReport(summary.getPageLink(), reportDirectory, template,
+					context);
 		}
 
 	}
 
-	private ProjectSummary getPerformanceData(List<ProjectRun> runs,
-			String buildNumber) {
-		ProjectSummary projectSummary = new ProjectSummary();
-		List<ProjectPerformanceEntry> entries = new ArrayList<ProjectPerformanceEntry>();
+	private Summary getPerformanceData(List<ProjectRun> runs, String buildNumber) {
+		Summary projectSummary = new Summary();
+		List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
 		int passedSteps = 0;
 		int failedSteps = 0;
 		int skippedSteps = 0;
@@ -92,12 +88,12 @@ public class ReportBuilder {
 		int failedBuilds = 0;
 
 		for (ProjectRun run : runs) {
-			ProjectPerformanceEntry performanceEntry = reporter
-					.generateBasicProjectPerformanceData(run);
+			PerformanceEntry performanceEntry = reporter
+					.generateProjectPerformanceData(run);
 			passedSteps += performanceEntry.getPassedSteps();
 			failedSteps += performanceEntry.getFailedSteps();
 			skippedSteps += performanceEntry.getSkippedSteps();
-			if (performanceEntry.isPassedBuild()) {
+			if (performanceEntry.isPassed()) {
 				passedBuilds++;
 				entries.add(performanceEntry);
 			} else {
@@ -110,7 +106,7 @@ public class ReportBuilder {
 		projectSummary.setPassedSteps(passedSteps);
 		projectSummary.setFailedSteps(failedSteps);
 		projectSummary.setSkippedSteps(skippedSteps);
-		projectSummary.setPerformanceEntries(entries);
+		projectSummary.setEntries(entries);
 		return projectSummary;
 	}
 

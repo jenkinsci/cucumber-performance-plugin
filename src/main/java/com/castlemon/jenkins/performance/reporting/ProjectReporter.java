@@ -8,24 +8,21 @@ import java.util.Map;
 import com.castlemon.jenkins.performance.domain.Elements;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.Step;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
-import com.castlemon.jenkins.performance.domain.reporting.FeaturePerformanceEntry;
-import com.castlemon.jenkins.performance.domain.reporting.FeatureSummary;
-import com.castlemon.jenkins.performance.domain.reporting.StepPerformanceEntry;
-import com.castlemon.jenkins.performance.domain.reporting.StepSummary;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
 
 public class ProjectReporter {
 
 	private static final String STEP_FAILED = "failed";
 	private static final String STEP_SKIPPED = "skipped";
 
-	Map<String, FeatureSummary> featureEntries;
-	Map<String, StepSummary> stepEntries;
+	Map<String, Summary> featureEntries;
+	Map<String, Summary> scenarioEntries;
+	Map<String, Summary> stepEntries;
 
-	public ProjectPerformanceEntry generateBasicProjectPerformanceData(
-			ProjectRun projectRun) {
-		ProjectPerformanceEntry output = new ProjectPerformanceEntry();
+	public PerformanceEntry generateProjectPerformanceData(ProjectRun projectRun) {
+		PerformanceEntry output = new PerformanceEntry();
 		output.setRunDate(projectRun.getRunDate());
 		output.setBuildNumber(projectRun.getBuildNumber());
 		long projectDuration = 0;
@@ -33,19 +30,25 @@ public class ProjectReporter {
 		int projectFailedSteps = 0;
 		int projectSkippedSteps = 0;
 		for (Feature feature : projectRun.getFeatures()) {
-			FeatureSummary featureSummary = getRelevantFeatureSummary(feature);
-			FeaturePerformanceEntry featurePerformanceEntry = createFeaturePerformanceEntry(
+			Summary featureSummary = getRelevantFeatureSummary(feature);
+			PerformanceEntry featurePerformanceEntry = createFeaturePerformanceEntry(
 					feature.getId(), projectRun.getBuildNumber());
 			long featureDuration = 0;
 			int featurePassedSteps = 0;
 			int featureFailedSteps = 0;
 			int featureSkippedSteps = 0;
-			for (Elements element : feature.getElements()) {
-				for (Step step : element.getSteps()) {
-					StepSummary stepSummary = getRelevantStepSummary(step);
-					StepPerformanceEntry stepPerformanceEntry = createStepPerformanceEntry(
-							stepSummary.getStepId(),
-							projectRun.getBuildNumber());
+			for (Elements scenario : feature.getElements()) {
+				Summary scenarioSummary = getRelevantScenarioSummary(scenario);
+				PerformanceEntry scenarioPerformanceEntry = createScenarioPerformanceEntry(projectRun
+						.getBuildNumber());
+				long scenarioDuration = 0;
+				int scenarioPassedSteps = 0;
+				int scenarioFailedSteps = 0;
+				int scenarioSkippedSteps = 0;
+				for (Step step : scenario.getSteps()) {
+					Summary stepSummary = getRelevantStepSummary(step);
+					PerformanceEntry stepPerformanceEntry = createStepPerformanceEntry(
+							stepSummary.getId(), projectRun.getBuildNumber());
 					long duration;
 					if (step.getResult().getStatus().equals(STEP_SKIPPED)) {
 						duration = 0;
@@ -64,11 +67,20 @@ public class ProjectReporter {
 						stepPerformanceEntry.setPassed(true);
 						stepSummary.addToPassedSteps(1);
 					}
+					scenarioDuration += duration;
 					featureDuration += duration;
 					stepPerformanceEntry.setElapsedTime(duration);
 					updateStepData(stepSummary, stepPerformanceEntry);
-					addStepDataToFeature(featureSummary, stepSummary);
 				}
+				scenarioSummary.addToPassedSteps(featurePassedSteps);
+				scenarioSummary.addToFailedSteps(featureFailedSteps);
+				scenarioSummary.addToSkippedSteps(featureSkippedSteps);
+				if (scenarioFailedSteps == 0 && scenarioSkippedSteps == 0) {
+					scenarioSummary.incrementPassedBuilds();
+				} else {
+					scenarioSummary.incrementFailedBuilds();
+				}
+				//updateScenarioData(scenarioSummary, scenarioPerformanceEntry);
 			}
 			featurePerformanceEntry.setPassedSteps(featurePassedSteps);
 			featurePerformanceEntry.setFailedSteps(featureFailedSteps);
@@ -93,23 +105,22 @@ public class ProjectReporter {
 		output.setPassedSteps(projectPassedSteps);
 		output.setSkippedSteps(projectSkippedSteps);
 		if (projectFailedSteps == 0 && projectSkippedSteps == 0) {
-			output.setPassedBuild(true);
+			output.setPassed(true);
 		} else {
-			output.setPassedBuild(false);
+			output.setPassed(false);
 		}
 		return output;
 	}
 
 	public void initialiseFeatureEntries() {
-		featureEntries = new HashMap<String, FeatureSummary>();
+		featureEntries = new HashMap<String, Summary>();
 	}
 
-	public Map<String, FeatureSummary> getFeatureEntries() {
+	public Map<String, Summary> getFeatureEntries() {
 		return featureEntries;
 	}
 
-	private void updateFeatureData(FeatureSummary summary,
-			FeaturePerformanceEntry entry) {
+	private void updateFeatureData(Summary summary, PerformanceEntry entry) {
 		// check the duration fields
 		if (entry.getElapsedTime() < summary.getShortestDuration()) {
 			summary.setShortestDuration(entry.getElapsedTime());
@@ -121,64 +132,88 @@ public class ProjectReporter {
 		summary.getEntries().add(entry);
 	}
 
-	private FeaturePerformanceEntry createFeaturePerformanceEntry(
-			String featureId, int buildNumber) {
-		FeaturePerformanceEntry featurePerformanceEntry = new FeaturePerformanceEntry();
-		featurePerformanceEntry.setFeatureId(featureId);
+	private PerformanceEntry createFeaturePerformanceEntry(String featureId,
+			int buildNumber) {
+		PerformanceEntry featurePerformanceEntry = new PerformanceEntry();
 		featurePerformanceEntry.setBuildNumber(buildNumber);
 		return featurePerformanceEntry;
 	}
 
-	private FeatureSummary getRelevantFeatureSummary(Feature feature) {
+	private PerformanceEntry createScenarioPerformanceEntry(int buildNumber) {
+		PerformanceEntry featurePerformanceEntry = new PerformanceEntry();
+		featurePerformanceEntry.setBuildNumber(buildNumber);
+		return featurePerformanceEntry;
+	}
+
+	private Summary getRelevantFeatureSummary(Feature feature) {
 		// find the right feature summary to use
-		FeatureSummary featureSummary = null;
+		Summary featureSummary = null;
 		if (featureEntries.containsKey(feature.getId())) {
 			// exists - use it
 			featureSummary = featureEntries.get(feature.getId());
 		} else {
 			// doesn't exist - create it
-			featureSummary = new FeatureSummary();
-			featureSummary.setFeatureId(feature.getId());
-			featureSummary.setFeatureName(feature.getName());
-			List<FeaturePerformanceEntry> entries = new ArrayList<FeaturePerformanceEntry>();
+			featureSummary = new Summary();
+			featureSummary.setId(feature.getId());
+			featureSummary.setName(feature.getName());
+			List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
 			featureSummary.setEntries(entries);
-			List<StepSummary> stepSummaries = new ArrayList<StepSummary>();
-			featureSummary.setStepSummaries(stepSummaries);
+			// List<Summary> stepSummaries = new ArrayList<Summary>();
+			// featureSummary.setStepSummaries(stepSummaries);
 			featureEntries.put(feature.getId(), featureSummary);
 		}
 		// add the new entry to the list
 		return featureSummary;
 	}
 
-	public void initialiseStepEntries() {
-		stepEntries = new HashMap<String, StepSummary>();
+	private Summary getRelevantScenarioSummary(Elements scenario) {
+		// find the right feature summary to use
+		Summary scenarioSummary = null;
+		if (scenarioEntries.containsKey(scenario.getId())) {
+			// exists - use it
+			scenarioSummary = scenarioEntries.get(scenario.getId());
+		} else {
+			// doesn't exist - create it
+			scenarioSummary = new Summary();
+			scenarioSummary.setId(scenario.getId());
+			scenarioSummary.setName(scenario.getName());
+			List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
+			scenarioSummary.setEntries(entries);
+			// add the new entry to the list
+			scenarioEntries.put(scenario.getId(), scenarioSummary);
+		}
+		return scenarioSummary;
 	}
 
-	public Map<String, StepSummary> getStepEntries() {
+	public void initialiseStepEntries() {
+		stepEntries = new HashMap<String, Summary>();
+	}
+
+	public Map<String, Summary> getStepEntries() {
 		return stepEntries;
 	}
 
-	private StepPerformanceEntry createStepPerformanceEntry(String stepId,
+	private PerformanceEntry createStepPerformanceEntry(String stepId,
 			int buildNumber) {
-		StepPerformanceEntry stepPerformanceEntry = new StepPerformanceEntry();
-		stepPerformanceEntry.setStepId(stepId);
+		PerformanceEntry stepPerformanceEntry = new PerformanceEntry();
+		// stepPerformanceEntry.setStepId(stepId);
 		stepPerformanceEntry.setBuildNumber(buildNumber);
 		return stepPerformanceEntry;
 	}
 
-	private StepSummary getRelevantStepSummary(Step step) {
+	private Summary getRelevantStepSummary(Step step) {
 		// find the right step summary to use
-		StepSummary stepSummary = null;
+		Summary stepSummary = null;
 		String currentStepId = step.getName().replaceAll("\\s+", "_");
 		if (featureEntries.containsKey(currentStepId)) {
 			// exists - use it
 			stepSummary = stepEntries.get(currentStepId);
 		} else {
 			// doesn't exist - create it
-			stepSummary = new StepSummary();
-			stepSummary.setStepId(currentStepId);
-			stepSummary.setStepName(step.getName());
-			List<StepPerformanceEntry> entries = new ArrayList<StepPerformanceEntry>();
+			stepSummary = new Summary();
+			stepSummary.setId(currentStepId);
+			stepSummary.setName(step.getName());
+			List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
 			stepSummary.setEntries(entries);
 			stepEntries.put(currentStepId, stepSummary);
 		}
@@ -186,7 +221,7 @@ public class ProjectReporter {
 		return stepSummary;
 	}
 
-	private void updateStepData(StepSummary summary, StepPerformanceEntry entry) {
+	private void updateStepData(Summary summary, PerformanceEntry entry) {
 		// check the duration fields
 		if (entry.getElapsedTime() < summary.getShortestDuration()) {
 			summary.setShortestDuration(entry.getElapsedTime());
@@ -198,30 +233,23 @@ public class ProjectReporter {
 		summary.getEntries().add(entry);
 	}
 
-	private void addStepDataToFeature(FeatureSummary featureSummary,
-			StepSummary stepSummary) {
-
-		for (StepSummary existingSummary : featureSummary.getStepSummaries()) {
-			if (existingSummary.getStepId().equals(stepSummary.getStepId())) {
-				// update the existing version
-				existingSummary.getEntries().addAll(stepSummary.getEntries());
-				if (stepSummary.getShortestDuration() < existingSummary
-						.getShortestDuration()) {
-					existingSummary.setShortestDuration(stepSummary
-							.getShortestDuration());
-				}
-				if (stepSummary.getLongestDuration() > existingSummary
-						.getLongestDuration()) {
-					existingSummary.setLongestDuration(stepSummary
-							.getLongestDuration());
-				}
-				existingSummary.addToPassedSteps(stepSummary.getPassedSteps());
-				existingSummary.addToFailedSteps(stepSummary.getFailedSteps());
-				existingSummary.addToFailedSteps(stepSummary.getFailedSteps());
-				return;
-			}
-		}
-		// no existing version, so add to the list
-		featureSummary.getStepSummaries().add(stepSummary);
-	}
+	/*
+	 * private void addStepDataToFeature(Summary featureSummary, Summary
+	 * stepSummary) {
+	 * 
+	 * for (StepSummary existingSummary : featureSummary.getStepSummaries()) {
+	 * if (existingSummary.getId().equals(stepSummary.getId())) { // update the
+	 * existing version
+	 * existingSummary.getEntries().addAll(stepSummary.getEntries()); if
+	 * (stepSummary.getShortestDuration() < existingSummary
+	 * .getShortestDuration()) { existingSummary.setShortestDuration(stepSummary
+	 * .getShortestDuration()); } if (stepSummary.getLongestDuration() >
+	 * existingSummary .getLongestDuration()) {
+	 * existingSummary.setLongestDuration(stepSummary .getLongestDuration()); }
+	 * existingSummary.addToPassedSteps(stepSummary.getPassedSteps());
+	 * existingSummary.addToFailedSteps(stepSummary.getFailedSteps());
+	 * existingSummary.addToFailedSteps(stepSummary.getFailedSteps()); return; }
+	 * } // no existing version, so add to the list
+	 * featureSummary.getStepSummaries().add(stepSummary); }
+	 */
 }

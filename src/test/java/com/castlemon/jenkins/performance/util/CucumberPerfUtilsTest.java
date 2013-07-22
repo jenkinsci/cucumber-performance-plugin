@@ -13,8 +13,8 @@ import org.junit.rules.TemporaryFolder;
 
 import com.castlemon.jenkins.performance.TestUtils;
 import com.castlemon.jenkins.performance.domain.Feature;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
+import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
 
 public class CucumberPerfUtilsTest {
 
@@ -25,17 +25,17 @@ public class CucumberPerfUtilsTest {
 
 	@Test
 	public void testBuildProjectGraphData() {
-		ProjectPerformanceEntry entry1 = new ProjectPerformanceEntry();
+		PerformanceEntry entry1 = new PerformanceEntry();
 		entry1.setBuildNumber(1);
 		entry1.setElapsedTime(5000000000l);
-		ProjectPerformanceEntry entry2 = new ProjectPerformanceEntry();
+		PerformanceEntry entry2 = new PerformanceEntry();
 		entry2.setBuildNumber(2);
 		entry2.setElapsedTime(6000000000l);
-		List<ProjectPerformanceEntry> runs = new ArrayList<ProjectPerformanceEntry>();
+		List<PerformanceEntry> runs = new ArrayList<PerformanceEntry>();
 		runs.add(entry1);
 		runs.add(entry2);
-		ProjectSummary projectSummary = new ProjectSummary();
-		projectSummary.setPerformanceEntries(runs);
+		Summary projectSummary = new Summary();
+		projectSummary.setEntries(runs);
 		String expectedReturn = "[[1, 5],[2, 6]]";
 		Assert.assertEquals(expectedReturn,
 				CucumberPerfUtils.buildProjectGraphData(projectSummary));
@@ -88,11 +88,10 @@ public class CucumberPerfUtilsTest {
 				f.getParentFile());
 		Assert.assertEquals(4, features.size());
 	}
-	
+
 	@Test
 	public void testGetDataMultipleIOException() throws IOException {
-		String[] jsonReportFiles = { "cucumber-success.json",
-				"nonexist.json" };
+		String[] jsonReportFiles = { "cucumber-success.json", "nonexist.json" };
 		File f = FileUtils.toFile(this.getClass().getResource(
 				"/cucumber-success.json"));
 		List<Feature> features = CucumberPerfUtils.getData(jsonReportFiles,

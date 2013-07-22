@@ -2,7 +2,7 @@ package com.castlemon.jenkins.performance.domain.reporting;
 
 import java.util.Date;
 
-public class ProjectPerformanceEntry {
+public class PerformanceEntry {
 
 	private int buildNumber;
 
@@ -16,7 +16,7 @@ public class ProjectPerformanceEntry {
 
 	private int skippedSteps;
 
-	private boolean passedBuild;
+	private boolean passed;
 
 	public long getElapsedTime() {
 		return elapsedTime;
@@ -58,12 +58,12 @@ public class ProjectPerformanceEntry {
 		this.skippedSteps = skippedSteps;
 	}
 
-	public boolean isPassedBuild() {
-		return passedBuild;
+	public boolean isPassed() {
+		return passed;
 	}
 
-	public void setPassedBuild(boolean passedBuild) {
-		this.passedBuild = passedBuild;
+	public void setPassed(boolean passed) {
+		this.passed = passed;
 	}
 
 	public int getBuildNumber() {
