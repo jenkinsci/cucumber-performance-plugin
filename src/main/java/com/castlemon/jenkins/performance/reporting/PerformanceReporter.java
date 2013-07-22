@@ -25,21 +25,43 @@ public class PerformanceReporter {
 		PerformanceEntry output = new PerformanceEntry();
 		output.setRunDate(projectRun.getRunDate());
 		output.setBuildNumber(projectRun.getBuildNumber());
+		long projectDuration = 0;
+		int projectPassedSteps = 0;
+		int projectFailedSteps = 0;
+		int projectSkippedSteps = 0;
 		for (Feature feature : projectRun.getFeatures()) {
+			Summary featureSummary = getRelevantSummary(feature.getId(),
+					feature.getName(), featureSummaries);
 			for (Elements scenario : feature.getElements()) {
 				Summary scenarioSummary = getRelevantSummary(scenario.getId(),
 						scenario.getName(), scenarioSummaries);
-				// PerformanceEntry scenarioPerformanceEntry =
-				// createPerformanceEntry(projectRun
-				// .getBuildNumber());
 				for (Step step : scenario.getSteps()) {
-					Summary stepSummary = processStep(step,
-							projectRun.getBuildNumber());
-					scenarioSummary.getSummaries().add(stepSummary);
+					PerformanceEntry stepEntry = processStep(step);
+					projectDuration += stepEntry.getElapsedTime();
+					updateSummaryDataFromEntry(scenarioSummary, stepEntry);
 				}
-				// process the step summaries to get the scenario summaries
-				updateScenarioSummary(scenarioSummary);
+				scenarioSummary.incrementTotalBuilds();
+				if (scenarioSummary.getFailedSteps() == 0
+						&& scenarioSummary.getSkippedSteps() == 0) {
+					scenarioSummary.incrementPassedBuilds();
+				} else {
+					scenarioSummary.incrementFailedBuilds();
+				}
+				updateSummaryDataFromLowerSummary(featureSummary,
+						scenarioSummary);
+				projectPassedSteps += featureSummary.getPassedSteps();
+				projectFailedSteps += featureSummary.getFailedSteps();
+				projectSkippedSteps += featureSummary.getSkippedSteps();
 			}
+		}
+		output.setElapsedTime(projectDuration);
+		output.setFailedSteps(projectFailedSteps);
+		output.setPassedSteps(projectPassedSteps);
+		output.setSkippedSteps(projectSkippedSteps);
+		if (projectFailedSteps == 0 && projectSkippedSteps == 0) {
+			output.setPassed(true);
+		} else {
+			output.setPassed(false);
 		}
 		return output;
 	}
@@ -62,47 +84,50 @@ public class PerformanceReporter {
 		return featureSummaries;
 	}
 
-	private void updateScenarioSummary(Summary scenarioSummary) {
-		// update count
-		scenarioSummary.incrementTotalBuilds();
-		// go through the list of step summaries to assemble counts
-		for (Summary stepSummary : scenarioSummary.getSummaries()) {
-			scenarioSummary.addToPassedSteps(stepSummary.getPassedSteps());
-			scenarioSummary.addToFailedSteps(stepSummary.getFailedSteps());
-			scenarioSummary.addToSkippedSteps(stepSummary.getSkippedSteps());
-		}
-	}
-
-	private Summary processStep(Step step, int buildNumber) {
-		String currentStepId = step.getName().replaceAll("\\s+", "_");
-		Summary stepSummary = getRelevantSummary(currentStepId, step.getName(),
-				stepSummaries);
-		PerformanceEntry stepPerformanceEntry = createPerformanceEntry(buildNumber);
-		long duration;
+	private PerformanceEntry processStep(Step step) {
+		PerformanceEntry stepEntry = new PerformanceEntry();
 		if (step.getResult().getStatus().equals(STEP_SKIPPED)) {
-			duration = 0;
-			stepPerformanceEntry.setPassed(false);
-			stepSummary.addToSkippedSteps(1);
-
+			stepEntry.setElapsedTime(0);
+			stepEntry.setSkippedSteps(1);
 		} else if (step.getResult().getStatus().equals(STEP_FAILED)) {
-			duration = step.getResult().getDuration();
-			stepPerformanceEntry.setPassed(false);
-			stepSummary.addToFailedSteps(1);
+			stepEntry.setElapsedTime(step.getResult().getDuration());
+			stepEntry.setFailedSteps(1);
 		} else {
-			duration = step.getResult().getDuration();
-			stepPerformanceEntry.setPassed(true);
-			stepSummary.addToPassedSteps(1);
+			stepEntry.setElapsedTime(step.getResult().getDuration());
+			stepEntry.setPassedSteps(1);
 		}
-		stepPerformanceEntry.setElapsedTime(duration);
-		updateSummaryData(stepSummary, stepPerformanceEntry);
-		return stepSummary;
+		return stepEntry;
 	}
 
-	private void updateSummaryData(Summary summary, PerformanceEntry entry) {
+	private void updateSummaryDataFromLowerSummary(Summary upperSummary,
+			Summary lowerSummary) {
 		// update the count fields
-
+		upperSummary.addToFailedSteps(lowerSummary.getFailedSteps());
+		upperSummary.addToPassedSteps(lowerSummary.getPassedSteps());
+		upperSummary.addToSkippedSteps(lowerSummary.getSkippedSteps());
 		// check the duration fields
-		if (entry.getElapsedTime() < summary.getShortestDuration()) {
+		if (lowerSummary.getShortestDuration() < upperSummary
+				.getShortestDuration()) {
+			upperSummary
+					.setShortestDuration(lowerSummary.getShortestDuration());
+		}
+		if (lowerSummary.getLongestDuration() > upperSummary
+				.getLongestDuration()) {
+			upperSummary.setLongestDuration(lowerSummary.getLongestDuration());
+		}
+		// add the entry to the list
+		upperSummary.getEntries().addAll(lowerSummary.getEntries());
+	}
+
+	private void updateSummaryDataFromEntry(Summary summary,
+			PerformanceEntry entry) {
+		// update the count fields
+		summary.addToFailedSteps(entry.getFailedSteps());
+		summary.addToPassedSteps(entry.getPassedSteps());
+		summary.addToSkippedSteps(entry.getSkippedSteps());
+		// check the duration fields
+		if (entry.getElapsedTime() > 0
+				&& entry.getElapsedTime() < summary.getShortestDuration()) {
 			summary.setShortestDuration(entry.getElapsedTime());
 		}
 		if (entry.getElapsedTime() > summary.getLongestDuration()) {
@@ -110,12 +135,6 @@ public class PerformanceReporter {
 		}
 		// add the entry to the list
 		summary.getEntries().add(entry);
-	}
-
-	private PerformanceEntry createPerformanceEntry(int buildNumber) {
-		PerformanceEntry performanceEntry = new PerformanceEntry();
-		performanceEntry.setBuildNumber(buildNumber);
-		return performanceEntry;
 	}
 
 	private Summary getRelevantSummary(String id, String name,

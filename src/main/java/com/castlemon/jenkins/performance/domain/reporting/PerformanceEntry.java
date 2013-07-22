@@ -18,6 +18,22 @@ public class PerformanceEntry {
 
 	private boolean passed;
 
+	public void addToPassedSteps(int passedSteps) {
+		this.passedSteps += passedSteps;
+	}
+
+	public void addToSkippedSteps(int skippedSteps) {
+		this.skippedSteps += skippedSteps;
+	}
+
+	public void addToFailedSteps(int failedSteps) {
+		this.failedSteps += failedSteps;
+	}
+
+	public void addToElapsedTime(long elapsedTime) {
+		this.elapsedTime += elapsedTime;
+	}
+
 	public long getElapsedTime() {
 		return elapsedTime;
 	}
