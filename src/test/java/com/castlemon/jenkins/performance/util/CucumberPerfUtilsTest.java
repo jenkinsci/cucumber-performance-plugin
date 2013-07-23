@@ -40,9 +40,9 @@ public class CucumberPerfUtilsTest {
 		projectSummary.setEntries(runs);
 		String expectedReturn = "[[1, 5],[2, 6]]";
 		Assert.assertEquals(expectedReturn,
-				CucumberPerfUtils.buildProjectGraphData(projectSummary));
+				CucumberPerfUtils.buildGraphData(projectSummary));
 	}
-	
+
 	@Test
 	public void testBuildProjectGraphDataOneFail() {
 		PerformanceEntry entry1 = new PerformanceEntry();
@@ -60,7 +60,7 @@ public class CucumberPerfUtilsTest {
 		projectSummary.setEntries(runs);
 		String expectedReturn = "[[2, 6]]";
 		Assert.assertEquals(expectedReturn,
-				CucumberPerfUtils.buildProjectGraphData(projectSummary));
+				CucumberPerfUtils.buildGraphData(projectSummary));
 	}
 
 	@Test

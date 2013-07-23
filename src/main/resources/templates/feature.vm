@@ -58,7 +58,7 @@
 
 	<p />
 	<div id="content">
-		<h1>Feature Report for $featureSummary.featureName</h1>
+		<h1>Feature Report for $featureSummary.name</h1>
 		<h3>Summary</h3>
 		<p />
 		<div id="summaryArea">

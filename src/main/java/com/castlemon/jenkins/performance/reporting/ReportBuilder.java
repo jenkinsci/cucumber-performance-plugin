@@ -28,8 +28,7 @@ public class ReportBuilder {
 			String pluginUrlPath) {
 		copyCSSFile(reportDirectory);
 		reporter.initialiseEntryMaps();
-		Summary projectSummary = reporter.getPerformanceData(projectRuns,
-				buildNumber);
+		Summary projectSummary = reporter.getPerformanceData(projectRuns);
 		projectSummary.setName(buildProject);
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty("resource.loader", "class");
@@ -45,9 +44,9 @@ public class ReportBuilder {
 		context.put("genDate", new Date());
 		context.put("projectSummary", projectSummary);
 		context.put("perfData",
-				CucumberPerfUtils.buildProjectGraphData(projectSummary));
+				CucumberPerfUtils.buildGraphData(projectSummary));
 		context.put("averageData",
-				CucumberPerfUtils.buildProjectAverageData(projectSummary));
+				CucumberPerfUtils.buildAverageData(projectSummary));
 		context.put("featureData", reporter.getFeatureSummaries());
 		context.put("build_project", buildProject);
 		context.put("build_number", buildNumber);
@@ -66,10 +65,9 @@ public class ReportBuilder {
 		for (Summary summary : summaries.values()) {
 			context.put("featureSummary", summary);
 			// context.put("stepData", summary.getStepSummaries());
-			context.put("perfData",
-					CucumberPerfUtils.buildFeatureGraphData(summary));
+			context.put("perfData", CucumberPerfUtils.buildGraphData(summary));
 			context.put("averageData",
-					CucumberPerfUtils.buildFeatureAverageData(summary));
+					CucumberPerfUtils.buildAverageData(summary));
 			writeReport(summary.getPageLink(), reportDirectory, template,
 					context);
 		}

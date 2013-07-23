@@ -25,18 +25,18 @@ public class CucumberPerfUtils {
 
 	private static int nanosInAMilli = 1000000;
 
-	public static String buildProjectGraphData(Summary projectSummary) {
+	public static String buildGraphData(Summary summary) {
 		StringBuilder output = new StringBuilder();
 		output.append("[");
 		int i = 1;
-		for (PerformanceEntry run : projectSummary.getEntries()) {
+		for (PerformanceEntry run : summary.getEntries()) {
 			if (run.isPassed()) {
 				output.append("["
 						+ run.getBuildNumber()
 						+ ", "
 						+ getDurationInSeconds(run.getElapsedTime()
 								/ nanosInAMilli) + "]");
-				if (i < projectSummary.getEntries().size()) {
+				if (i < summary.getEntries().size()) {
 					output.append(",");
 				}
 			}
@@ -46,59 +46,19 @@ public class CucumberPerfUtils {
 		return output.toString();
 	}
 
-	public static String buildProjectAverageData(Summary projectSummary) {
+	public static String buildAverageData(Summary summary) {
 		long totalDuration = 0l;
 		StringBuilder output = new StringBuilder();
-		for (PerformanceEntry run : projectSummary.getEntries()) {
+		for (PerformanceEntry run : summary.getEntries()) {
 			totalDuration += run.getElapsedTime();
 		}
-		long average = totalDuration / projectSummary.getEntries().size();
+		long average = totalDuration / summary.getEntries().size();
 		output.append("[");
 		int i = 1;
-		for (PerformanceEntry run : projectSummary.getEntries()) {
+		for (PerformanceEntry run : summary.getEntries()) {
 			output.append("[" + run.getBuildNumber() + ", "
 					+ getDurationInSeconds(average / nanosInAMilli) + "]");
-			if (i < projectSummary.getEntries().size()) {
-				output.append(",");
-			}
-			i++;
-		}
-		output.append("]");
-		return output.toString();
-	}
-
-	public static String buildFeatureGraphData(Summary featureSummary) {
-		StringBuilder output = new StringBuilder();
-		output.append("[");
-		int i = 1;
-		for (PerformanceEntry run : featureSummary.getEntries()) {
-			output.append("["
-					+ run.getBuildNumber()
-					+ ", "
-					+ getDurationInSeconds(run.getElapsedTime() / nanosInAMilli)
-					+ "]");
-			if (i < featureSummary.getEntries().size()) {
-				output.append(",");
-			}
-			i++;
-		}
-		output.append("]");
-		return output.toString();
-	}
-
-	public static String buildFeatureAverageData(Summary featureSummary) {
-		long totalDuration = 0l;
-		StringBuilder output = new StringBuilder();
-		for (PerformanceEntry run : featureSummary.getEntries()) {
-			totalDuration += run.getElapsedTime();
-		}
-		long average = totalDuration / featureSummary.getEntries().size();
-		output.append("[");
-		int i = 1;
-		for (PerformanceEntry run : featureSummary.getEntries()) {
-			output.append("[" + run.getBuildNumber() + ", "
-					+ getDurationInSeconds(average / nanosInAMilli) + "]");
-			if (i < featureSummary.getEntries().size()) {
+			if (i < summary.getEntries().size()) {
 				output.append(",");
 			}
 			i++;

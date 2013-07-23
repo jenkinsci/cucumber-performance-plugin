@@ -119,14 +119,14 @@
 					<th class="coloured">Longest Duration</th>
 					<th class="coloured">Average Duration</th>
 				</tr>
-				<!-- #foreach ($summary in $featureData)
+				#foreach ($summary in $featureData)
 				<tr>
 					<td><a href="$summary.pageLink">$summary.name</a></td>
 					<td>$summary.formattedShortestDuration</td>
 					<td>$summary.formattedLongestDuration</td>
 					<td>$summary.formattedAverageDuration</td>
 				</tr> 
-				#end-->
+				#end
 			</table>
 		</div>
 		<p />
