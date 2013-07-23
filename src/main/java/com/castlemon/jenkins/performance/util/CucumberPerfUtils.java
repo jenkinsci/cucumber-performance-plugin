@@ -30,13 +30,15 @@ public class CucumberPerfUtils {
 		output.append("[");
 		int i = 1;
 		for (PerformanceEntry run : projectSummary.getEntries()) {
-			output.append("["
-					+ run.getBuildNumber()
-					+ ", "
-					+ getDurationInSeconds(run.getElapsedTime() / nanosInAMilli)
-					+ "]");
-			if (i < projectSummary.getEntries().size()) {
-				output.append(",");
+			if (run.isPassed()) {
+				output.append("["
+						+ run.getBuildNumber()
+						+ ", "
+						+ getDurationInSeconds(run.getElapsedTime()
+								/ nanosInAMilli) + "]");
+				if (i < projectSummary.getEntries().size()) {
+					output.append(",");
+				}
 			}
 			i++;
 		}

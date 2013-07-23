@@ -21,49 +21,117 @@ public class PerformanceReporter {
 	Map<String, Summary> scenarioSummaries;
 	Map<String, Summary> stepSummaries;
 
-	public PerformanceEntry generateProjectPerformanceData(ProjectRun projectRun) {
-		PerformanceEntry output = new PerformanceEntry();
-		output.setRunDate(projectRun.getRunDate());
-		output.setBuildNumber(projectRun.getBuildNumber());
-		long projectDuration = 0;
-		int projectPassedSteps = 0;
-		int projectFailedSteps = 0;
-		int projectSkippedSteps = 0;
-		for (Feature feature : projectRun.getFeatures()) {
-			Summary featureSummary = getRelevantSummary(feature.getId(),
-					feature.getName(), featureSummaries);
-			for (Elements scenario : feature.getElements()) {
-				Summary scenarioSummary = getRelevantSummary(scenario.getId(),
-						scenario.getName(), scenarioSummaries);
-				for (Step step : scenario.getSteps()) {
-					PerformanceEntry stepEntry = processStep(step);
-					projectDuration += stepEntry.getElapsedTime();
-					updateSummaryDataFromEntry(scenarioSummary, stepEntry);
-				}
-				scenarioSummary.incrementTotalBuilds();
-				if (scenarioSummary.getFailedSteps() == 0
-						&& scenarioSummary.getSkippedSteps() == 0) {
-					scenarioSummary.incrementPassedBuilds();
-				} else {
-					scenarioSummary.incrementFailedBuilds();
-				}
-				updateSummaryDataFromLowerSummary(featureSummary,
-						scenarioSummary);
-				projectPassedSteps += featureSummary.getPassedSteps();
-				projectFailedSteps += featureSummary.getFailedSteps();
-				projectSkippedSteps += featureSummary.getSkippedSteps();
+	public Summary getPerformanceData(List<ProjectRun> runs, String buildNumber) {
+		Summary projectSummary = new Summary();
+		List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
+		int passedSteps = 0;
+		int failedSteps = 0;
+		int skippedSteps = 0;
+		int passedBuilds = 0;
+		int failedBuilds = 0;
+		for (ProjectRun run : runs) {
+			PerformanceEntry performanceEntry = processRun(run);
+			passedSteps += performanceEntry.getPassedSteps();
+			failedSteps += performanceEntry.getFailedSteps();
+			skippedSteps += performanceEntry.getSkippedSteps();
+			if (performanceEntry.isPassed()) {
+				passedBuilds++;
+			} else {
+				failedBuilds++;
 			}
+			if (performanceEntry.getElapsedTime() < projectSummary
+					.getShortestDuration()) {
+				projectSummary.setShortestDuration(performanceEntry
+						.getElapsedTime());
+			} else if (performanceEntry.getElapsedTime() > projectSummary
+					.getLongestDuration()) {
+				projectSummary.setLongestDuration(performanceEntry
+						.getElapsedTime());
+			}
+			entries.add(performanceEntry);
 		}
-		output.setElapsedTime(projectDuration);
-		output.setFailedSteps(projectFailedSteps);
-		output.setPassedSteps(projectPassedSteps);
-		output.setSkippedSteps(projectSkippedSteps);
-		if (projectFailedSteps == 0 && projectSkippedSteps == 0) {
-			output.setPassed(true);
-		} else {
-			output.setPassed(false);
+		projectSummary.setPassedBuilds(passedBuilds);
+		projectSummary.setFailedBuilds(failedBuilds);
+		projectSummary.setTotalBuilds(passedBuilds + failedBuilds);
+		projectSummary.setPassedSteps(passedSteps);
+		projectSummary.setFailedSteps(failedSteps);
+		projectSummary.setSkippedSteps(skippedSteps);
+		projectSummary.setEntries(entries);
+		return projectSummary;
+	}
+
+	protected PerformanceEntry processRun(ProjectRun projectRun) {
+		PerformanceEntry runEntry = new PerformanceEntry();
+		runEntry.setRunDate(projectRun.getRunDate());
+		runEntry.setBuildNumber(projectRun.getBuildNumber());
+		List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
+		int passedSteps = 0;
+		int failedSteps = 0;
+		int skippedSteps = 0;
+		long elapsedTime = 0l;
+		for (Feature feature : projectRun.getFeatures()) {
+			PerformanceEntry featureEntry = processFeature(feature);
+			passedSteps += featureEntry.getPassedSteps();
+			failedSteps += featureEntry.getFailedSteps();
+			skippedSteps += featureEntry.getSkippedSteps();
+			elapsedTime += featureEntry.getElapsedTime();
 		}
-		return output;
+		runEntry.setElapsedTime(elapsedTime);
+		runEntry.setPassedSteps(passedSteps);
+		runEntry.setFailedSteps(failedSteps);
+		runEntry.setSkippedSteps(skippedSteps);
+		if (failedSteps == 0 && skippedSteps == 0) {
+			runEntry.setPassed(true);
+		}
+		return runEntry;
+	}
+
+	protected PerformanceEntry processFeature(Feature feature) {
+		PerformanceEntry featureEntry = new PerformanceEntry();
+		// List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
+		int passedSteps = 0;
+		int failedSteps = 0;
+		int skippedSteps = 0;
+		long elapsedTime = 0l;
+		for (Elements scenario : feature.getElements()) {
+			PerformanceEntry scenarioEntry = processScenario(scenario);
+			passedSteps += scenarioEntry.getPassedSteps();
+			failedSteps += scenarioEntry.getFailedSteps();
+			skippedSteps += scenarioEntry.getSkippedSteps();
+			elapsedTime += scenarioEntry.getElapsedTime();
+		}
+		featureEntry.setElapsedTime(elapsedTime);
+		featureEntry.setPassedSteps(passedSteps);
+		featureEntry.setFailedSteps(failedSteps);
+		featureEntry.setSkippedSteps(skippedSteps);
+		if (failedSteps == 0 && skippedSteps == 0) {
+			featureEntry.setPassed(true);
+		}
+		return featureEntry;
+	}
+
+	protected PerformanceEntry processScenario(Elements scenario) {
+		PerformanceEntry scenarioEntry = new PerformanceEntry();
+		// List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
+		int passedSteps = 0;
+		int failedSteps = 0;
+		int skippedSteps = 0;
+		long elapsedTime = 0l;
+		for (Step step : scenario.getSteps()) {
+			PerformanceEntry stepEntry = processStep(step);
+			passedSteps += stepEntry.getPassedSteps();
+			failedSteps += stepEntry.getFailedSteps();
+			skippedSteps += stepEntry.getSkippedSteps();
+			elapsedTime += stepEntry.getElapsedTime();
+		}
+		scenarioEntry.setElapsedTime(elapsedTime);
+		scenarioEntry.setPassedSteps(passedSteps);
+		scenarioEntry.setFailedSteps(failedSteps);
+		scenarioEntry.setSkippedSteps(skippedSteps);
+		if (failedSteps == 0 && skippedSteps == 0) {
+			scenarioEntry.setPassed(true);
+		}
+		return scenarioEntry;
 	}
 
 	public void initialiseEntryMaps() {
@@ -84,7 +152,7 @@ public class PerformanceReporter {
 		return featureSummaries;
 	}
 
-	private PerformanceEntry processStep(Step step) {
+	protected PerformanceEntry processStep(Step step) {
 		PerformanceEntry stepEntry = new PerformanceEntry();
 		if (step.getResult().getStatus().equals(STEP_SKIPPED)) {
 			stepEntry.setElapsedTime(0);
@@ -95,6 +163,7 @@ public class PerformanceReporter {
 		} else {
 			stepEntry.setElapsedTime(step.getResult().getDuration());
 			stepEntry.setPassedSteps(1);
+			stepEntry.setPassed(true);
 		}
 		return stepEntry;
 	}
@@ -155,6 +224,12 @@ public class PerformanceReporter {
 		}
 		// add the new entry to the list
 		return summary;
+	}
+
+	private PerformanceEntry createPerformanceEntry(int buildNumber) {
+		PerformanceEntry featurePerformanceEntry = new PerformanceEntry();
+		featurePerformanceEntry.setBuildNumber(buildNumber);
+		return featurePerformanceEntry;
 	}
 
 }

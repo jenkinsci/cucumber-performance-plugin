@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,22 +15,21 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ReportBuilder {
 
-	ProjectReporter reporter = new ProjectReporter();
+	PerformanceReporter reporter = new PerformanceReporter();
 
 	public boolean generateProjectReports(List<ProjectRun> projectRuns,
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
 		copyCSSFile(reportDirectory);
-		reporter.initialiseFeatureEntries();
-		reporter.initialiseStepEntries();
-		Summary projectSummary = getPerformanceData(projectRuns, buildNumber);
+		reporter.initialiseEntryMaps();
+		Summary projectSummary = reporter.getPerformanceData(projectRuns,
+				buildNumber);
 		projectSummary.setName(buildProject);
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty("resource.loader", "class");
@@ -41,7 +39,7 @@ public class ReportBuilder {
 		velocityEngine.init();
 		Template template = velocityEngine.getTemplate("/templates/project.vm");
 		String fullPluginPath = getPluginUrlPath(pluginUrlPath);
-		generateFeatureReports(reporter.getFeatureEntries(), velocityEngine,
+		generateFeatureReports(reporter.getFeatureSummaries(), velocityEngine,
 				fullPluginPath, reportDirectory);
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
@@ -50,7 +48,7 @@ public class ReportBuilder {
 				CucumberPerfUtils.buildProjectGraphData(projectSummary));
 		context.put("averageData",
 				CucumberPerfUtils.buildProjectAverageData(projectSummary));
-		context.put("featureData", reporter.getFeatureEntries());
+		context.put("featureData", reporter.getFeatureSummaries());
 		context.put("build_project", buildProject);
 		context.put("build_number", buildNumber);
 		context.put("jenkins_base", fullPluginPath);
@@ -67,7 +65,7 @@ public class ReportBuilder {
 		context.put("jenkins_base", pluginPath);
 		for (Summary summary : summaries.values()) {
 			context.put("featureSummary", summary);
-			//context.put("stepData", summary.getStepSummaries());
+			// context.put("stepData", summary.getStepSummaries());
 			context.put("perfData",
 					CucumberPerfUtils.buildFeatureGraphData(summary));
 			context.put("averageData",
@@ -76,38 +74,6 @@ public class ReportBuilder {
 					context);
 		}
 
-	}
-
-	private Summary getPerformanceData(List<ProjectRun> runs, String buildNumber) {
-		Summary projectSummary = new Summary();
-		List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
-		int passedSteps = 0;
-		int failedSteps = 0;
-		int skippedSteps = 0;
-		int passedBuilds = 0;
-		int failedBuilds = 0;
-
-		for (ProjectRun run : runs) {
-			PerformanceEntry performanceEntry = reporter
-					.generateProjectPerformanceData(run);
-			passedSteps += performanceEntry.getPassedSteps();
-			failedSteps += performanceEntry.getFailedSteps();
-			skippedSteps += performanceEntry.getSkippedSteps();
-			if (performanceEntry.isPassed()) {
-				passedBuilds++;
-				entries.add(performanceEntry);
-			} else {
-				failedBuilds++;
-			}
-		}
-		projectSummary.setPassedBuilds(passedBuilds);
-		projectSummary.setFailedBuilds(failedBuilds);
-		projectSummary.setTotalBuilds(passedBuilds + failedBuilds);
-		projectSummary.setPassedSteps(passedSteps);
-		projectSummary.setFailedSteps(failedSteps);
-		projectSummary.setSkippedSteps(skippedSteps);
-		projectSummary.setEntries(entries);
-		return projectSummary;
 	}
 
 	private boolean writeReport(String fileName, File reportDirectory,

@@ -55,7 +55,7 @@
 
 	<p />
 	<div id="content">
-		<h1>Performance Report for $projectSummary.projectName</h1>
+		<h1>Performance Report for $projectSummary.name</h1>
 		<h3>Summary</h3>
 		<p />
 		<div id="summaryArea">
@@ -119,14 +119,14 @@
 					<th class="coloured">Longest Duration</th>
 					<th class="coloured">Average Duration</th>
 				</tr>
-				#foreach ($summary in $featureData)
+				<!-- #foreach ($summary in $featureData)
 				<tr>
-					<td><a href="$summary.pageLink">$summary.featureName</a></td>
-					<td>$summary.FormattedShortestDuration</td>
-					<td>$summary.FormattedLongestDuration</td>
-					<td>$summary.FormattedAverageDuration</td>
-				</tr>
-				#end
+					<td><a href="$summary.pageLink">$summary.name</a></td>
+					<td>$summary.formattedShortestDuration</td>
+					<td>$summary.formattedLongestDuration</td>
+					<td>$summary.formattedAverageDuration</td>
+				</tr> 
+				#end-->
 			</table>
 		</div>
 		<p />
