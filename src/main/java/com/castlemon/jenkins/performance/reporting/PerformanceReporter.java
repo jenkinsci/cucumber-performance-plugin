@@ -44,7 +44,8 @@ public class PerformanceReporter {
 					.getShortestDuration()) {
 				projectSummary.setShortestDuration(performanceEntry
 						.getElapsedTime());
-			} else if (performanceEntry.getElapsedTime() > projectSummary
+			}
+			if (performanceEntry.getElapsedTime() > projectSummary
 					.getLongestDuration()) {
 				projectSummary.setLongestDuration(performanceEntry
 						.getElapsedTime());
@@ -69,13 +70,16 @@ public class PerformanceReporter {
 		int failedSteps = 0;
 		int skippedSteps = 0;
 		long elapsedTime = 0l;
+		int orderParam = 0;
 		for (Feature feature : projectRun.getFeatures()) {
 			PerformanceEntry featureEntry = processFeature(feature,
-					projectRun.getRunDate(), projectRun.getBuildNumber());
+					projectRun.getRunDate(), projectRun.getBuildNumber(),
+					orderParam);
 			passedSteps += featureEntry.getPassedSteps();
 			failedSteps += featureEntry.getFailedSteps();
 			skippedSteps += featureEntry.getSkippedSteps();
 			elapsedTime += featureEntry.getElapsedTime();
+			orderParam++;
 		}
 		runEntry.setElapsedTime(elapsedTime);
 		runEntry.setPassedSteps(passedSteps);
@@ -88,9 +92,10 @@ public class PerformanceReporter {
 	}
 
 	protected PerformanceEntry processFeature(Feature feature, Date runDate,
-			int buildNumber) {
+			int buildNumber, int higherOrderParam) {
 		Summary featureSummary = getRelevantSummary(feature.getId(),
-				feature.getName(), featureSummaries);
+				feature.getId(), feature.getName(), featureSummaries,
+				higherOrderParam, feature.getElements().size());
 		PerformanceEntry featureEntry = new PerformanceEntry();
 		featureEntry.setRunDate(runDate);
 		featureEntry.setBuildNumber(buildNumber);
@@ -98,14 +103,23 @@ public class PerformanceReporter {
 		int failedSteps = 0;
 		int skippedSteps = 0;
 		long elapsedTime = 0l;
+		int orderParam = 0;
+		System.out.println("feature: " + feature.getId());
 		for (Elements scenario : feature.getElements()) {
 			PerformanceEntry scenarioEntry = processScenario(scenario, runDate,
-					buildNumber);
+					buildNumber, feature.getId(), orderParam);
 			passedSteps += scenarioEntry.getPassedSteps();
 			failedSteps += scenarioEntry.getFailedSteps();
 			skippedSteps += scenarioEntry.getSkippedSteps();
 			elapsedTime += scenarioEntry.getElapsedTime();
+			System.out.println("duration : " + elapsedTime);
+			System.out.println("scenario : " + scenarioEntry.getElapsedTime());
 			updateSummaryDataFromEntry(featureSummary, scenarioEntry);
+			System.out.println("shortest : "
+					+ featureSummary.getShortestDuration());
+			System.out.println("longest  : "
+					+ featureSummary.getLongestDuration());
+			orderParam++;
 		}
 		featureEntry.setElapsedTime(elapsedTime);
 		featureEntry.setPassedSteps(passedSteps);
@@ -117,17 +131,18 @@ public class PerformanceReporter {
 		} else {
 			featureSummary.incrementFailedBuilds();
 		}
+		featureSummary.getEntries().add(featureEntry);
 		return featureEntry;
 	}
 
 	protected PerformanceEntry processScenario(Elements scenario, Date runDate,
-			int buildNumber) {
+			int buildNumber, String featureId, int orderParam) {
 		Summary scenarioSummary = getRelevantSummary(scenario.getId(),
-				scenario.getName(), scenarioSummaries);
+				featureId, scenario.getName(), scenarioSummaries, orderParam,
+				scenario.getSteps().size());
 		PerformanceEntry scenarioEntry = new PerformanceEntry();
 		scenarioEntry.setRunDate(runDate);
 		scenarioEntry.setBuildNumber(buildNumber);
-		// List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
 		int passedSteps = 0;
 		int failedSteps = 0;
 		int skippedSteps = 0;
@@ -146,7 +161,11 @@ public class PerformanceReporter {
 		scenarioEntry.setSkippedSteps(skippedSteps);
 		if (failedSteps == 0 && skippedSteps == 0) {
 			scenarioEntry.setPassed(true);
+			scenarioSummary.incrementPassedBuilds();
+		} else {
+			scenarioSummary.incrementFailedBuilds();
 		}
+		scenarioSummary.getEntries().add(scenarioEntry);
 		return scenarioEntry;
 	}
 
@@ -180,11 +199,11 @@ public class PerformanceReporter {
 	}
 
 	public Map<String, Summary> getScenarioSummaries() {
-		return featureSummaries;
+		return scenarioSummaries;
 	}
 
 	public Map<String, Summary> getStepSummaries() {
-		return featureSummaries;
+		return stepSummaries;
 	}
 
 	private void updateSummaryDataFromEntry(Summary summary,
@@ -201,25 +220,28 @@ public class PerformanceReporter {
 		if (entry.getElapsedTime() > summary.getLongestDuration()) {
 			summary.setLongestDuration(entry.getElapsedTime());
 		}
-		// add the entry to the list
-		summary.getEntries().add(entry);
 	}
 
-	private Summary getRelevantSummary(String id, String name,
-			Map<String, Summary> summaries) {
+	private Summary getRelevantSummary(String id, String seniorId, String name,
+			Map<String, Summary> summaries, int orderParam, int subItemCount) {
+		// generate the key for the map
+		String complexKey = seniorId + id;
 		// find the right step summary to use
 		Summary summary = null;
-		if (summaries.containsKey(id)) {
+		if (summaries.containsKey(complexKey)) {
 			// exists - use it
-			summary = summaries.get(id);
+			summary = summaries.get(complexKey);
 		} else {
 			// doesn't exist - create it
 			summary = new Summary();
 			summary.setId(id);
+			summary.setSeniorId(seniorId);
 			summary.setName(name);
+			summary.setOrder(orderParam);
+			summary.setNumberOfSubItems(subItemCount);
 			List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
 			summary.setEntries(entries);
-			summaries.put(id, summary);
+			summaries.put(complexKey, summary);
 		}
 		// add the new entry to the list
 		return summary;

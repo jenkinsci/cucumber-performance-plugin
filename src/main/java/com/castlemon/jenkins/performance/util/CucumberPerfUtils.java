@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
@@ -16,6 +18,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
+import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryComparator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -24,6 +27,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CucumberPerfUtils {
 
 	private static int nanosInAMilli = 1000000;
+
+	public static List<Summary> getRelevantSummaries(
+			Map<String, Summary> summaries, String seniorId) {
+		List<Summary> summaryList = new ArrayList<Summary>();
+		for (Map.Entry<String, Summary> entry : summaries.entrySet()) {
+			Summary summary = entry.getValue();
+			if (summary.getSeniorId().equals(seniorId)) {
+				summaryList.add(summary);
+			}
+		}
+		Collections.sort(summaryList, new SummaryComparator());
+		return summaryList;
+	}
 
 	public static String buildGraphData(Summary summary) {
 		StringBuilder output = new StringBuilder();
@@ -116,14 +132,15 @@ public class CucumberPerfUtils {
 	}
 
 	public static String formatDuration(Long duration) {
-		PeriodFormatter formatter = new PeriodFormatterBuilder().appendDays()
-				.appendSuffix(" day", " days").appendSeparator(" and ")
+		PeriodFormatter formatter = new PeriodFormatterBuilder()
+				.printZeroRarelyLast().appendDays()
+				.appendSuffix(" day", " days").appendSeparator(" ")
 				.appendHours().appendSuffix(" hour", " hours")
 				.appendSeparator(" and ").appendMinutes()
-				.appendSuffix(" min", " mins").appendSeparator(" and ")
+				.appendSuffix(" min", " mins").appendSeparator(" ")
 				.appendSeconds().appendSuffix(" sec", " secs")
-				.appendSeparator(" and ").appendMillis()
-				.appendSuffix(" ms", " ms").toFormatter();
+				.appendSeparator(" ").appendMillis().appendSuffix(" ms", " ms")
+				.toFormatter();
 		return formatter.print(new Period(0, duration / 1000000));
 	}
 

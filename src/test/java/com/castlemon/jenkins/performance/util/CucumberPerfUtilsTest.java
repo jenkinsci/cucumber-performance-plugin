@@ -3,13 +3,13 @@ package com.castlemon.jenkins.performance.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import com.castlemon.jenkins.performance.TestUtils;
 import com.castlemon.jenkins.performance.domain.Feature;
@@ -20,8 +20,52 @@ public class CucumberPerfUtilsTest {
 
 	private TestUtils testUtils = new TestUtils();
 
-	@Rule
-	public TemporaryFolder testFolder = new TemporaryFolder();
+	// @Rule
+	// public TemporaryFolder testFolder = new TemporaryFolder();
+
+	@Test
+	public void testGetRelevantSummariesMultiple() {
+		Map<String, Summary> summaries = new HashMap<String, Summary>();
+		Summary summary1 = new Summary();
+		summary1.setId("fred");
+		summary1.setSeniorId("sen1");
+		summary1.setOrder(2);
+		summaries.put(summary1.getSeniorId() + summary1.getId(), summary1);
+		Summary summary2 = new Summary();
+		summary2.setId("bill");
+		summary2.setSeniorId("senZ");
+		summaries.put(summary2.getSeniorId() + summary2.getId(), summary2);
+		Summary summary3 = new Summary();
+		summary3.setId("george");
+		summary3.setSeniorId("sen1");
+		summary3.setOrder(1);
+		summaries.put(summary3.getSeniorId() + summary3.getId(), summary3);
+		List<Summary> output = CucumberPerfUtils.getRelevantSummaries(
+				summaries, "sen1");
+		Assert.assertEquals(2, output.size());
+		Assert.assertEquals("george", output.get(0).getId());
+		Assert.assertEquals("fred", output.get(1).getId());
+	}
+
+	@Test
+	public void testGetRelevantSummariesNone() {
+		Map<String, Summary> summaries = new HashMap<String, Summary>();
+		Summary summary1 = new Summary();
+		summary1.setId("fred");
+		summary1.setSeniorId("senA");
+		summaries.put(summary1.getSeniorId() + summary1.getId(), summary1);
+		Summary summary2 = new Summary();
+		summary2.setId("bill");
+		summary2.setSeniorId("senZ");
+		summaries.put(summary2.getSeniorId() + summary2.getId(), summary2);
+		Summary summary3 = new Summary();
+		summary3.setId("george");
+		summary3.setSeniorId("senC");
+		summaries.put(summary3.getSeniorId() + summary3.getId(), summary3);
+		List<Summary> output = CucumberPerfUtils.getRelevantSummaries(
+				summaries, "sen1");
+		Assert.assertEquals(0, output.size());
+	}
 
 	@Test
 	public void testBuildProjectGraphDataAllSuccess() {
@@ -64,10 +108,48 @@ public class CucumberPerfUtilsTest {
 	}
 
 	@Test
+	public void testBuildAverageDataAllSuccess() {
+		PerformanceEntry entry1 = new PerformanceEntry();
+		entry1.setBuildNumber(1);
+		entry1.setElapsedTime(4000000000l);
+		entry1.setPassed(true);
+		PerformanceEntry entry2 = new PerformanceEntry();
+		entry2.setBuildNumber(2);
+		entry2.setElapsedTime(6000000000l);
+		entry2.setPassed(true);
+		List<PerformanceEntry> runs = new ArrayList<PerformanceEntry>();
+		runs.add(entry1);
+		runs.add(entry2);
+		Summary projectSummary = new Summary();
+		projectSummary.setEntries(runs);
+		String expectedReturn = "[[1, 5],[2, 5]]";
+		Assert.assertEquals(expectedReturn,
+				CucumberPerfUtils.buildAverageData(projectSummary));
+	}
+
+	@Test
 	public void testGetDurationInMinutes() {
 		Assert.assertEquals(3, CucumberPerfUtils.getDurationInMinutes(180000l));
 	}
 
+	@Test
+	public void testFormatDuration() {
+		Assert.assertEquals("30 mins 30 secs 900 ms",
+				CucumberPerfUtils.formatDuration(1830900900300l));
+	}
+	
+	@Test
+	public void testFormatDurationZeroSeconds() {
+		Assert.assertEquals("2 ms",
+				CucumberPerfUtils.formatDuration(0000010000000l));
+	}
+
+	@Test
+	public void testFormatDurationOneSecond() {
+		Assert.assertEquals("1 sec 73 ms",
+				CucumberPerfUtils.formatDuration(0010000000000l));
+	}
+	
 	@Test
 	public void testGetDataSingle() throws IOException {
 		String jsonString = testUtils.loadJsonFile("/cucumber-success.json");

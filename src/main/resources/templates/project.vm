@@ -115,6 +115,7 @@
 			<table class="summaryTable">
 				<tr>
 					<th class="coloured">Feature Name</th>
+					<th class="coloured">Scenarios</th>
 					<th class="coloured">Shortest Duration</th>
 					<th class="coloured">Longest Duration</th>
 					<th class="coloured">Average Duration</th>
@@ -122,10 +123,11 @@
 				#foreach ($summary in $featureData)
 				<tr>
 					<td><a href="$summary.pageLink">$summary.name</a></td>
+					<td>$summary.numberOfSubItems</td>
 					<td>$summary.formattedShortestDuration</td>
 					<td>$summary.formattedLongestDuration</td>
 					<td>$summary.formattedAverageDuration</td>
-				</tr> 
+				</tr>
 				#end
 			</table>
 		</div>

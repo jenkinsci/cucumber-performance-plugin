@@ -113,21 +113,23 @@
 			</noscript>
 		</div>
 		<p />
-		<h3>Step details</h3>
+		<h3>Scenario details</h3>
 		<div id="stepArea">
 			<table class="summaryTable">
 				<tr>
-					<th class="coloured">Step Name</th>
+					<th class="coloured">Scenario Name</th>
+					<th class="coloured">Steps</th>
 					<th class="coloured">Shortest Duration</th>
 					<th class="coloured">Longest Duration</th>
 					<th class="coloured">Average Duration</th>
 				</tr>
-				#foreach ($summary in $stepData)
+				#foreach ($summary in $scenarioData)
 				<tr>
-					<td>$summary.stepName</td>
-					<td>$summary.FormattedShortestDuration</td>
-					<td>$summary.FormattedLongestDuration</td>
-					<td>$summary.FormattedAverageDuration</td>
+					<td>$summary.name</td>
+					<td>$summary.numberOfSubItems</td>
+					<td>$summary.formattedShortestDuration</td>
+					<td>$summary.formattedLongestDuration</td>
+					<td>$summary.formattedAverageDuration</td>
 				</tr>
 				#end
 			</table>

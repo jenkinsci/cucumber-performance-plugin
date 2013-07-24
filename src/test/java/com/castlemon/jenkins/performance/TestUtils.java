@@ -38,9 +38,11 @@ public class TestUtils {
 		steps.add(generateStep(outcome));
 		Elements element = new Elements();
 		element.setSteps(steps);
+		element.setId("elem1");
 		List<Elements> elementsList = new ArrayList<Elements>();
 		elementsList.add(element);
 		Feature feature = new Feature();
+		feature.setId("feat1");
 		feature.setElements(elementsList);
 		List<Feature> features = new ArrayList<Feature>();
 		features.add(feature);

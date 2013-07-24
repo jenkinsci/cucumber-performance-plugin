@@ -15,6 +15,8 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
@@ -63,8 +65,21 @@ public class ReportBuilder {
 		context.put("genDate", new Date());
 		context.put("jenkins_base", pluginPath);
 		for (Summary summary : summaries.values()) {
+			System.out.println("ID       : " + summary.getId());
+			System.out.println("runs     : " + summary.getEntries().size());
+			System.out.println("shortest : " + summary.getShortestDuration());
+			System.out.println("shortest : "
+					+ summary.getFormattedShortestDuration());
+			System.out.println("longest  : " + summary.getLongestDuration());
+			System.out.println("longest  : "
+					+ summary.getFormattedLongestDuration());
+			System.out.println("average  : "
+					+ summary.getFormattedAverageDuration());
 			context.put("featureSummary", summary);
-			// context.put("stepData", summary.getStepSummaries());
+			context.put(
+					"scenarioData",
+					CucumberPerfUtils.getRelevantSummaries(
+							reporter.getScenarioSummaries(), summary.getId()));
 			context.put("perfData", CucumberPerfUtils.buildGraphData(summary));
 			context.put("averageData",
 					CucumberPerfUtils.buildAverageData(summary));

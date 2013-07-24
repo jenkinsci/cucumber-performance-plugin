@@ -12,7 +12,7 @@ public class Summary {
 
 	private List<PerformanceEntry> entries;
 
-	private long shortestDuration;
+	private long shortestDuration = Long.MAX_VALUE;
 
 	private long longestDuration;
 
@@ -29,15 +29,19 @@ public class Summary {
 	private int failedSteps;
 
 	private int skippedSteps;
-	
-	private List<Summary> summaries;
+
+	private String seniorId;
+
+	private int order;
+
+	private int numberOfSubItems;
 
 	public String getPageLink() {
 		return this.id + ".html";
 	}
 
 	public String getFormattedAverageDuration() {
-		long totalDuration = 0;
+		long totalDuration = 0l;
 		for (PerformanceEntry entry : entries) {
 			totalDuration += entry.getElapsedTime();
 		}
@@ -65,7 +69,7 @@ public class Summary {
 	public void addToFailedSteps(int failedSteps) {
 		this.failedSteps += failedSteps;
 	}
-	
+
 	public void incrementTotalBuilds() {
 		this.totalBuilds++;
 	}
@@ -174,12 +178,28 @@ public class Summary {
 		this.skippedSteps = skippedSteps;
 	}
 
-	public List<Summary> getSummaries() {
-		return summaries;
+	public String getSeniorId() {
+		return seniorId;
 	}
 
-	public void setSummaries(List<Summary> summaries) {
-		this.summaries = summaries;
+	public void setSeniorId(String seniorId) {
+		this.seniorId = seniorId;
+	}
+
+	public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
+	}
+
+	public int getNumberOfSubItems() {
+		return numberOfSubItems;
+	}
+
+	public void setNumberOfSubItems(int numberOfSubItems) {
+		this.numberOfSubItems = numberOfSubItems;
 	}
 
 }

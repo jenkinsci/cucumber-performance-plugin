@@ -46,18 +46,27 @@ public class PerformanceReporterTest {
 		Assert.assertEquals(1, jobOutput.getPassedBuilds());
 		Assert.assertEquals(0, jobOutput.getFailedBuilds());
 		Assert.assertEquals(192349832481l, jobOutput.getLongestDuration());
-		Assert.assertEquals(0, jobOutput.getShortestDuration());
+		Assert.assertEquals(192349832481l, jobOutput.getShortestDuration());
+		Assert.assertEquals("3 mins 12 secs 349 ms",
+				jobOutput.getFormattedLongestDuration());
+		Assert.assertEquals("3 mins 12 secs 349 ms",
+				jobOutput.getFormattedShortestDuration());
+		Assert.assertEquals("3 mins 12 secs 349 ms",
+				jobOutput.getFormattedAverageDuration());
 		Assert.assertEquals(55, jobOutput.getPassedSteps());
 		Assert.assertEquals(0, jobOutput.getFailedSteps());
 		Map<String, Summary> featureSummaries = performanceReporter
 				.getFeatureSummaries();
 		Assert.assertEquals(2, featureSummaries.size());
-		Summary mainSummary = featureSummaries
-				.get("report---notes-\u0026-references");
+		String complexKey = features.get(0).getId() + features.get(0).getId();
+		Summary mainSummary = featureSummaries.get(complexKey);
 		Assert.assertEquals(1, mainSummary.getPassedBuilds());
 		Assert.assertEquals(0, mainSummary.getFailedBuilds());
-		Assert.assertEquals(8, mainSummary.getEntries().size());
-
+		Assert.assertEquals(8, mainSummary.getNumberOfSubItems());
+		Assert.assertEquals(1, mainSummary.getEntries().size());
+		Map<String, Summary> scenarioSummaries = performanceReporter
+				.getScenarioSummaries();
+		Assert.assertEquals(9, scenarioSummaries.size());
 	}
 
 	@Test
@@ -83,7 +92,7 @@ public class PerformanceReporterTest {
 		Assert.assertEquals(0, jobOutput.getPassedBuilds());
 		Assert.assertEquals(1, jobOutput.getFailedBuilds());
 		Assert.assertEquals(204151315589l, jobOutput.getLongestDuration());
-		Assert.assertEquals(0, jobOutput.getShortestDuration());
+		Assert.assertEquals(204151315589l, jobOutput.getShortestDuration());
 		Assert.assertEquals(52, jobOutput.getPassedSteps());
 		Assert.assertEquals(2, jobOutput.getFailedSteps());
 		Map<String, Summary> featureSummaries = performanceReporter
@@ -131,13 +140,14 @@ public class PerformanceReporterTest {
 		Assert.assertFalse(features.isEmpty());
 		Date date = new Date();
 		performanceReporter.initialiseEntryMaps();
-		PerformanceEntry stepEntry = performanceReporter.processScenario(
-				features.get(0).getElements().get(0), date, 116);
-		Assert.assertEquals(17383328936l, stepEntry.getElapsedTime());
-		Assert.assertEquals(5, stepEntry.getPassedSteps());
-		Assert.assertEquals(0, stepEntry.getFailedSteps());
-		Assert.assertEquals(0, stepEntry.getSkippedSteps());
-		Assert.assertTrue(stepEntry.isPassed());
+		PerformanceEntry scenarioEntry = performanceReporter.processScenario(
+				features.get(0).getElements().get(0), date, 116, features
+						.get(0).getId(), 0);
+		Assert.assertEquals(17383328936l, scenarioEntry.getElapsedTime());
+		Assert.assertEquals(5, scenarioEntry.getPassedSteps());
+		Assert.assertEquals(0, scenarioEntry.getFailedSteps());
+		Assert.assertEquals(0, scenarioEntry.getSkippedSteps());
+		Assert.assertTrue(scenarioEntry.isPassed());
 	}
 
 	@Test
@@ -148,16 +158,19 @@ public class PerformanceReporterTest {
 		Assert.assertFalse(features.isEmpty());
 		Date date = new Date();
 		performanceReporter.initialiseEntryMaps();
-		PerformanceEntry stepEntry = performanceReporter.processFeature(
-				features.get(0), date, 117);
-		Assert.assertEquals(191183691567l, stepEntry.getElapsedTime());
-		Assert.assertEquals(54, stepEntry.getPassedSteps());
-		Assert.assertEquals(0, stepEntry.getFailedSteps());
-		Assert.assertEquals(0, stepEntry.getSkippedSteps());
-		Assert.assertTrue(stepEntry.isPassed());
+		PerformanceEntry featureEntry = performanceReporter.processFeature(
+				features.get(0), date, 117, 0);
+		Assert.assertEquals(191183691567l, featureEntry.getElapsedTime());
+		Assert.assertEquals(54, featureEntry.getPassedSteps());
+		Assert.assertEquals(0, featureEntry.getFailedSteps());
+		Assert.assertEquals(0, featureEntry.getSkippedSteps());
+		Assert.assertTrue(featureEntry.isPassed());
 		Map<String, Summary> featureSummaries = performanceReporter
 				.getFeatureSummaries();
 		Assert.assertEquals(1, featureSummaries.size());
+		Map<String, Summary> scenarioSummaries = performanceReporter
+				.getScenarioSummaries();
+		Assert.assertEquals(8, scenarioSummaries.size());
 	}
 
 	@Test
