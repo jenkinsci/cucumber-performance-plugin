@@ -65,15 +65,6 @@ public class ReportBuilder {
 		context.put("genDate", new Date());
 		context.put("jenkins_base", pluginPath);
 		for (Summary summary : summaries.values()) {
-			/*System.out.println("ID       : " + summary.getId());
-			System.out.println("runs     : " + summary.getEntries().size());
-			System.out.println("shortest : " + summary.getShortestDuration()
-					+ "    longest  : " + summary.getLongestDuration());
-			System.out.println("shortest : "
-					+ summary.getFormattedShortestDuration()
-					+ "      longest  : "
-					+ summary.getFormattedLongestDuration() + " average  : "
-					+ summary.getFormattedAverageDuration());*/
 			context.put("featureSummary", summary);
 			context.put(
 					"scenarioData",

@@ -43,7 +43,7 @@ public class Summary {
 	}
 
 	public String getFormattedAverageDuration() {
-		long count = Long.valueOf(totalBuilds);
+		long count = Long.valueOf(numberOfSubItems);
 		long average = totalDuration / count;
 		return CucumberPerfUtils.formatDuration(average);
 	}

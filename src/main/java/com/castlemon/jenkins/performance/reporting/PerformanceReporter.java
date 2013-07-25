@@ -104,7 +104,6 @@ public class PerformanceReporter {
 		int skippedSteps = 0;
 		long elapsedTime = 0l;
 		int orderParam = 0;
-		System.out.println("feature: " + feature.getId());
 		for (Elements scenario : feature.getElements()) {
 			PerformanceEntry scenarioEntry = processScenario(scenario, runDate,
 					buildNumber, feature.getId(), orderParam);
@@ -206,7 +205,6 @@ public class PerformanceReporter {
 		summary.addToFailedSteps(entry.getFailedSteps());
 		summary.addToPassedSteps(entry.getPassedSteps());
 		summary.addToSkippedSteps(entry.getSkippedSteps());
-		summary.incrementTotalBuilds();
 		summary.addToTotalDuration(entry.getElapsedTime());
 		// check the duration fields
 		if (entry.getElapsedTime() > 0
