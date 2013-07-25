@@ -131,7 +131,7 @@ public class CucumberPerfUtils {
 		return features;
 	}
 
-	public static String formatDuration(Long duration) {
+	public static String formatDuration(Long durationInNanos) {
 		PeriodFormatter formatter = new PeriodFormatterBuilder()
 				.printZeroRarelyLast().appendDays()
 				.appendSuffix(" day", " days").appendSeparator(" ")
@@ -141,7 +141,7 @@ public class CucumberPerfUtils {
 				.appendSeconds().appendSuffix(" sec", " secs")
 				.appendSeparator(" ").appendMillis().appendSuffix(" ms", " ms")
 				.toFormatter();
-		return formatter.print(new Period(0, duration / 1000000));
+		return formatter.print(new Period(0, durationInNanos / 1000000));
 	}
 
 	private static String loadJsonFile(File targetBuildDirectory,

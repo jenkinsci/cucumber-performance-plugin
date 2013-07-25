@@ -16,6 +16,8 @@ public class Summary {
 
 	private long longestDuration;
 
+	private long totalDuration;
+
 	private int totalBuilds;
 
 	private int passedBuilds;
@@ -41,11 +43,7 @@ public class Summary {
 	}
 
 	public String getFormattedAverageDuration() {
-		long totalDuration = 0l;
-		for (PerformanceEntry entry : entries) {
-			totalDuration += entry.getElapsedTime();
-		}
-		long count = Long.valueOf(entries.size());
+		long count = Long.valueOf(totalBuilds);
 		long average = totalDuration / count;
 		return CucumberPerfUtils.formatDuration(average);
 	}
@@ -66,8 +64,12 @@ public class Summary {
 		this.skippedSteps += skippedSteps;
 	}
 
-	public void addToFailedSteps(int failedSteps) {
+	public void addToFailedSteps(long failedSteps) {
 		this.failedSteps += failedSteps;
+	}
+
+	public void addToTotalDuration(long duration) {
+		this.totalDuration += duration;
 	}
 
 	public void incrementTotalBuilds() {

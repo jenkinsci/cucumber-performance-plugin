@@ -112,13 +112,7 @@ public class PerformanceReporter {
 			failedSteps += scenarioEntry.getFailedSteps();
 			skippedSteps += scenarioEntry.getSkippedSteps();
 			elapsedTime += scenarioEntry.getElapsedTime();
-			System.out.println("duration : " + elapsedTime);
-			System.out.println("scenario : " + scenarioEntry.getElapsedTime());
 			updateSummaryDataFromEntry(featureSummary, scenarioEntry);
-			System.out.println("shortest : "
-					+ featureSummary.getShortestDuration());
-			System.out.println("longest  : "
-					+ featureSummary.getLongestDuration());
 			orderParam++;
 		}
 		featureEntry.setElapsedTime(elapsedTime);
@@ -212,6 +206,8 @@ public class PerformanceReporter {
 		summary.addToFailedSteps(entry.getFailedSteps());
 		summary.addToPassedSteps(entry.getPassedSteps());
 		summary.addToSkippedSteps(entry.getSkippedSteps());
+		summary.incrementTotalBuilds();
+		summary.addToTotalDuration(entry.getElapsedTime());
 		// check the duration fields
 		if (entry.getElapsedTime() > 0
 				&& entry.getElapsedTime() < summary.getShortestDuration()) {
