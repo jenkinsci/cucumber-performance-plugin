@@ -47,6 +47,7 @@ public class PerformanceReporterTest {
 		Assert.assertEquals(0, jobOutput.getFailedBuilds());
 		Assert.assertEquals(192349832481l, jobOutput.getLongestDuration());
 		Assert.assertEquals(192349832481l, jobOutput.getShortestDuration());
+		Assert.assertEquals(192349832481l, jobOutput.calculateAverageDuration());
 		Assert.assertEquals("3 mins 12 secs 349 ms",
 				jobOutput.getFormattedLongestDuration());
 		Assert.assertEquals("3 mins 12 secs 349 ms",
@@ -67,6 +68,16 @@ public class PerformanceReporterTest {
 		Map<String, Summary> scenarioSummaries = performanceReporter
 				.getScenarioSummaries();
 		Assert.assertEquals(9, scenarioSummaries.size());
+		// test first scenario summary
+		String complexId = features.get(0).getId()
+				+ features.get(0).getElements().get(0).getId();
+		Summary firstScenarioSummary = scenarioSummaries.get(complexId);
+		Assert.assertEquals(17383328936l,
+				firstScenarioSummary.getShortestDuration());
+		Assert.assertEquals(17383328936l,
+				firstScenarioSummary.getLongestDuration());
+		Assert.assertEquals(17383328936l,
+				firstScenarioSummary.calculateAverageDuration());
 	}
 
 	@Test

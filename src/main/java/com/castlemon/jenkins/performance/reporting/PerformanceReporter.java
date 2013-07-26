@@ -31,26 +31,26 @@ public class PerformanceReporter {
 		int passedBuilds = 0;
 		int failedBuilds = 0;
 		for (ProjectRun run : runs) {
-			PerformanceEntry performanceEntry = processRun(run);
-			passedSteps += performanceEntry.getPassedSteps();
-			failedSteps += performanceEntry.getFailedSteps();
-			skippedSteps += performanceEntry.getSkippedSteps();
-			if (performanceEntry.isPassed()) {
+			PerformanceEntry runPerformanceEntry = processRun(run);
+			passedSteps += runPerformanceEntry.getPassedSteps();
+			failedSteps += runPerformanceEntry.getFailedSteps();
+			skippedSteps += runPerformanceEntry.getSkippedSteps();
+			if (runPerformanceEntry.isPassed()) {
 				passedBuilds++;
 			} else {
 				failedBuilds++;
 			}
-			if (performanceEntry.getElapsedTime() < projectSummary
+			if (runPerformanceEntry.getElapsedTime() < projectSummary
 					.getShortestDuration()) {
-				projectSummary.setShortestDuration(performanceEntry
+				projectSummary.setShortestDuration(runPerformanceEntry
 						.getElapsedTime());
 			}
-			if (performanceEntry.getElapsedTime() > projectSummary
+			if (runPerformanceEntry.getElapsedTime() > projectSummary
 					.getLongestDuration()) {
-				projectSummary.setLongestDuration(performanceEntry
+				projectSummary.setLongestDuration(runPerformanceEntry
 						.getElapsedTime());
 			}
-			entries.add(performanceEntry);
+			entries.add(runPerformanceEntry);
 		}
 		projectSummary.setPassedBuilds(passedBuilds);
 		projectSummary.setFailedBuilds(failedBuilds);
@@ -124,6 +124,17 @@ public class PerformanceReporter {
 		} else {
 			featureSummary.incrementFailedBuilds();
 		}
+		featureSummary.setTotalBuilds(featureSummary.getPassedBuilds()
+				+ featureSummary.getFailedBuilds());
+		// check the duration fields
+		if (featureEntry.getElapsedTime() > 0
+				&& featureEntry.getElapsedTime() < featureSummary
+						.getShortestDuration()) {
+			featureSummary.setShortestDuration(featureEntry.getElapsedTime());
+		}
+		if (featureEntry.getElapsedTime() > featureSummary.getLongestDuration()) {
+			featureSummary.setLongestDuration(featureEntry.getElapsedTime());
+		}
 		featureSummary.getEntries().add(featureEntry);
 		return featureEntry;
 	}
@@ -157,6 +168,16 @@ public class PerformanceReporter {
 			scenarioSummary.incrementPassedBuilds();
 		} else {
 			scenarioSummary.incrementFailedBuilds();
+		}
+		// check the duration fields
+		if (scenarioEntry.getElapsedTime() > 0
+				&& scenarioEntry.getElapsedTime() < scenarioSummary
+						.getShortestDuration()) {
+			scenarioSummary.setShortestDuration(scenarioEntry.getElapsedTime());
+		}
+		if (scenarioEntry.getElapsedTime() > scenarioSummary
+				.getLongestDuration()) {
+			scenarioSummary.setLongestDuration(scenarioEntry.getElapsedTime());
 		}
 		scenarioSummary.getEntries().add(scenarioEntry);
 		return scenarioEntry;
@@ -206,14 +227,6 @@ public class PerformanceReporter {
 		summary.addToPassedSteps(entry.getPassedSteps());
 		summary.addToSkippedSteps(entry.getSkippedSteps());
 		summary.addToTotalDuration(entry.getElapsedTime());
-		// check the duration fields
-		if (entry.getElapsedTime() > 0
-				&& entry.getElapsedTime() < summary.getShortestDuration()) {
-			summary.setShortestDuration(entry.getElapsedTime());
-		}
-		if (entry.getElapsedTime() > summary.getLongestDuration()) {
-			summary.setLongestDuration(entry.getElapsedTime());
-		}
 	}
 
 	private Summary getRelevantSummary(String id, String seniorId, String name,

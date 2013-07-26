@@ -34,7 +34,6 @@ public class SummaryTest {
 		PerformanceEntry entry1 = new PerformanceEntry();
 		entry1.setElapsedTime(1000000000l);
 		entries.add(entry1);
-
 		PerformanceEntry entry2 = new PerformanceEntry();
 		entry2.setElapsedTime(5000000000l);
 		entries.add(entry2);
@@ -46,9 +45,14 @@ public class SummaryTest {
 	@Test
 	public void testGetFormattedAverageDurationRounding() {
 		Summary summary = new Summary();
-		summary.addToTotalDuration(1000000000l);
-		summary.addToTotalDuration(6000000000l);
-		summary.setNumberOfSubItems(2);
+		List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
+		PerformanceEntry entry1 = new PerformanceEntry();
+		entry1.setElapsedTime(1000000000l);
+		entries.add(entry1);
+		PerformanceEntry entry2 = new PerformanceEntry();
+		entry2.setElapsedTime(6000000000l);
+		entries.add(entry2);
+		summary.setEntries(entries);
 		Assert.assertEquals("3 secs 500 ms",
 				summary.getFormattedAverageDuration());
 	}

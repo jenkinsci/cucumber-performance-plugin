@@ -26,6 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.reporting.ReportBuilder;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
@@ -91,7 +92,8 @@ public class CucumberPerfRecorder extends Recorder {
 			projectRuns.add(projectRun);
 		}
 		listener.getLogger().println(
-				"[CucumberPerfRecorder] running project reports on " + projectRuns.size() + " builds");
+				"[CucumberPerfRecorder] running project reports on "
+						+ projectRuns.size() + " builds");
 		boolean success = reportBuilder.generateProjectReports(projectRuns,
 				targetBuildDirectory, buildProject, buildNumber, pluginUrlPath);
 		listener.getLogger().println(
@@ -155,6 +157,17 @@ public class CucumberPerfRecorder extends Recorder {
 			}
 			i++;
 		}
+		List<Feature> features = CucumberPerfUtils
+				.getData(
+						CucumberPerfUtils.findJsonFiles(
+								workspaceJsonReportDirectory,
+								"**/cucumber-perf*.json"),
+						workspaceJsonReportDirectory);
+		boolean success = reportBuilder.generateBuildReport(features,
+				targetBuildDirectory, buildProject, buildNumber, pluginUrlPath);
+		listener.getLogger().println(
+				"[CucumberPerfRecorder] build report generation complete - "
+						+ success);
 	}
 
 	@Extension

@@ -16,6 +16,8 @@ public class Summary {
 
 	private long longestDuration;
 
+	private long averageDuration;
+
 	private long totalDuration;
 
 	private int totalBuilds;
@@ -42,10 +44,19 @@ public class Summary {
 		return this.id + ".html";
 	}
 
+	public long calculateAverageDuration() {
+		long count = Long.valueOf(entries.size());
+		long duration = 0l;
+		for (PerformanceEntry entry : entries) {
+			duration += entry.getElapsedTime();
+		}
+		averageDuration = duration / count;
+		return averageDuration;
+	}
+
 	public String getFormattedAverageDuration() {
-		long count = Long.valueOf(numberOfSubItems);
-		long average = totalDuration / count;
-		return CucumberPerfUtils.formatDuration(average);
+		calculateAverageDuration();
+		return CucumberPerfUtils.formatDuration(averageDuration);
 	}
 
 	public String getFormattedShortestDuration() {
