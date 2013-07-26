@@ -1,6 +1,7 @@
 package com.castlemon.jenkins.performance.domain.reporting;
 
 import java.util.List;
+import java.util.Map;
 
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
@@ -17,8 +18,6 @@ public class Summary {
 	private long longestDuration;
 
 	private long averageDuration;
-
-	private long totalDuration;
 
 	private int totalBuilds;
 
@@ -40,8 +39,17 @@ public class Summary {
 
 	private int numberOfSubItems;
 
+	// only used for steps
+	private String keyword;
+
+	private List<List<String>> rows;
+
 	public String getPageLink() {
-		return this.id + ".html";
+		return id + ".html";
+	}
+
+	public boolean hasRows() {
+		return (rows != null);
 	}
 
 	public long calculateAverageDuration() {
@@ -77,10 +85,6 @@ public class Summary {
 
 	public void addToFailedSteps(long failedSteps) {
 		this.failedSteps += failedSteps;
-	}
-
-	public void addToTotalDuration(long duration) {
-		this.totalDuration += duration;
 	}
 
 	public void incrementTotalBuilds() {
@@ -213,6 +217,22 @@ public class Summary {
 
 	public void setNumberOfSubItems(int numberOfSubItems) {
 		this.numberOfSubItems = numberOfSubItems;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+
+	public List<List<String>> getRows() {
+		return rows;
+	}
+
+	public void setRows(List<List<String>> rows) {
+		this.rows = rows;
 	}
 
 }

@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Cucumber Feature Report</title>
+<title>Cucumber Scenario Report</title>
 <link rel="stylesheet" href="main.css" type="text/css" media="screen" />
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script>
-	/* Feature-level graph */
+	/* Scenario-level graph */
 	jQuery(document).ready(function() {
 		jQuery('#projectgraph').highcharts({
 			chart : {
@@ -18,7 +18,7 @@
 				enabled : false
 			},
 			title : {
-				text : 'Feature Performance'
+				text : 'Scenario Performance'
 			},
 			xAxis : {
 				title : {
@@ -58,7 +58,7 @@
 
 	<p />
 	<div id="content">
-		<h1>Feature Report for $featureSummary.name</h1>
+		<h1>Scenario Report for $scenarioSummary.name</h1>
 		<h3>Summary</h3>
 		<p />
 		<div id="summaryArea">
@@ -69,15 +69,15 @@
 					</tr>
 					<tr>
 						<td>Number of Passed Builds:</td>
-						<td>$featureSummary.passedBuilds</td>
+						<td>$scenarioSummary.passedBuilds</td>
 					</tr>
 					<tr>
 						<td>Number of Failed Builds:</td>
-						<td>$featureSummary.failedBuilds</td>
+						<td>$scenarioSummary.failedBuilds</td>
 					</tr>
 					<tr>
 						<td>Number of Total Builds:</td>
-						<td>$featureSummary.totalBuilds</td>
+						<td>$scenarioSummary.totalBuilds</td>
 					</tr>
 				</table>
 			</div>
@@ -88,15 +88,15 @@
 					</tr>
 					<tr>
 						<td>Number of Passed Steps:</td>
-						<td>$featureSummary.passedSteps</td>
+						<td>$scenarioSummary.passedSteps</td>
 					</tr>
 					<tr>
 						<td>Number of Failed Steps:</td>
-						<td>$featureSummary.failedSteps</td>
+						<td>$scenarioSummary.failedSteps</td>
 					</tr>
 					<tr>
 						<td>Number of Skipped Steps:</td>
-						<td>$featureSummary.skippedSteps</td>
+						<td>$scenarioSummary.skippedSteps</td>
 					</tr>
 				</table>
 			</div>
@@ -106,27 +106,39 @@
 				the details below.</div>
 		</div>
 		<p />
-		<h3>Feature Performance</h3>
+		<h3>Scenario Performance</h3>
 		<div id="projectgraph">
 			<noscript>
 				<p>This content requires JavaScript.</p>
 			</noscript>
 		</div>
 		<p />
-		<h3>Scenario details</h3>
+		<h3>Step details</h3>
 		<div id="stepArea">
 			<table class="summaryTable">
 				<tr>
-					<th class="coloured">Scenario Name</th>
-					<th class="coloured">Steps</th>
+					<th class="coloured">Step Name</th>
 					<th class="coloured">Shortest Duration</th>
 					<th class="coloured">Longest Duration</th>
 					<th class="coloured">Average Duration</th>
 				</tr>
-				#foreach ($summary in $scenarioData)
+				#foreach ($summary in $stepData)
 				<tr>
-					<td><a href="$summary.pageLink">$summary.name</a></td>
-					<td>$summary.numberOfSubItems</td>
+					<td><span class="bolded">$summary.keyword</span> $summary.name
+						#if($summary.hasRows())
+						<div>
+							<table class="summaryTable">
+								#foreach($row in $summary.getRows())
+								<tr>
+									#foreach($cell in $row)
+											<td>$cell</td> 
+									#end 
+								</tr>
+								#end
+							</table>
+						</div>
+						#end
+					</td>
 					<td>$summary.formattedShortestDuration</td>
 					<td>$summary.formattedLongestDuration</td>
 					<td>$summary.formattedAverageDuration</td>

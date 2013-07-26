@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.castlemon.jenkins.performance.domain.Elements;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.Step;
@@ -17,6 +19,7 @@ public class PerformanceReporter {
 
 	private static final String STEP_FAILED = "failed";
 	private static final String STEP_SKIPPED = "skipped";
+	private static final String ROWS = "rows";
 
 	Map<String, Summary> featureSummaries;
 	Map<String, Summary> scenarioSummaries;
@@ -140,10 +143,10 @@ public class PerformanceReporter {
 	}
 
 	protected PerformanceEntry processScenario(Elements scenario, Date runDate,
-			int buildNumber, String featureId, int orderParam) {
+			int buildNumber, String featureId, int higherOrderParam) {
 		Summary scenarioSummary = getRelevantSummary(scenario.getId(),
-				featureId, scenario.getName(), scenarioSummaries, orderParam,
-				scenario.getSteps().size());
+				featureId, scenario.getName(), scenarioSummaries,
+				higherOrderParam, scenario.getSteps().size());
 		PerformanceEntry scenarioEntry = new PerformanceEntry();
 		scenarioEntry.setRunDate(runDate);
 		scenarioEntry.setBuildNumber(buildNumber);
@@ -151,13 +154,16 @@ public class PerformanceReporter {
 		int failedSteps = 0;
 		int skippedSteps = 0;
 		long elapsedTime = 0l;
+		int orderParam = 0;
 		for (Step step : scenario.getSteps()) {
-			PerformanceEntry stepEntry = processStep(step, runDate, buildNumber);
+			PerformanceEntry stepEntry = processStep(step, runDate,
+					buildNumber, scenario.getId(), orderParam);
 			passedSteps += stepEntry.getPassedSteps();
 			failedSteps += stepEntry.getFailedSteps();
 			skippedSteps += stepEntry.getSkippedSteps();
 			elapsedTime += stepEntry.getElapsedTime();
 			updateSummaryDataFromEntry(scenarioSummary, stepEntry);
+			orderParam++;
 		}
 		scenarioEntry.setElapsedTime(elapsedTime);
 		scenarioEntry.setPassedSteps(passedSteps);
@@ -183,8 +189,25 @@ public class PerformanceReporter {
 		return scenarioEntry;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected PerformanceEntry processStep(Step step, Date runDate,
-			int buildNumber) {
+			int buildNumber, String scenarioId, int orderParam) {
+		Summary stepSummary = getRelevantSummary(step.getName(), scenarioId,
+				step.getName(), stepSummaries, orderParam, 1);
+		if (StringUtils.isEmpty(stepSummary.getKeyword())) {
+			stepSummary.setKeyword(step.getKeyword());
+		}
+		if (step.getAdditionalProperties().size() > 0) {
+			if (stepSummary.getRows() == null) {
+				List<List<String>> rows = new ArrayList<List<String>>();
+				List<Map<String, List<String>>> rawRows = (List<Map<String, List<String>>>) step.getAdditionalProperties().get(ROWS);
+				for(Map<String, List<String>> row : rawRows) {
+					List<String> cells = row.get("cells");
+					rows.add(cells);
+				}
+				stepSummary.setRows(rows);
+			}
+		}
 		PerformanceEntry stepEntry = new PerformanceEntry();
 		stepEntry.setRunDate(runDate);
 		stepEntry.setBuildNumber(buildNumber);
@@ -194,11 +217,23 @@ public class PerformanceReporter {
 		} else if (step.getResult().getStatus().equals(STEP_FAILED)) {
 			stepEntry.setElapsedTime(step.getResult().getDuration());
 			stepEntry.setFailedSteps(1);
+			stepSummary.incrementFailedBuilds();
 		} else {
 			stepEntry.setElapsedTime(step.getResult().getDuration());
 			stepEntry.setPassedSteps(1);
 			stepEntry.setPassed(true);
+			stepSummary.incrementFailedBuilds();
 		}
+		// check the duration fields
+		if (stepEntry.getElapsedTime() > 0
+				&& stepEntry.getElapsedTime() < stepSummary
+						.getShortestDuration()) {
+			stepSummary.setShortestDuration(stepEntry.getElapsedTime());
+		}
+		if (stepEntry.getElapsedTime() > stepSummary.getLongestDuration()) {
+			stepSummary.setLongestDuration(stepEntry.getElapsedTime());
+		}
+		stepSummary.getEntries().add(stepEntry);
 		return stepEntry;
 	}
 
@@ -226,7 +261,7 @@ public class PerformanceReporter {
 		summary.addToFailedSteps(entry.getFailedSteps());
 		summary.addToPassedSteps(entry.getPassedSteps());
 		summary.addToSkippedSteps(entry.getSkippedSteps());
-		summary.addToTotalDuration(entry.getElapsedTime());
+		// summary.addToTotalDuration(entry.getElapsedTime());
 	}
 
 	private Summary getRelevantSummary(String id, String seniorId, String name,

@@ -142,3 +142,8 @@ tr:nth-child(even) {
 	text-align: center;
 	font-style: italic;
 }
+
+.bolded {
+	font-weight: bold;
+	font-style: italic;
+}

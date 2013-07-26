@@ -37,8 +37,12 @@ public class CucumberPerfUtils {
 				summaryList.add(summary);
 			}
 		}
-		Collections.sort(summaryList, new SummaryComparator());
+		sortSummaryList(summaryList);
 		return summaryList;
+	}
+
+	public static void sortSummaryList(List<Summary> summaries) {
+		Collections.sort(summaries, new SummaryComparator());
 	}
 
 	public static String buildGraphData(Summary summary) {
