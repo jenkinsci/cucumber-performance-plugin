@@ -19,6 +19,10 @@ h3 {
 	color: #AD0000;
 }
 
+tr:nth-child(even) {
+	background-color: #EBEBEB;
+}
+
 th.coloured {
 	font-size: 13px;
 	font-weight: bold;
@@ -35,10 +39,6 @@ td {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 1px solid black;
-}
-
-tr:nth-child(even) {
-	background-color: #EBEBEB;
 }
 
 .clear {
@@ -66,7 +66,7 @@ tr:nth-child(even) {
 }
 
 #linkArea {
-	width: 50%;
+	width: 60%;
 	font-size: 12px;
 	font-weight: bold;
 	color: #4D6EBA;
@@ -106,7 +106,13 @@ tr:nth-child(even) {
 #featureArea {
 	margin-left: auto;
 	margin-right: auto;
-	width: 90%;
+	width: 1080px;
+}
+
+#stepArea {
+	margin-left: auto;
+	margin-right: auto;
+	width: 1080px;
 }
 
 #pageFooter {
@@ -130,6 +136,21 @@ tr:nth-child(even) {
 	margin-right: auto;
 	text-align: left;
 	border-collapse: collapse;
+}
+
+.rowsTable {
+	border: 1px solid black;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+	border-collapse: collapse;
+	margin-right: auto;
+}
+
+.cellText {
+	font-size: 9px;
+	background-color: #ffffff;
+	align: left;
 }
 
 .emphasised {

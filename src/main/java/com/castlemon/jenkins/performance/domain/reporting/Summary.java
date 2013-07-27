@@ -1,7 +1,8 @@
 package com.castlemon.jenkins.performance.domain.reporting;
 
 import java.util.List;
-import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 

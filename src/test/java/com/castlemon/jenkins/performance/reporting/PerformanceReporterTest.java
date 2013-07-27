@@ -135,7 +135,8 @@ public class PerformanceReporterTest {
 		Date date = new Date();
 		performanceReporter.initialiseEntryMaps();
 		PerformanceEntry stepEntry = performanceReporter.processStep(features
-				.get(0).getElements().get(0).getSteps().get(0), date, 115);
+				.get(0).getElements().get(0).getSteps().get(0), date, 115,
+				features.get(0).getElements().get(0).getId(), 0);
 		Assert.assertEquals(10957080635l, stepEntry.getElapsedTime());
 		Assert.assertEquals(1, stepEntry.getPassedSteps());
 		Assert.assertEquals(0, stepEntry.getFailedSteps());

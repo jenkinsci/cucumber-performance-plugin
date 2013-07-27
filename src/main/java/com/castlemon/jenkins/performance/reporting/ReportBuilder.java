@@ -56,6 +56,8 @@ public class ReportBuilder {
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
 		copyCSSFile(reportDirectory);
+		copyJQueryFile(reportDirectory);
+		copyHighChartsFile(reportDirectory);
 		reporter.initialiseEntryMaps();
 		Summary projectSummary = reporter.getPerformanceData(projectRuns);
 		projectSummary.setName(buildProject);
@@ -183,6 +185,53 @@ public class ReportBuilder {
 			IOUtils.closeQuietly(resourceArchiveInputStream);
 			IOUtils.closeQuietly(cssOutStream);
 		}
+	}
 
+	private void copyJQueryFile(File reportDirectory) {
+		InputStream resourceArchiveInputStream = null;
+		FileOutputStream jqueryOutStream = null;
+		try {
+			resourceArchiveInputStream = ReportBuilder.class
+					.getResourceAsStream("javascript/jquery/jquery-1.8.2.min.js");
+			if (resourceArchiveInputStream == null) {
+				resourceArchiveInputStream = ReportBuilder.class
+						.getResourceAsStream("/javascript/jquery/jquery-1.8.2.min.js");
+			}
+			File file = new File(reportDirectory, "jquery-1.8.2.min.js");
+			jqueryOutStream = new FileOutputStream(file);
+
+			IOUtils.copy(resourceArchiveInputStream, jqueryOutStream);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(resourceArchiveInputStream);
+			IOUtils.closeQuietly(jqueryOutStream);
+		}
+	}
+
+	private void copyHighChartsFile(File reportDirectory) {
+		InputStream resourceArchiveInputStream = null;
+		FileOutputStream highchartOutStream = null;
+		try {
+			resourceArchiveInputStream = ReportBuilder.class
+					.getResourceAsStream("javascript/highcharts-3.0.2/highcharts.js");
+			if (resourceArchiveInputStream == null) {
+				resourceArchiveInputStream = ReportBuilder.class
+						.getResourceAsStream("/javascript/highcharts-3.0.2/highcharts.js");
+			}
+			File file = new File(reportDirectory, "highcharts.js");
+			highchartOutStream = new FileOutputStream(file);
+
+			IOUtils.copy(resourceArchiveInputStream, highchartOutStream);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(resourceArchiveInputStream);
+			IOUtils.closeQuietly(highchartOutStream);
+		}
 	}
 }
