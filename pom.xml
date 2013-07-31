@@ -13,9 +13,9 @@
 	<packaging>hpi</packaging>
 
 	<scm>
-		<connection>scm:git:ssh://github.com/jenkinsci/cucumber-performance-plugin.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/cucumber-performance-plugin.git</developerConnection>
-		<url>http://github.com/jenkinsci/cucumber-performance-plugin</url>
+		<connection>scm:git:ssh://github.com/TrueDub/cucumber-performance.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/TrueDub/cucumber-performance.git</developerConnection>
+		<url>http://github.com/TrueDub/cucumber-performance</url>
 	</scm>
 
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/Cucumber+Performance+Reports+Plugin</url>
