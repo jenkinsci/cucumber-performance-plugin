@@ -13,6 +13,7 @@ public class SummaryTest {
 	@Test
 	public void testProperties() throws Exception {
 		PropertiesTester tester = new PropertiesTester();
+		tester.setNameExclusions("pageLink");
 		tester.testAll(Summary.class);
 	}
 
@@ -55,5 +56,13 @@ public class SummaryTest {
 		summary.setEntries(entries);
 		Assert.assertEquals("3 secs 500 ms",
 				summary.getFormattedAverageDuration());
+	}
+
+	@Test
+	public void testGetPageLink() {
+		Summary summary = new Summary();
+		String pageLink = summary.getPageLink();
+		Assert.assertEquals(10, pageLink.length());
+
 	}
 }
