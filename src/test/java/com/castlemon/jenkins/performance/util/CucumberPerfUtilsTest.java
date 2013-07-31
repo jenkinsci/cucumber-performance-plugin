@@ -137,7 +137,7 @@ public class CucumberPerfUtilsTest {
 		Assert.assertEquals("30 mins 30 secs 900 ms",
 				CucumberPerfUtils.formatDuration(1830900900300l));
 	}
-	
+
 	@Test
 	public void testFormatDurationZeroSeconds() {
 		Assert.assertEquals("2 ms",
@@ -149,7 +149,7 @@ public class CucumberPerfUtilsTest {
 		Assert.assertEquals("1 sec 73 ms",
 				CucumberPerfUtils.formatDuration(0010000000000l));
 	}
-	
+
 	@Test
 	public void testGetDataSingle() throws IOException {
 		String jsonString = testUtils.loadJsonFile("/cucumber-success.json");
@@ -177,9 +177,10 @@ public class CucumberPerfUtilsTest {
 				"/cucumber-success.json"));
 		String[] results = CucumberPerfUtils.findJsonFiles(f.getParentFile(),
 				".json");
-		Assert.assertEquals(2, results.length);
-		Assert.assertEquals("cucumber-failure.json", results[0]);
-		Assert.assertEquals("cucumber-success.json", results[1]);
+		Assert.assertEquals(3, results.length);
+		Assert.assertEquals("cucumber-basic.json", results[0]);
+		Assert.assertEquals("cucumber-failure.json", results[1]);
+		Assert.assertEquals("cucumber-success.json", results[2]);
 	}
 
 	@Test

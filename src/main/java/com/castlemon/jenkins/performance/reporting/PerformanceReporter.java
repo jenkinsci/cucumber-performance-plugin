@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.castlemon.jenkins.performance.domain.Elements;
 import com.castlemon.jenkins.performance.domain.Feature;
+import com.castlemon.jenkins.performance.domain.Result;
 import com.castlemon.jenkins.performance.domain.Step;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
@@ -19,6 +20,8 @@ public class PerformanceReporter {
 
 	private static final String STEP_FAILED = "failed";
 	private static final String STEP_SKIPPED = "skipped";
+	private static final String STEP_PASSED = "passed";
+
 	private static final String ROWS = "rows";
 
 	Map<String, Summary> featureSummaries;
@@ -200,10 +203,13 @@ public class PerformanceReporter {
 		if (step.getAdditionalProperties().size() > 0) {
 			if (stepSummary.getRows() == null) {
 				List<List<String>> rows = new ArrayList<List<String>>();
-				List<Map<String, List<String>>> rawRows = (List<Map<String, List<String>>>) step.getAdditionalProperties().get(ROWS);
-				for(Map<String, List<String>> row : rawRows) {
-					List<String> cells = row.get("cells");
-					rows.add(cells);
+				List<Map<String, List<String>>> rawRows = (List<Map<String, List<String>>>) step
+						.getAdditionalProperties().get(ROWS);
+				if (rawRows != null) {
+					for (Map<String, List<String>> row : rawRows) {
+						List<String> cells = row.get("cells");
+						rows.add(cells);
+					}
 				}
 				stepSummary.setRows(rows);
 			}
@@ -211,19 +217,28 @@ public class PerformanceReporter {
 		PerformanceEntry stepEntry = new PerformanceEntry();
 		stepEntry.setRunDate(runDate);
 		stepEntry.setBuildNumber(buildNumber);
-		if (step.getResult().getStatus().equals(STEP_SKIPPED)) {
-			stepEntry.setElapsedTime(0);
-			stepEntry.setSkippedSteps(1);
-		} else if (step.getResult().getStatus().equals(STEP_FAILED)) {
-			stepEntry.setElapsedTime(step.getResult().getDuration());
-			stepEntry.setFailedSteps(1);
-			stepSummary.incrementFailedBuilds();
+		Result result = step.getResult();
+		if (result == null) {
+			System.err.println("No result for step: " + step);
 		} else {
-			stepEntry.setElapsedTime(step.getResult().getDuration());
-			stepEntry.setPassedSteps(1);
-			stepEntry.setPassed(true);
-			stepSummary.incrementFailedBuilds();
+			String status = result.getStatus();
+			if (STEP_SKIPPED.equals(status)) {
+				stepEntry.setElapsedTime(0);
+				stepEntry.setSkippedSteps(1);
+			} else if (STEP_FAILED.equals(status)) {
+				stepEntry.setElapsedTime(result.getDuration());
+				stepEntry.setFailedSteps(1);
+				stepSummary.incrementFailedBuilds();
+			} else if (STEP_PASSED.equals(status)) {
+				stepEntry.setElapsedTime(result.getDuration());
+				stepEntry.setPassedSteps(1);
+				stepEntry.setPassed(true);
+				stepSummary.incrementFailedBuilds();
+			} else {
+				System.err.println("Unexpected build result: '" + status + "'");
+			}
 		}
+
 		// check the duration fields
 		if (stepEntry.getElapsedTime() > 0
 				&& stepEntry.getElapsedTime() < stepSummary

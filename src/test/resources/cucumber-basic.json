@@ -1,0 +1,53 @@
+[ {
+                "id" : "test-feature-[should-be-empty]",
+                "description" : "",
+                "name" : "Test Feature [should be empty]",
+                "keyword" : "Feature",
+                "line" : 1,
+                "elements" : [ {
+                                "id" : "test-feature-[should-be-empty];tc1-:-test-valid-login",
+                                "description" : "",
+                                "name" : "TC1 : Test Valid login",
+                                "keyword" : "Scenario",
+                                "line" : 5,
+                                "steps" : [
+                                                                {
+                                                                                "name" : "the user waits for 3 seconds",
+                                                                                "keyword" : "When ",
+                                                                                "line" : 9,
+                                                                                "comments" : [
+                                                                                                                {
+                                                                                                                                "value" : "#    When user \"dublin\" logs in with password \"password\"",
+                                                                                                                                "line" : 6
+                                                                                                                },
+                                                                                                                {
+                                                                                                                                "value" : "#\tThen the \"Dashboard\" link should be displayed",
+                                                                                                                                "line" : 7
+                                                                                                                }, {
+                                                                                                                                "value" : "#\tThen close the browser",
+                                                                                                                                "line" : 8
+                                                                                                                } ]
+                                                                }, {
+                                                                                "result" : {
+                                                                                                "duration" : 1979078,
+                                                                                                "status" : "passed"
+                                                                                },
+                                                                                "name" : "write message \"Hello World\"",
+                                                                                "keyword" : "Then ",
+                                                                                "line" : 10,
+                                                                                "match" : {
+                                                                                                "arguments" : [ {
+                                                                                                                "val" : "Hello World",
+                                                                                                                "offset" : 15
+                                                                                                } ],
+                                                                                                "location" : "CommonMappings.writeMessage(String)"
+                                                                                }
+                                                                } ],
+                                "type" : "scenario",
+                                "comments" : [ {
+                                                "value" : "# Please do not check in changes to this feature file",
+                                                "line" : 3
+                                } ]
+                } ],
+                "uri" : "src\\main\\features\\Test.feature"
+} ]

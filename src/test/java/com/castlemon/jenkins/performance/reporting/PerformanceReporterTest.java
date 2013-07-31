@@ -201,5 +201,24 @@ public class PerformanceReporterTest {
 		Assert.assertEquals(0, stepEntry.getSkippedSteps());
 		Assert.assertTrue(stepEntry.isPassed());
 	}
+	
+	@Test
+	public void testGetPerformanceDataBasic() throws IOException {
+		long expectedDuration = 192349832481l;
+		String jsonString = testUtils.loadJsonFile("/cucumber-basic.json");
+		Assert.assertNotNull(jsonString);
+		List<Feature> features = CucumberPerfUtils.getData(jsonString);
+		Assert.assertFalse(features.isEmpty());
+		List<ProjectRun> runs = new ArrayList<ProjectRun>();
+		ProjectRun run = new ProjectRun();
+		run.setFeatures(features);
+		Date date = new Date();
+		run.setRunDate(date);
+		run.setBuildNumber(112);
+		runs.add(run);
+		performanceReporter.initialiseEntryMaps();
+		Summary jobOutput = performanceReporter.getPerformanceData(runs);
+		Assert.assertEquals(1, jobOutput.getEntries().size());
+	}
 
 }
