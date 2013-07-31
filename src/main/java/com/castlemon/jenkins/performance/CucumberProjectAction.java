@@ -44,6 +44,7 @@ public class CucumberProjectAction implements ProminentProjectAction {
 		dbs.generateResponse(req, rsp, this);
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected File dir() {
 		if (this.project instanceof AbstractProject) {
 			AbstractProject abstractProject = (AbstractProject) this.project;

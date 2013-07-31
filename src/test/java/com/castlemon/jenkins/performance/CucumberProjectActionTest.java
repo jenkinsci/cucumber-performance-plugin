@@ -3,8 +3,17 @@ package com.castlemon.jenkins.performance;
 import hudson.model.AbstractProject;
 import hudson.model.Run;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -16,8 +25,12 @@ public class CucumberProjectActionTest {
 	@Mock
 	Run run = Mockito.mock(Run.class);
 
+	@InjectMocks
 	private CucumberProjectAction cucumberProjectAction = new CucumberProjectAction(
 			project);
+
+	@Rule
+	public TemporaryFolder testFolder = new TemporaryFolder();
 
 	@Test
 	public void testGetDisplayName() {

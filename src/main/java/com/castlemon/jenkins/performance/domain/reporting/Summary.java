@@ -2,7 +2,7 @@ package com.castlemon.jenkins.performance.domain.reporting;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.RandomStringUtils;
 
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
@@ -40,13 +40,19 @@ public class Summary {
 
 	private int numberOfSubItems;
 
+	private final String pageLink;
+
 	// only used for steps
 	private String keyword;
 
 	private List<List<String>> rows;
 
+	public Summary() {
+		this.pageLink = RandomStringUtils.randomAlphabetic(5);
+	}
+
 	public String getPageLink() {
-		return id + ".html";
+		return pageLink + ".html";
 	}
 
 	public boolean hasRows() {
