@@ -89,7 +89,10 @@ public class CucumberPerfRecorder extends Recorder {
 					.findJsonFiles(workspaceJsonReportDirectory,
 							"**/cucumber-perf*.json"),
 					workspaceJsonReportDirectory));
-			projectRuns.add(projectRun);
+			// only report on runs that have been analysed
+			if (!projectRun.getFeatures().isEmpty()) {
+				projectRuns.add(projectRun);
+			}
 		}
 		listener.getLogger().println(
 				"[CucumberPerfRecorder] running project reports on "
