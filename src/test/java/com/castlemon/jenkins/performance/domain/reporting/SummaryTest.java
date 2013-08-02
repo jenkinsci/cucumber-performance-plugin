@@ -63,6 +63,90 @@ public class SummaryTest {
 		Summary summary = new Summary();
 		String pageLink = summary.getPageLink();
 		Assert.assertEquals(10, pageLink.length());
+	}
 
+	@Test
+	public void testHasRows() {
+		List<List<String>> temp = new ArrayList<List<String>>();
+		Summary summary = new Summary();
+		Assert.assertFalse(summary.hasRows());
+		summary.setRows(temp);
+		Assert.assertTrue(summary.hasRows());
+	}
+
+	@Test
+	public void testGetFormattedShortestDurationZero() {
+		Summary summary = new Summary();
+		Assert.assertEquals("0 ms", summary.getFormattedShortestDuration());
+	}
+
+	@Test
+	public void testGetFormattedShortestDurationNonZero() {
+		Summary summary = new Summary();
+		summary.setShortestDuration(192349832481l);
+		Assert.assertEquals("3 mins 12 secs 349 ms",
+				summary.getFormattedShortestDuration());
+	}
+
+	@Test
+	public void testGetFormattedLongestDurationZero() {
+		Summary summary = new Summary();
+		Assert.assertEquals("0 ms", summary.getFormattedLongestDuration());
+	}
+
+	@Test
+	public void testGetFormattedLongestDurationNonZero() {
+		Summary summary = new Summary();
+		summary.setLongestDuration(192349832481l);
+		Assert.assertEquals("3 mins 12 secs 349 ms",
+				summary.getFormattedLongestDuration());
+	}
+
+	@Test
+	public void testAddToPassedSteps() {
+		Summary summary = new Summary();
+		Assert.assertEquals(0, summary.getPassedSteps());
+		summary.addToPassedSteps(3);
+		Assert.assertEquals(3, summary.getPassedSteps());
+	}
+
+	@Test
+	public void testAddToFailedSteps() {
+		Summary summary = new Summary();
+		Assert.assertEquals(0, summary.getFailedSteps());
+		summary.addToFailedSteps(3);
+		Assert.assertEquals(3, summary.getFailedSteps());
+	}
+
+	@Test
+	public void testAddToSkippedSteps() {
+		Summary summary = new Summary();
+		Assert.assertEquals(0, summary.getSkippedSteps());
+		summary.addToSkippedSteps(3);
+		Assert.assertEquals(3, summary.getSkippedSteps());
+	}
+
+	@Test
+	public void testIncrementTotalBuilds() {
+		Summary summary = new Summary();
+		Assert.assertEquals(0, summary.getTotalBuilds());
+		summary.incrementTotalBuilds();
+		Assert.assertEquals(1, summary.getTotalBuilds());
+	}
+
+	@Test
+	public void testIncrementPassedBuilds() {
+		Summary summary = new Summary();
+		Assert.assertEquals(0, summary.getPassedBuilds());
+		summary.incrementPassedBuilds();
+		Assert.assertEquals(1, summary.getPassedBuilds());
+	}
+
+	@Test
+	public void testIncrementFailedBuilds() {
+		Summary summary = new Summary();
+		Assert.assertEquals(0, summary.getFailedBuilds());
+		summary.incrementFailedBuilds();
+		Assert.assertEquals(1, summary.getFailedBuilds());
 	}
 }

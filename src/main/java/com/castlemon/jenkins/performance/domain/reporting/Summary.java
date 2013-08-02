@@ -75,6 +75,10 @@ public class Summary {
 	}
 
 	public String getFormattedShortestDuration() {
+		if (shortestDuration == Long.MAX_VALUE) {
+			// field not updated, return 0
+			return CucumberPerfUtils.formatDuration(0l);
+		}
 		return CucumberPerfUtils.formatDuration(shortestDuration);
 	}
 
