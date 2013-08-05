@@ -18,9 +18,9 @@ import com.castlemon.jenkins.performance.domain.reporting.Summary;
 
 public class PerformanceReporter {
 
-	private static final String STEP_FAILED = "failed";
-	private static final String STEP_SKIPPED = "skipped";
-	private static final String STEP_PASSED = "passed";
+	public static final String STEP_FAILED = "failed";
+	public static final String STEP_SKIPPED = "skipped";
+	public static final String STEP_PASSED = "passed";
 
 	private static final String ROWS = "rows";
 
@@ -43,18 +43,18 @@ public class PerformanceReporter {
 			skippedSteps += runPerformanceEntry.getSkippedSteps();
 			if (runPerformanceEntry.isPassed()) {
 				passedBuilds++;
+				if (runPerformanceEntry.getElapsedTime() < projectSummary
+						.getShortestDuration()) {
+					projectSummary.setShortestDuration(runPerformanceEntry
+							.getElapsedTime());
+				}
+				if (runPerformanceEntry.getElapsedTime() > projectSummary
+						.getLongestDuration()) {
+					projectSummary.setLongestDuration(runPerformanceEntry
+							.getElapsedTime());
+				}
 			} else {
 				failedBuilds++;
-			}
-			if (runPerformanceEntry.getElapsedTime() < projectSummary
-					.getShortestDuration()) {
-				projectSummary.setShortestDuration(runPerformanceEntry
-						.getElapsedTime());
-			}
-			if (runPerformanceEntry.getElapsedTime() > projectSummary
-					.getLongestDuration()) {
-				projectSummary.setLongestDuration(runPerformanceEntry
-						.getElapsedTime());
 			}
 			entries.add(runPerformanceEntry);
 		}
@@ -127,20 +127,23 @@ public class PerformanceReporter {
 		if (failedSteps == 0 && skippedSteps == 0) {
 			featureEntry.setPassed(true);
 			featureSummary.incrementPassedBuilds();
+			// check the duration fields
+			if (featureEntry.getElapsedTime() > 0
+					&& featureEntry.getElapsedTime() < featureSummary
+							.getShortestDuration()) {
+				featureSummary.setShortestDuration(featureEntry
+						.getElapsedTime());
+			}
+			if (featureEntry.getElapsedTime() > featureSummary
+					.getLongestDuration()) {
+				featureSummary
+						.setLongestDuration(featureEntry.getElapsedTime());
+			}
 		} else {
 			featureSummary.incrementFailedBuilds();
 		}
 		featureSummary.setTotalBuilds(featureSummary.getPassedBuilds()
 				+ featureSummary.getFailedBuilds());
-		// check the duration fields
-		if (featureEntry.getElapsedTime() > 0
-				&& featureEntry.getElapsedTime() < featureSummary
-						.getShortestDuration()) {
-			featureSummary.setShortestDuration(featureEntry.getElapsedTime());
-		}
-		if (featureEntry.getElapsedTime() > featureSummary.getLongestDuration()) {
-			featureSummary.setLongestDuration(featureEntry.getElapsedTime());
-		}
 		featureSummary.getEntries().add(featureEntry);
 		return featureEntry;
 	}
@@ -175,18 +178,20 @@ public class PerformanceReporter {
 		if (failedSteps == 0 && skippedSteps == 0) {
 			scenarioEntry.setPassed(true);
 			scenarioSummary.incrementPassedBuilds();
+			// check the duration fields
+			if (scenarioEntry.getElapsedTime() > 0
+					&& scenarioEntry.getElapsedTime() < scenarioSummary
+							.getShortestDuration()) {
+				scenarioSummary.setShortestDuration(scenarioEntry
+						.getElapsedTime());
+			}
+			if (scenarioEntry.getElapsedTime() > scenarioSummary
+					.getLongestDuration()) {
+				scenarioSummary.setLongestDuration(scenarioEntry
+						.getElapsedTime());
+			}
 		} else {
 			scenarioSummary.incrementFailedBuilds();
-		}
-		// check the duration fields
-		if (scenarioEntry.getElapsedTime() > 0
-				&& scenarioEntry.getElapsedTime() < scenarioSummary
-						.getShortestDuration()) {
-			scenarioSummary.setShortestDuration(scenarioEntry.getElapsedTime());
-		}
-		if (scenarioEntry.getElapsedTime() > scenarioSummary
-				.getLongestDuration()) {
-			scenarioSummary.setLongestDuration(scenarioEntry.getElapsedTime());
 		}
 		scenarioSummary.getEntries().add(scenarioEntry);
 		return scenarioEntry;
@@ -238,15 +243,16 @@ public class PerformanceReporter {
 				System.err.println("Unexpected build result: '" + status + "'");
 			}
 		}
-
 		// check the duration fields
-		if (stepEntry.getElapsedTime() > 0
-				&& stepEntry.getElapsedTime() < stepSummary
-						.getShortestDuration()) {
-			stepSummary.setShortestDuration(stepEntry.getElapsedTime());
-		}
-		if (stepEntry.getElapsedTime() > stepSummary.getLongestDuration()) {
-			stepSummary.setLongestDuration(stepEntry.getElapsedTime());
+		if (stepEntry.isPassed()) {
+			if (stepEntry.getElapsedTime() > 0
+					&& stepEntry.getElapsedTime() < stepSummary
+							.getShortestDuration()) {
+				stepSummary.setShortestDuration(stepEntry.getElapsedTime());
+			}
+			if (stepEntry.getElapsedTime() > stepSummary.getLongestDuration()) {
+				stepSummary.setLongestDuration(stepEntry.getElapsedTime());
+			}
 		}
 		stepSummary.getEntries().add(stepEntry);
 		return stepEntry;

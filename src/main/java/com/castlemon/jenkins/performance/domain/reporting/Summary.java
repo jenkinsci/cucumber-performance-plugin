@@ -60,13 +60,19 @@ public class Summary {
 	}
 
 	public long calculateAverageDuration() {
-		long count = Long.valueOf(entries.size());
+		long count = 0l;
 		long duration = 0l;
 		for (PerformanceEntry entry : entries) {
-			duration += entry.getElapsedTime();
+			if (entry.isPassed()) {
+				duration += entry.getElapsedTime();
+				count++;
+			}
 		}
-		averageDuration = duration / count;
-		return averageDuration;
+		if (count > 0) {
+			averageDuration = duration / count;
+			return averageDuration;
+		}
+		return 0l;
 	}
 
 	public String getFormattedAverageDuration() {
@@ -135,7 +141,11 @@ public class Summary {
 	}
 
 	public long getShortestDuration() {
-		return shortestDuration;
+		/*
+		 * if (this.shortestDuration == Long.MAX_VALUE) { // field not updated,
+		 * return 0 return 0l; }
+		 */
+		return this.shortestDuration;
 	}
 
 	public void setShortestDuration(long shortestDuration) {

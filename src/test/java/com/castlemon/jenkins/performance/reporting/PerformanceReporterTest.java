@@ -102,8 +102,8 @@ public class PerformanceReporterTest {
 		Assert.assertFalse(jobOutput.getEntries().get(0).isPassed());
 		Assert.assertEquals(0, jobOutput.getPassedBuilds());
 		Assert.assertEquals(1, jobOutput.getFailedBuilds());
-		Assert.assertEquals(204151315589l, jobOutput.getLongestDuration());
-		Assert.assertEquals(204151315589l, jobOutput.getShortestDuration());
+		Assert.assertEquals(0l, jobOutput.getLongestDuration());
+		Assert.assertEquals(Long.MAX_VALUE, jobOutput.getShortestDuration());
 		Assert.assertEquals(52, jobOutput.getPassedSteps());
 		Assert.assertEquals(2, jobOutput.getFailedSteps());
 		Map<String, Summary> featureSummaries = performanceReporter
@@ -201,7 +201,7 @@ public class PerformanceReporterTest {
 		Assert.assertEquals(0, stepEntry.getSkippedSteps());
 		Assert.assertTrue(stepEntry.isPassed());
 	}
-	
+
 	@Test
 	public void testGetPerformanceDataBasic() throws IOException {
 		long expectedDuration = 192349832481l;

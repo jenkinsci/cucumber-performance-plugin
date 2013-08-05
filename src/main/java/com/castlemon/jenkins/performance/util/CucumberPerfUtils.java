@@ -68,11 +68,18 @@ public class CucumberPerfUtils {
 
 	public static String buildAverageData(Summary summary) {
 		long totalDuration = 0l;
+		long executionCount = 0l;
 		StringBuilder output = new StringBuilder();
 		for (PerformanceEntry run : summary.getEntries()) {
-			totalDuration += run.getElapsedTime();
+			if (run.isPassed()) {
+				totalDuration += run.getElapsedTime();
+				executionCount++;
+			}
 		}
-		long average = totalDuration / summary.getEntries().size();
+		long average = 0l;
+		if (executionCount > 0) {
+			average = totalDuration / executionCount;
+		}
 		output.append("[");
 		int i = 1;
 		for (PerformanceEntry run : summary.getEntries()) {
