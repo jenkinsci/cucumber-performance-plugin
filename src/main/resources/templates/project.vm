@@ -10,8 +10,8 @@
 <script>
 	/* project-level graph */
 	jQuery(document).ready(function() {
-		/* initialise datables */
-		jQuery('#scenarioTable').dataTable();
+		/* initialise datables 
+		jQuery('#scenarioTable').dataTable();*/
 
 		/* draw the graph */
 		jQuery('#projectgraph').highcharts({
