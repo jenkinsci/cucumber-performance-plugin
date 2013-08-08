@@ -28,7 +28,7 @@ public class ReportBuilder {
 	public boolean generateBuildReport(List<Feature> features,
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
-		copyCSSFile(reportDirectory);
+		copyResourceFiles(reportDirectory);
 		reporter.initialiseEntryMaps();
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.setProperty("resource.loader", "class");
@@ -55,9 +55,7 @@ public class ReportBuilder {
 	public boolean generateProjectReports(List<ProjectRun> projectRuns,
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
-		copyCSSFile(reportDirectory);
-		copyJQueryFile(reportDirectory);
-		copyHighChartsFile(reportDirectory);
+		copyResourceFiles(reportDirectory);
 		reporter.initialiseEntryMaps();
 		Summary projectSummary = reporter.getPerformanceData(projectRuns);
 		projectSummary.setName(buildProject);
@@ -163,17 +161,31 @@ public class ReportBuilder {
 		return path;
 	}
 
-	private void copyCSSFile(File reportDirectory) {
+	private void copyResourceFiles(File reportDirectory) {
+		copyResource(reportDirectory, "css/main.css", "main.css");
+		copyResource(reportDirectory, "css/jquery.dataTables.css",
+				"jquery.dataTables.css");
+		copyResource(reportDirectory, "javascript/jquery/jquery-1.8.2.min.js",
+				"jquery-1.8.2.min.js");
+		copyResource(reportDirectory,
+				"javascript/jquery/jquery.dataTables.min.js",
+				"jquery.dataTables.min.js");
+		copyResource(reportDirectory,
+				"javascript/highcharts-3.0.2/highcharts.js", "highcharts.js");
+	}
+
+	private void copyResource(File reportDirectory, String resourceName,
+			String targetName) {
 		InputStream resourceArchiveInputStream = null;
 		FileOutputStream cssOutStream = null;
 		try {
 			resourceArchiveInputStream = ReportBuilder.class
-					.getResourceAsStream("css/main.css");
+					.getResourceAsStream(resourceName);
 			if (resourceArchiveInputStream == null) {
 				resourceArchiveInputStream = ReportBuilder.class
-						.getResourceAsStream("/css/main.css");
+						.getResourceAsStream("/" + resourceName);
 			}
-			File file = new File(reportDirectory, "main.css");
+			File file = new File(reportDirectory, targetName);
 			cssOutStream = new FileOutputStream(file);
 
 			IOUtils.copy(resourceArchiveInputStream, cssOutStream);
@@ -184,54 +196,6 @@ public class ReportBuilder {
 		} finally {
 			IOUtils.closeQuietly(resourceArchiveInputStream);
 			IOUtils.closeQuietly(cssOutStream);
-		}
-	}
-
-	private void copyJQueryFile(File reportDirectory) {
-		InputStream resourceArchiveInputStream = null;
-		FileOutputStream jqueryOutStream = null;
-		try {
-			resourceArchiveInputStream = ReportBuilder.class
-					.getResourceAsStream("javascript/jquery/jquery-1.8.2.min.js");
-			if (resourceArchiveInputStream == null) {
-				resourceArchiveInputStream = ReportBuilder.class
-						.getResourceAsStream("/javascript/jquery/jquery-1.8.2.min.js");
-			}
-			File file = new File(reportDirectory, "jquery-1.8.2.min.js");
-			jqueryOutStream = new FileOutputStream(file);
-
-			IOUtils.copy(resourceArchiveInputStream, jqueryOutStream);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(resourceArchiveInputStream);
-			IOUtils.closeQuietly(jqueryOutStream);
-		}
-	}
-
-	private void copyHighChartsFile(File reportDirectory) {
-		InputStream resourceArchiveInputStream = null;
-		FileOutputStream highchartOutStream = null;
-		try {
-			resourceArchiveInputStream = ReportBuilder.class
-					.getResourceAsStream("javascript/highcharts-3.0.2/highcharts.js");
-			if (resourceArchiveInputStream == null) {
-				resourceArchiveInputStream = ReportBuilder.class
-						.getResourceAsStream("/javascript/highcharts-3.0.2/highcharts.js");
-			}
-			File file = new File(reportDirectory, "highcharts.js");
-			highchartOutStream = new FileOutputStream(file);
-
-			IOUtils.copy(resourceArchiveInputStream, highchartOutStream);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(resourceArchiveInputStream);
-			IOUtils.closeQuietly(highchartOutStream);
 		}
 	}
 }
