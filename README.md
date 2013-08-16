@@ -2,6 +2,7 @@ cucumber-performance
 ====================
 
 Version 1.2 released on 31st July 2013.
+
 Version 1.3.1 released on 5th August 2013.
 
 This plugin reports on the performance over time of testing jobs run by Jenkins containing tests using the Cucumber-JVM framework.
@@ -17,3 +18,5 @@ The code is contained in this GitHub repo (https://github.com/TrueDub/cucumber-p
 This project owes a lot to the excellent Cucumber-JVM reporting plugins developed by Kingsley Hendrickse and Masterthought, and available at https://github.com/masterthought
 
 Many thanks to them for their hard work!
+
+[![Build Status](https://buildhive.cloudbees.com/job/TrueDub/job/cucumber-performance/badge/icon)](https://buildhive.cloudbees.com/job/TrueDub/job/cucumber-performance/)
