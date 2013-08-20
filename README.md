@@ -1,9 +1,11 @@
 cucumber-performance
 ====================
 
-Version 1.2 released on 31st July 2013.
-
-Version 1.3.1 released on 5th August 2013.
+<table>
+<tr><th>Version</th><th>Release Date</th></tr>
+<tr><td>1.3.1</td><td>5th August 2013</td></tr>
+<tr><td>1.2</td><td>31st July 2013</td></tr>
+</table>
 
 This plugin reports on the performance over time of testing jobs run by Jenkins containing tests using the Cucumber-JVM framework.
 
