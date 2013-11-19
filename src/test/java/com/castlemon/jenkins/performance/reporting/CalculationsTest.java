@@ -714,5 +714,68 @@ public class CalculationsTest {
 		Assert.assertEquals("[[112, " + durationInSeconds + "],]", buildData);
 		Assert.assertEquals("[[112, " + durationInSeconds + "],]", averageData);
 	}
+	
+	@Test
+	public void testCucError() throws IOException {
+		String jsonString = testUtils.loadJsonFile("/cuc-error.json");
+		Assert.assertNotNull(jsonString);
+		List<Feature> features = CucumberPerfUtils.getData(jsonString);
+		Assert.assertFalse(features.isEmpty());
+		List<ProjectRun> runs = new ArrayList<ProjectRun>();
+		ProjectRun run = new ProjectRun();
+		run.setFeatures(features);
+		Date date = new Date();
+		run.setRunDate(date);
+		run.setBuildNumber(112);
+		runs.add(run);
+		performanceReporter.initialiseEntryMaps();
+		Summary jobOutput = performanceReporter.getPerformanceData(runs);
+		Assert.assertEquals(1, jobOutput.getEntries().size());
+		/*Assert.assertEquals(378363603637l, jobOutput.getEntries().get(0)
+				.getElapsedTime());
+		Assert.assertTrue(jobOutput.getEntries().get(0).isPassed());
+		Assert.assertEquals(1, jobOutput.getPassedBuilds());
+		Assert.assertEquals(0, jobOutput.getFailedBuilds());
+		Assert.assertEquals(378363603637l, jobOutput.getLongestDuration());
+		Assert.assertEquals(378363603637l, jobOutput.getShortestDuration());
+		Assert.assertEquals(378363603637l, jobOutput.calculateAverageDuration());
+		Assert.assertEquals("6 mins 18 secs 363 ms",
+				jobOutput.getFormattedLongestDuration());
+		Assert.assertEquals("6 mins 18 secs 363 ms",
+				jobOutput.getFormattedShortestDuration());
+		Assert.assertEquals("6 mins 18 secs 363 ms",
+				jobOutput.getFormattedAverageDuration());
+		Assert.assertEquals(313, jobOutput.getPassedSteps());
+		Assert.assertEquals(0, jobOutput.getFailedSteps());
+		Map<String, Summary> featureSummaries = performanceReporter
+				.getFeatureSummaries();
+		Assert.assertEquals(3, featureSummaries.size());
+		String complexKey = features.get(0).getId() + features.get(0).getId();
+		Summary mainSummary = featureSummaries.get(complexKey);
+		Assert.assertEquals(1, mainSummary.getPassedBuilds());
+		Assert.assertEquals(0, mainSummary.getFailedBuilds());
+		Assert.assertEquals(9, mainSummary.getNumberOfSubItems()); // scenarios
+		Assert.assertEquals(1, mainSummary.getEntries().size());*/
+		Map<String, Summary> scenarioSummaries = performanceReporter
+				.getScenarioSummaries();
+		Assert.assertEquals(17, scenarioSummaries.size());
+		// test first scenario summary
+		/*String complexId = features.get(0).getId()
+				+ features.get(0).getElements().get(0).getId();
+		Summary firstScenarioSummary = scenarioSummaries.get(complexId);
+		Assert.assertEquals(23251577640l,
+				firstScenarioSummary.getShortestDuration());
+		Assert.assertEquals(23251577640l,
+				firstScenarioSummary.getLongestDuration());
+		Assert.assertEquals(23251577640l,
+				firstScenarioSummary.calculateAverageDuration());
+		// Test average calculations
+		String buildData = CucumberPerfUtils.buildGraphData(jobOutput);
+		String averageData = CucumberPerfUtils.buildAverageData(jobOutput);
+		long durationInSeconds = CucumberPerfUtils
+				.getDurationInSeconds(378363603637l / 1000000);
+		Assert.assertEquals("[[112, " + durationInSeconds + "]]", buildData);
+		Assert.assertEquals("[[112, " + durationInSeconds + "]]", averageData);*/
+	}
 
 }
