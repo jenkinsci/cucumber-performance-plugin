@@ -31,8 +31,10 @@ public class CucumberPerfUtils {
 	public static List<Summary> getRelevantSummaries(
 			Map<String, Summary> summaries, String seniorId) {
 		List<Summary> summaryList = new ArrayList<Summary>();
+		 System.out.println("senior id: " + seniorId);
 		for (Map.Entry<String, Summary> entry : summaries.entrySet()) {
 			Summary summary = entry.getValue();
+            System.out.println("summary senior id: " + summary.getSeniorId());           
 			if (summary.getSeniorId().equals(seniorId)) {
 				summaryList.add(summary);
 			}

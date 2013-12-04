@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.519</version>
+		<version>1.520</version>
 	</parent>
 
 	<groupId>com.castlemon.hudson</groupId>
@@ -28,7 +28,7 @@
 	</developers>
 
 	<!-- get every artifact through repo.jenkins-ci.org, which proxies all the 
-		artifacts that we need -->
+		artifacts that we need 
 	<repositories>
 		<repository>
 			<id>repo.jenkins-ci.org</id>
@@ -41,7 +41,7 @@
 			<id>repo.jenkins-ci.org</id>
 			<url>http://repo.jenkins-ci.org/public/</url>
 		</pluginRepository>
-	</pluginRepositories>
+	</pluginRepositories> -->
 
 	<distributionManagement>
 		<repository>
@@ -57,12 +57,17 @@
 				<artifactId>cobertura-maven-plugin</artifactId>
 				<version>2.5</version>
 			</plugin>
+			<plugin>
+				<groupId>org.eclipse.hudson.tools</groupId>
+				<artifactId>maven-hpi-plugin</artifactId>
+				<version>${maven-hpi-plugin.version}</version>
+			</plugin>
 		</plugins>
 	</build>
 
 	<properties>
 		<!-- explicitly specifying the latest version here because one we get from 
-			the parent POM tends to lag behind a bit <maven-hpi-plugin.version>1.95</maven-hpi-plugin.version> -->
+			the parent POM tends to lag behind a bit--> <maven-hpi-plugin.version>1.95</maven-hpi-plugin.version> 
 	</properties>
 
 	<dependencies>
