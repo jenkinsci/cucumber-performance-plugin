@@ -1,8 +1,6 @@
 package com.castlemon.jenkins.performance.reporting;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -12,10 +10,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import com.castlemon.jenkins.performance.TestUtils;
-import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
-import com.castlemon.jenkins.performance.domain.reporting.Summary;
-import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ReportBuilderTest {
 

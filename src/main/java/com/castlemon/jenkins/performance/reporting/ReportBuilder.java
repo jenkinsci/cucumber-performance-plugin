@@ -69,10 +69,12 @@ public class ReportBuilder {
 		velocityEngine.init();
 		Template template = velocityEngine.getTemplate("/templates/project.vm");
 		String fullPluginPath = getPluginUrlPath(pluginUrlPath);
-		generateFeatureReports(reporter.getFeatureSummaries(), velocityEngine,
-				fullPluginPath, reportDirectory);
-		generateScenarioReports(reporter.getScenarioSummaries(),
-				velocityEngine, fullPluginPath, reportDirectory);
+		// feature reports
+		generateReports(reporter.getFeatureSummaries(), velocityEngine,
+				fullPluginPath, reportDirectory, "feature", "scenario");
+		// scenario reports
+		generateReports(reporter.getScenarioSummaries(), velocityEngine,
+				fullPluginPath, reportDirectory, "scenario", "step");
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
 		context.put("projectSummary", projectSummary);
@@ -91,52 +93,34 @@ public class ReportBuilder {
 				context));
 	}
 
-	private void generateFeatureReports(Map<String, Summary> featureSummaries,
+	private void generateReports(Map<String, Summary> summaries,
 			VelocityEngine velocityEngine, String pluginPath,
-			File reportDirectory) {
-		Template template = velocityEngine.getTemplate("/templates/feature.vm");
+			File reportDirectory, String type, String lowerType) {
+		Template template = velocityEngine.getTemplate("/templates/" + type
+				+ ".vm");
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
 		context.put("jenkins_base", pluginPath);
-		for (Summary featureSummary : featureSummaries.values()) {
-			context.put("featureSummary", featureSummary);
-			context.put(
-					"scenarioData",
-					CucumberPerfUtils.getRelevantSummaries(
-							reporter.getScenarioSummaries(),
-							featureSummary.getId()));
-			context.put("perfData",
-					CucumberPerfUtils.buildGraphData(featureSummary));
+		for (Summary summary : summaries.values()) {
+			context.put(type + "Summary", summary);
+			context.put(lowerType + "Data", CucumberPerfUtils
+					.getRelevantSummaries(getSubSummaries(lowerType),
+							summary.getId()));
+			context.put("perfData", CucumberPerfUtils.buildGraphData(summary));
 			context.put("averageData",
-					CucumberPerfUtils.buildAverageData(featureSummary));
-			writeReport(featureSummary.getPageLink(), reportDirectory,
-					template, context);
+					CucumberPerfUtils.buildAverageData(summary));
+			writeReport(summary.getPageLink(), reportDirectory, template,
+					context);
 		}
 	}
 
-	private void generateScenarioReports(
-			Map<String, Summary> scenarioSummaries,
-			VelocityEngine velocityEngine, String pluginPath,
-			File reportDirectory) {
-		Template template = velocityEngine
-				.getTemplate("/templates/scenario.vm");
-		VelocityContext context = new VelocityContext();
-		context.put("genDate", new Date());
-		context.put("jenkins_base", pluginPath);
-		for (Summary scenarioSummary : scenarioSummaries.values()) {
-			context.put("scenarioSummary", scenarioSummary);
-			context.put(
-					"stepData",
-					CucumberPerfUtils.getRelevantSummaries(
-							reporter.getStepSummaries(),
-							scenarioSummary.getId()));
-			context.put("perfData",
-					CucumberPerfUtils.buildGraphData(scenarioSummary));
-			context.put("averageData",
-					CucumberPerfUtils.buildAverageData(scenarioSummary));
-			writeReport(scenarioSummary.getPageLink(), reportDirectory,
-					template, context);
+	private Map<String, Summary> getSubSummaries(String lowerType) {
+		if (lowerType.equals("step")) {
+			return reporter.getStepSummaries();
 		}
+		// assume scenario summaries required
+		return reporter.getScenarioSummaries();
+
 	}
 
 	private boolean writeReport(String fileName, File reportDirectory,
