@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
@@ -42,7 +41,7 @@
 			<id>repo.jenkins-ci.org</id>
 			<url>http://repo.jenkins-ci.org/public/</url>
 		</pluginRepository>
-	</pluginRepositories>
+	</pluginRepositories> 
 
 	<distributionManagement>
 		<repository>
@@ -82,12 +81,17 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.eclipse.hudson.tools</groupId>
+				<artifactId>maven-hpi-plugin</artifactId>
+				<version>${maven-hpi-plugin.version}</version>
+			</plugin>
 		</plugins>
 	</build>
 
 	<properties>
 		<!-- explicitly specifying the latest version here because one we get from 
-			the parent POM tends to lag behind a bit <maven-hpi-plugin.version>1.95</maven-hpi-plugin.version> -->
+			the parent POM tends to lag behind a bit--> <maven-hpi-plugin.version>1.95</maven-hpi-plugin.version> 
 	</properties>
 
 	<dependencies>

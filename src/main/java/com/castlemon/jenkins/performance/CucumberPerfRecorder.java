@@ -64,7 +64,9 @@ public class CucumberPerfRecorder extends Recorder {
 		listener.getLogger().println(
 				"[CucumberPerfRecorder] Reporting on performance for "
 						+ buildProject + " #" + buildNumber);
-		generateBuildReport(build, listener, targetBuildDirectory, buildNumber,
+		gatherJsonResultFiles(build, listener, targetBuildDirectory,
+				buildNumber, buildProject);
+		generateBuildReport(listener, targetBuildDirectory, buildNumber,
 				buildProject);
 		generateProjectReport(build, listener, targetBuildDirectory,
 				buildNumber, buildProject);
@@ -104,7 +106,21 @@ public class CucumberPerfRecorder extends Recorder {
 						+ success);
 	}
 
-	private void generateBuildReport(AbstractBuild<?, ?> build,
+	private void generateBuildReport(BuildListener listener,
+			File targetBuildDirectory, String buildNumber, String buildProject) {
+		listener.getLogger().println(
+				"[CucumberPerfRecorder] running project report");
+		List<Feature> features = CucumberPerfUtils.getData(CucumberPerfUtils
+				.findJsonFiles(targetBuildDirectory, "**/cucumber-perf*.json"),
+				targetBuildDirectory);
+		boolean success = reportBuilder.generateBuildReport(features,
+				targetBuildDirectory, buildProject, buildNumber, pluginUrlPath);
+		listener.getLogger().println(
+				"[CucumberPerfRecorder] build report generation complete - "
+						+ success);
+	}
+
+	private void gatherJsonResultFiles(AbstractBuild<?, ?> build,
 			BuildListener listener, File targetBuildDirectory,
 			String buildNumber, String buildProject) throws IOException,
 			InterruptedException {
@@ -114,7 +130,6 @@ public class CucumberPerfRecorder extends Recorder {
 			workspaceJsonReportDirectory = new File(build.getWorkspace()
 					.toURI().getPath(), jsonReportDirectory);
 		}
-
 		// if we are on a slave
 		if (Computer.currentComputer() instanceof SlaveComputer) {
 			listener.getLogger().println(
@@ -160,17 +175,6 @@ public class CucumberPerfRecorder extends Recorder {
 			}
 			i++;
 		}
-		List<Feature> features = CucumberPerfUtils
-				.getData(
-						CucumberPerfUtils.findJsonFiles(
-								workspaceJsonReportDirectory,
-								"**/cucumber-perf*.json"),
-						workspaceJsonReportDirectory);
-		boolean success = reportBuilder.generateBuildReport(features,
-				targetBuildDirectory, buildProject, buildNumber, pluginUrlPath);
-		listener.getLogger().println(
-				"[CucumberPerfRecorder] build report generation complete - "
-						+ success);
 	}
 
 	@Extension

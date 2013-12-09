@@ -50,4 +50,5 @@ public class ReportBuilderTest {
 				"test build 1", "1", "");
 		Assert.assertEquals(8, testFolder.getRoot().listFiles().length);
 	}
+
 }
