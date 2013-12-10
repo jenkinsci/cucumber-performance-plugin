@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.apache.velocity.app.VelocityEngine;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
+import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryAverageDurationComparator;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ReportBuilder {
@@ -73,6 +75,9 @@ public class ReportBuilder {
 		// scenario reports
 		generateReports(reporter.getScenarioSummaries(), velocityEngine,
 				fullPluginPath, reportDirectory, "scenario", "step");
+		// sorted feature reports
+		generateSortedReports(reporter.getFeatureSummaries(), velocityEngine,
+				fullPluginPath, reportDirectory, "feature");
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
 		context.put("projectSummary", projectSummary);
@@ -110,6 +115,20 @@ public class ReportBuilder {
 			writeReport(summary.getPageLink(), reportDirectory, template,
 					context);
 		}
+	}
+
+	private void generateSortedReports(Map<String, Summary> summaries,
+			VelocityEngine velocityEngine, String pluginPath,
+			File reportDirectory, String type) {
+		Template template = velocityEngine.getTemplate("/templates/sorted"
+				+ type + ".vm");
+		VelocityContext context = new VelocityContext();
+		context.put("genDate", new Date());
+		context.put("jenkins_base", pluginPath);
+		List<Summary> summaryList = new ArrayList<Summary>(summaries.values());
+		context.put("sortedData",
+				CucumberPerfUtils.generateJsonSummary(summaryList));
+		writeReport("featuresreport.html", reportDirectory, template, context);
 	}
 
 	private Map<String, Summary> getSubSummaries(String lowerType) {

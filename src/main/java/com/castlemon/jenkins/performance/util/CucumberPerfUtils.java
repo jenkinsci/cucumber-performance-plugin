@@ -18,7 +18,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
-import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryComparator;
+import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryOrderComparator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -31,10 +31,8 @@ public class CucumberPerfUtils {
 	public static List<Summary> getRelevantSummaries(
 			Map<String, Summary> summaries, String seniorId) {
 		List<Summary> summaryList = new ArrayList<Summary>();
-		 System.out.println("senior id: " + seniorId);
 		for (Map.Entry<String, Summary> entry : summaries.entrySet()) {
 			Summary summary = entry.getValue();
-            System.out.println("summary senior id: " + summary.getSeniorId());           
 			if (summary.getSeniorId().equals(seniorId)) {
 				summaryList.add(summary);
 			}
@@ -44,7 +42,7 @@ public class CucumberPerfUtils {
 	}
 
 	public static void sortSummaryList(List<Summary> summaries) {
-		Collections.sort(summaries, new SummaryComparator());
+		Collections.sort(summaries, new SummaryOrderComparator());
 	}
 
 	public static String buildGraphData(Summary summary) {
@@ -157,6 +155,25 @@ public class CucumberPerfUtils {
 				.appendSeparator(" ").appendMillis().appendSuffix(" ms", " ms")
 				.toFormatter();
 		return formatter.print(new Period(0, durationInNanos / 1000000));
+	}
+
+	public static String generateJsonSummary(List<Summary> summaries) {
+		StringBuilder output = new StringBuilder();
+		output.append("[");
+		int i = 1;
+		for (Summary summary : summaries) {
+			output.append("[" + '"' + summary.getName() + '"' + ", "
+					+ summary.getNumberOfSubItems() + ", " + '"'
+					+ summary.getFormattedShortestDuration() + '"' + ", " + '"'
+					+ summary.getFormattedLongestDuration() + '"' + ", "
+					+ summary.getAverageInMilliseconds() + "]");
+			if (i < summaries.size()) {
+				output.append(",");
+			}
+			i++;
+		}
+		output.append("]");
+		return output.toString();
 	}
 
 	private static String loadJsonFile(File targetBuildDirectory,

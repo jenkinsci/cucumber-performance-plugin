@@ -4,15 +4,15 @@ import java.util.Comparator;
 
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 
-public class SummaryComparator implements Comparator<Summary> {
+public class SummaryLongestDurationComparator implements Comparator<Summary> {
 
 	public int compare(Summary summary1, Summary summary2) {
 
-		int order1 = summary1.getOrder();
-		int order2 = summary2.getOrder();
+		long order1 = summary1.getLongestDuration();
+		long order2 = summary2.getLongestDuration();
 
 		// ascending order
-		return order1 - order2;
+		return (int) (order1 - order2);
 
 	}
 

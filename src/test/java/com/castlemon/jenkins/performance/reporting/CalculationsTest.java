@@ -31,7 +31,7 @@ public class CalculationsTest {
 	/*
 	 * Used only to gather the duration information to import into Excel
 	 */
-	@Test
+	//@Test
 	public void getFigures() throws IOException {
 		String jsonString = testUtils.loadJsonFile("/cuc-error1.json");
 		Assert.assertNotNull(jsonString);

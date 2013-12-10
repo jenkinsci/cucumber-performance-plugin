@@ -28,7 +28,7 @@ public class ReportBuilderTest {
 		projectRuns.add(testUtils.generateRun("failed"));
 		builder.generateProjectReports(projectRuns, testFolder.getRoot(),
 				"test build 1", "1", "pluginPath");
-		Assert.assertEquals(8, testFolder.getRoot().listFiles().length);
+		Assert.assertEquals(9, testFolder.getRoot().listFiles().length);
 	}
 
 	@Test
@@ -38,7 +38,7 @@ public class ReportBuilderTest {
 		projectRuns.add(testUtils.generateRun("failed"));
 		builder.generateProjectReports(projectRuns, testFolder.getRoot(),
 				"test build 1", "1", null);
-		Assert.assertEquals(8, testFolder.getRoot().listFiles().length);
+		Assert.assertEquals(9, testFolder.getRoot().listFiles().length);
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class ReportBuilderTest {
 		projectRuns.add(testUtils.generateRun("failed"));
 		builder.generateProjectReports(projectRuns, testFolder.getRoot(),
 				"test build 1", "1", "");
-		Assert.assertEquals(8, testFolder.getRoot().listFiles().length);
+		Assert.assertEquals(9, testFolder.getRoot().listFiles().length);
 	}
 
 }

@@ -10,8 +10,6 @@
 <script>
 	/* project-level graph */
 	jQuery(document).ready(function() {
-		/* initialise datables 
-		jQuery('#scenarioTable').dataTable();*/
 
 		/* draw the graph */
 		jQuery('#projectgraph').highcharts({
@@ -112,6 +110,11 @@
 			<noscript>
 				<p>This content requires JavaScript.</p>
 			</noscript>
+		</div>
+		<p />
+		<h3>Links to overall reports</h3>
+		<div id="summaryReports">
+			<a href="featuresreport.html">Features</a>
 		</div>
 		<p />
 		<h3>Feature details</h3>

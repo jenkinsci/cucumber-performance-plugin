@@ -80,6 +80,12 @@ public class Summary {
 		return CucumberPerfUtils.formatDuration(averageDuration);
 	}
 
+	public long getAverageInMilliseconds() {
+		calculateAverageDuration();
+		// return (averageDuration / 1000000000);
+		return (averageDuration / 1000000);
+	}
+
 	public String getFormattedShortestDuration() {
 		if (shortestDuration == Long.MAX_VALUE) {
 			// field not updated, return 0
