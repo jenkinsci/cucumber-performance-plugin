@@ -5,68 +5,15 @@
         <title>Cucumber Feature Report</title>
         <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="css/jquery.dataTables.css" type="text/css" media="screen" />
-        <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
-        <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-        <script>            
-            jQuery(document).ready(function() {
-            /* Feature-level table */
-            jQuery('#sortedFeatureTable').dataTable( {            	
-            "aaData": $sortedFeatureData,            	
-            "aoColumns" : [
-            { "sType": "string" },
-            null,
-            { "iDataSort": 5 },
-            { "iDataSort": 6 },
-            { "iDataSort": 7 },
-            { "bVisible": false },
-            { "bVisible": false },
-            { "bVisible": false }
-            ],
-            aaSorting : [[7,'desc']],				
-            "bPaginate": false,
-            "bFilter": false,
-            "bSort": true,
-            "bInfo": false
-            } );
-            /* Scenario-level table */
-            jQuery('#sortedScenarioTable').dataTable( {            	
-            "aaData": $sortedScenarioData,            	
-            "aoColumns" : [
-            { "sType": "string" },
-            null,
-            { "iDataSort": 5 },
-            { "iDataSort": 6 },
-            { "iDataSort": 7 },
-            { "bVisible": false },
-            { "bVisible": false },
-            { "bVisible": false }
-            ],
-            aaSorting : [[7,'desc']],				
-            "bPaginate": false,
-            "bFilter": false,
-            "bSort": true,
-            "bInfo": false
-            } );
-            /* Step-level table */
-            jQuery('#sortedStepTable').dataTable( {            	
-            "aaData": $sortedStepData,            	
-            "aoColumns" : [
-            { "sType": "string" },
-            null,
-            { "iDataSort": 5 },
-            { "iDataSort": 6 },
-            { "iDataSort": 7 },
-            { "bVisible": false },
-            { "bVisible": false },
-            { "bVisible": false }
-            ],
-            aaSorting : [[7,'desc']],				
-            "bPaginate": false,
-            "bFilter": false,
-            "bSort": true,
-            "bInfo": false
-            } );
-            } );
+        <script type="text/javascript" src="js/jquery/jquery-1.8.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="js/featureSortedTable.js"></script>
+        <script type="text/javascript" src="js/scenarioSortedTable.js"></script>
+        <script type="text/javascript" src="js/stepSortedTable.js"></script>
+        <script>
+            var sortedFeatureData = $sortedFeatureData
+            var sortedScenarioData = $sortedScenarioData
+            var sortedStepData = $sortedStepData
         </script>
     </head>
     <body>

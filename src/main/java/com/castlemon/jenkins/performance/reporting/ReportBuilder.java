@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -28,7 +29,7 @@ public class ReportBuilder {
 	public boolean generateBuildReport(List<Feature> features,
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
-		copyResourceFiles(reportDirectory);
+		copyAllResourceFiles(reportDirectory);
 		reporter.initialiseEntryMaps();
 		// VelocityEngine velocityEngine = new VelocityEngine();
 		// velocityEngine.setProperty("resource.loader", "class");
@@ -56,7 +57,7 @@ public class ReportBuilder {
 	public boolean generateProjectReports(List<ProjectRun> projectRuns,
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
-		copyResourceFiles(reportDirectory);
+		// copyResourceFiles(reportDirectory);
 		reporter.initialiseEntryMaps();
 		Summary projectSummary = reporter.getPerformanceData(projectRuns);
 		projectSummary.setName(buildProject);
@@ -141,7 +142,7 @@ public class ReportBuilder {
 				stepSummaries.values());
 		context.put("sortedStepData",
 				CucumberPerfUtils.generateJsonSummary(stepSummaryList));
-		writeReport("featuresreport.html", reportDirectory, template, context);
+		writeReport("sortedreports.html", reportDirectory, template, context);
 	}
 
 	private Map<String, Summary> getSubSummaries(String lowerType) {
@@ -177,35 +178,45 @@ public class ReportBuilder {
 		return path;
 	}
 
-	private void copyResourceFiles(File reportDirectory) {
+	private void copyAllResourceFiles(File reportDirectory) {
 		// copy css
+		File sourceCssDirectory = new File(ReportBuilder.class.getResource(
+				"/css").getPath());
 		File targetCssDirectory = new File(reportDirectory.getAbsolutePath()
 				+ "/css");
 		targetCssDirectory.mkdir();
-		copyResource(targetCssDirectory, "css/main.css", "main.css");
-		copyResource(targetCssDirectory, "css/jquery.dataTables.css",
-				"jquery.dataTables.css");
+		try {
+			FileUtils.copyDirectory(sourceCssDirectory, targetCssDirectory);
+		} catch (IOException e) {
+			System.out.println("unable to copy CSS files");
+			e.printStackTrace();
+		}
 		// copy javascript
+		File sourceJsDirectory = new File(ReportBuilder.class.getResource(
+				"/javascript").getPath());
 		File targetJsDirectory = new File(reportDirectory.getAbsolutePath()
 				+ "/js");
 		targetJsDirectory.mkdir();
-		copyResource(targetJsDirectory,
-				"javascript/jquery/jquery-1.8.2.min.js", "jquery-1.8.2.min.js");
-		copyResource(targetJsDirectory,
-				"javascript/jquery/jquery.dataTables.min.js",
-				"jquery.dataTables.min.js");
-		copyResource(targetJsDirectory,
-				"javascript/highcharts-3.0.2/highcharts.js", "highcharts.js");
-		// copy images
-		File targetImagesDirectory = new File(reportDirectory.getAbsolutePath()
+		try {
+			FileUtils.copyDirectory(sourceJsDirectory, targetJsDirectory);
+		} catch (IOException e) {
+			System.out.println("unable to copy Javascript files");
+			e.printStackTrace();
+		}
+		// copy image files
+		File sourceImageDirectory = new File(ReportBuilder.class.getResource(
+				"/perfimages").getPath());
+		System.out.println("source: "
+				+ ReportBuilder.class.getResource("/images").getPath());
+		File targetImageDirectory = new File(reportDirectory.getAbsolutePath()
 				+ "/images");
-		targetImagesDirectory.mkdir();
-		copyResource(targetImagesDirectory, "images/sort_asc.png",
-				"sort_asc.png");
-		copyResource(targetImagesDirectory, "images/sort_both.png",
-				"sort_both.png");
-		copyResource(targetImagesDirectory, "images/sort_desc.png",
-				"sort_desc.png");
+		targetImageDirectory.mkdir();
+		try {
+			FileUtils.copyDirectory(sourceImageDirectory, targetImageDirectory);
+		} catch (IOException e) {
+			System.out.println("unable to copy image files");
+			e.printStackTrace();
+		}
 	}
 
 	private void copyResource(File reportDirectory, String resourceName,

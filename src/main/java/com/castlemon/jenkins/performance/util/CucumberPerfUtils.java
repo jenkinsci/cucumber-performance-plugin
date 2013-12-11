@@ -145,6 +145,9 @@ public class CucumberPerfUtils {
 	}
 
 	public static String formatDuration(Long durationInNanos) {
+		if (durationInNanos < nanosInAMilli) {
+			return (durationInNanos + " ns");
+		}
 		PeriodFormatter formatter = new PeriodFormatterBuilder()
 				.printZeroRarelyLast().appendDays()
 				.appendSuffix(" day", " days").appendSeparator(" ")
@@ -154,7 +157,7 @@ public class CucumberPerfUtils {
 				.appendSeconds().appendSuffix(" sec", " secs")
 				.appendSeparator(" ").appendMillis().appendSuffix(" ms", " ms")
 				.toFormatter();
-		return formatter.print(new Period(0, durationInNanos / 1000000));
+		return formatter.print(new Period(0, durationInNanos / nanosInAMilli));
 	}
 
 	public static String generateJsonSummary(List<Summary> summaries) {
