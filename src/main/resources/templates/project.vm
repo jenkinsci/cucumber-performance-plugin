@@ -6,40 +6,11 @@
         <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
         <script type="text/javascript" src="js/jquery/jquery-1.8.2.min.js"></script>
         <script type="text/javascript" src="js/highcharts-3.0.2/highcharts.js"></script>
+        <script type="text/javascript" src="js/performanceGraph.js"></script>
         <script>
-            /* project-level graph */
-            jQuery(document).ready(function() {
-            /* draw the graph */
-            jQuery('#projectgraph').highcharts({
-            chart : {
-            type : 'line'
-            },
-            tooltip : {
-            enabled : false
-            },
-            title : {
-            text : 'Project Performance'
-            },
-            xAxis : {
-            title : {
-            text : 'Build Number'
-            },
-            tickInterval : 1
-            },
-            yAxis : {
-            title : {
-            text : 'Time taken (seconds)'
-            }
-            },
-            series : [ {
-            name : 'Time Taken',
-            data : $perfData
-            }, {
-            name : 'Average',
-            data : $averageData
-            } ]
-            });
-            });
+            var titleText = 'Project Performance'
+            var perfData = $perfData
+            var averageData = $averageData
         </script>
     </head>
     <body>
@@ -103,7 +74,7 @@
             </div>
             <p />
             <h3>Overall Project Performance</h3>
-            <div id="projectgraph">
+            <div id="graphArea">
                 <noscript>
                     <p>This content requires JavaScript.</p>
                 </noscript>

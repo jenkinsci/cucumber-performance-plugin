@@ -206,8 +206,6 @@ public class ReportBuilder {
 		// copy image files
 		File sourceImageDirectory = new File(ReportBuilder.class.getResource(
 				"/perfimages").getPath());
-		System.out.println("source: "
-				+ ReportBuilder.class.getResource("/images").getPath());
 		File targetImageDirectory = new File(reportDirectory.getAbsolutePath()
 				+ "/images");
 		targetImageDirectory.mkdir();
@@ -216,31 +214,6 @@ public class ReportBuilder {
 		} catch (IOException e) {
 			System.out.println("unable to copy image files");
 			e.printStackTrace();
-		}
-	}
-
-	private void copyResource(File reportDirectory, String resourceName,
-			String targetName) {
-		InputStream resourceArchiveInputStream = null;
-		FileOutputStream cssOutStream = null;
-		try {
-			resourceArchiveInputStream = ReportBuilder.class
-					.getResourceAsStream(resourceName);
-			if (resourceArchiveInputStream == null) {
-				resourceArchiveInputStream = ReportBuilder.class
-						.getResourceAsStream("/" + resourceName);
-			}
-			File file = new File(reportDirectory, targetName);
-			cssOutStream = new FileOutputStream(file);
-
-			IOUtils.copy(resourceArchiveInputStream, cssOutStream);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(resourceArchiveInputStream);
-			IOUtils.closeQuietly(cssOutStream);
 		}
 	}
 }
