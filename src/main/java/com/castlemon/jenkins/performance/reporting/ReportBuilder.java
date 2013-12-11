@@ -74,9 +74,10 @@ public class ReportBuilder {
 		// scenario reports
 		generateReports(reporter.getScenarioSummaries(), velocityEngine,
 				fullPluginPath, reportDirectory, "scenario", "step");
-		// sorted feature reports
-		generateSortedReports(reporter.getFeatureSummaries(), velocityEngine,
-				fullPluginPath, reportDirectory, "feature");
+		// sorted reports
+		generateSortedReports(reporter.getFeatureSummaries(),
+				reporter.getScenarioSummaries(), reporter.getStepSummaries(),
+				velocityEngine, fullPluginPath, reportDirectory, "feature");
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
 		context.put("projectSummary", projectSummary);
@@ -116,17 +117,30 @@ public class ReportBuilder {
 		}
 	}
 
-	private void generateSortedReports(Map<String, Summary> summaries,
-			VelocityEngine velocityEngine, String pluginPath,
-			File reportDirectory, String type) {
-		Template template = velocityEngine.getTemplate("/templates/sorted"
-				+ type + ".vm");
+	private void generateSortedReports(Map<String, Summary> featureSummaries,
+			Map<String, Summary> scenarioSummaries,
+			Map<String, Summary> stepSummaries, VelocityEngine velocityEngine,
+			String pluginPath, File reportDirectory, String type) {
+		Template template = velocityEngine
+				.getTemplate("/templates/sortedlists.vm");
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
 		context.put("jenkins_base", pluginPath);
-		List<Summary> summaryList = new ArrayList<Summary>(summaries.values());
-		context.put("sortedData",
-				CucumberPerfUtils.generateJsonSummary(summaryList));
+		// feature summary
+		List<Summary> featureSummaryList = new ArrayList<Summary>(
+				featureSummaries.values());
+		context.put("sortedFeatureData",
+				CucumberPerfUtils.generateJsonSummary(featureSummaryList));
+		// scenario summary
+		List<Summary> scenarioSummaryList = new ArrayList<Summary>(
+				scenarioSummaries.values());
+		context.put("sortedScenarioData",
+				CucumberPerfUtils.generateJsonSummary(scenarioSummaryList));
+		// step summary
+		List<Summary> stepSummaryList = new ArrayList<Summary>(
+				stepSummaries.values());
+		context.put("sortedStepData",
+				CucumberPerfUtils.generateJsonSummary(stepSummaryList));
 		writeReport("featuresreport.html", reportDirectory, template, context);
 	}
 
