@@ -165,8 +165,11 @@ public class CucumberPerfUtils {
 			output.append("[" + '"' + summary.getName() + '"' + ", "
 					+ summary.getNumberOfSubItems() + ", " + '"'
 					+ summary.getFormattedShortestDuration() + '"' + ", " + '"'
-					+ summary.getFormattedLongestDuration() + '"' + ", "
-					+ summary.getAverageInMilliseconds() + "]");
+					+ summary.getFormattedLongestDuration() + '"' + ", " + '"'
+					+ summary.getFormattedAverageDuration() + '"' + ", "
+					+ summary.getShortestDuration() + ", "
+					+ summary.getLongestDuration() + ", "
+					+ summary.calculateAverageDuration() + "]");
 			if (i < summaries.size()) {
 				output.append(",");
 			}

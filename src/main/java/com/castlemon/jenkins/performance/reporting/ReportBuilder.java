@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,6 @@ import org.apache.velocity.app.VelocityEngine;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
-import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryAverageDurationComparator;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ReportBuilder {
@@ -32,23 +30,24 @@ public class ReportBuilder {
 			String pluginUrlPath) {
 		copyResourceFiles(reportDirectory);
 		reporter.initialiseEntryMaps();
-		VelocityEngine velocityEngine = new VelocityEngine();
-		velocityEngine.setProperty("resource.loader", "class");
-		velocityEngine
-				.setProperty("class.resource.loader.class",
-						"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-		velocityEngine.init();
-		Template template = velocityEngine.getTemplate("/templates/basic.vm");
-		String fullPluginPath = getPluginUrlPath(pluginUrlPath);
+		// VelocityEngine velocityEngine = new VelocityEngine();
+		// velocityEngine.setProperty("resource.loader", "class");
+		// velocityEngine
+		// .setProperty("class.resource.loader.class",
+		// "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+		// velocityEngine.init();
+		// Template template =
+		// velocityEngine.getTemplate("/templates/basic.vm");
+		// String fullPluginPath = getPluginUrlPath(pluginUrlPath);
 		// generateFeatureReports(reporter.getFeatureSummaries(),
 		// velocityEngine,
 		// fullPluginPath, reportDirectory);
-		VelocityContext context = new VelocityContext();
-		context.put("genDate", new Date());
-		context.put("features", features);
-		context.put("build_project", buildProject);
-		context.put("build_number", buildNumber);
-		context.put("jenkins_base", fullPluginPath);
+		// VelocityContext context = new VelocityContext();
+		// context.put("genDate", new Date());
+		// context.put("features", features);
+		// context.put("build_project", buildProject);
+		// context.put("build_number", buildNumber);
+		// context.put("jenkins_base", fullPluginPath);
 		// return (writeReport("basicview.html", reportDirectory, template,
 		// context));
 		return true;
@@ -165,16 +164,34 @@ public class ReportBuilder {
 	}
 
 	private void copyResourceFiles(File reportDirectory) {
-		copyResource(reportDirectory, "css/main.css", "main.css");
-		copyResource(reportDirectory, "css/jquery.dataTables.css",
+		// copy css
+		File targetCssDirectory = new File(reportDirectory.getAbsolutePath()
+				+ "/css");
+		targetCssDirectory.mkdir();
+		copyResource(targetCssDirectory, "css/main.css", "main.css");
+		copyResource(targetCssDirectory, "css/jquery.dataTables.css",
 				"jquery.dataTables.css");
-		copyResource(reportDirectory, "javascript/jquery/jquery-1.8.2.min.js",
-				"jquery-1.8.2.min.js");
-		copyResource(reportDirectory,
+		// copy javascript
+		File targetJsDirectory = new File(reportDirectory.getAbsolutePath()
+				+ "/js");
+		targetJsDirectory.mkdir();
+		copyResource(targetJsDirectory,
+				"javascript/jquery/jquery-1.8.2.min.js", "jquery-1.8.2.min.js");
+		copyResource(targetJsDirectory,
 				"javascript/jquery/jquery.dataTables.min.js",
 				"jquery.dataTables.min.js");
-		copyResource(reportDirectory,
+		copyResource(targetJsDirectory,
 				"javascript/highcharts-3.0.2/highcharts.js", "highcharts.js");
+		// copy images
+		File targetImagesDirectory = new File(reportDirectory.getAbsolutePath()
+				+ "/images");
+		targetImagesDirectory.mkdir();
+		copyResource(targetImagesDirectory, "images/sort_asc.png",
+				"sort_asc.png");
+		copyResource(targetImagesDirectory, "images/sort_both.png",
+				"sort_both.png");
+		copyResource(targetImagesDirectory, "images/sort_desc.png",
+				"sort_desc.png");
 	}
 
 	private void copyResource(File reportDirectory, String resourceName,

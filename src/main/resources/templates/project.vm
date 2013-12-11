@@ -3,10 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Cucumber Project Reports</title>
-<link rel="stylesheet" href="main.css" type="text/css" media="screen" />
-<script type="text/javascript" src="jquery-1.8.2.min.js"></script>
-<script type="text/javascript" src="highcharts.js"></script>
-<script type="text/javascript" src="jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
+<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="js/highcharts.js"></script>
 <script>
 	/* project-level graph */
 	jQuery(document).ready(function() {
@@ -56,7 +55,7 @@
 	</div>
 
 	<p />
-	<div id="content">
+	<div class="content">
 		<h1>Performance Report for $projectSummary.name</h1>
 		<h3>Summary</h3>
 		<p />
@@ -119,7 +118,7 @@
 		<p />
 		<h3>Feature details</h3>
 	</div>
-	<div id="featureArea">
+	<div class="fullWidth">
 		<table id="scenarioTable" class="summaryTable">
 			<thead>
 				<tr>
