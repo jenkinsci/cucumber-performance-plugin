@@ -15,7 +15,6 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 
-import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
@@ -23,34 +22,7 @@ import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 public class ReportBuilder {
 
 	PerformanceReporter reporter = new PerformanceReporter();
-
-	public boolean generateBuildReport(List<Feature> features,
-			File reportDirectory, String buildProject, String buildNumber,
-			String pluginUrlPath) {
-		// copyAllResourceFiles(reportDirectory);
-		// reporter.initialiseEntryMaps();
-		// VelocityEngine velocityEngine = new VelocityEngine();
-		// velocityEngine.setProperty("resource.loader", "class");
-		// velocityEngine
-		// .setProperty("class.resource.loader.class",
-		// "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-		// velocityEngine.init();
-		// Template template =
-		// velocityEngine.getTemplate("/templates/basic.vm");
-		// String fullPluginPath = getPluginUrlPath(pluginUrlPath);
-		// generateFeatureReports(reporter.getFeatureSummaries(),
-		// velocityEngine,
-		// fullPluginPath, reportDirectory);
-		// VelocityContext context = new VelocityContext();
-		// context.put("genDate", new Date());
-		// context.put("features", features);
-		// context.put("build_project", buildProject);
-		// context.put("build_number", buildNumber);
-		// context.put("jenkins_base", fullPluginPath);
-		// return (writeReport("basicview.html", reportDirectory, template,
-		// context));
-		return true;
-	}
+	VelocityEngine velocityEngine = setupVelocityEngine();
 
 	public boolean generateProjectReports(List<ProjectRun> projectRuns,
 			File reportDirectory, String buildProject, String buildNumber,
@@ -59,64 +31,56 @@ public class ReportBuilder {
 		reporter.initialiseEntryMaps();
 		Summary projectSummary = reporter.getPerformanceData(projectRuns);
 		projectSummary.setName(buildProject);
-		VelocityEngine velocityEngine = new VelocityEngine();
-		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "class");
-		velocityEngine
-				.setProperty("class.resource.loader.class",
-						"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-		//velocityEngine.setProperty(RuntimeConstants.VM_LIBRARY,
-		//		"/templates/macros");
-		velocityEngine.init();
-		Template template = velocityEngine.getTemplate("/templates/project.vm");
 		String fullPluginPath = getPluginUrlPath(pluginUrlPath);
+		// set up velocity context
+		VelocityContext context = new VelocityContext();
+		context.put("genDate", new Date());
+		context.put("build_project", buildProject);
+		context.put("build_number", buildNumber);
+		context.put("jenkins_base", fullPluginPath);
 		// feature reports
-		generateReport(reporter.getFeatureSummaries(), velocityEngine,
-				fullPluginPath, reportDirectory, "Feature", "Scenario");
+		generateReports(reporter.getFeatureSummaries(), velocityEngine,
+				reportDirectory, "Feature", "Scenario", context);
 		// scenario reports
-		generateReport(reporter.getScenarioSummaries(), velocityEngine,
-				fullPluginPath, reportDirectory, "Scenario", "Step");
+		generateReports(reporter.getScenarioSummaries(), velocityEngine,
+				reportDirectory, "Scenario", "Step", context);
 		// sorted reports
 		generateSortedReports(reporter.getFeatureSummaries(),
 				reporter.getScenarioSummaries(), reporter.getStepSummaries(),
 				velocityEngine, fullPluginPath, reportDirectory, "feature");
-		VelocityContext context = new VelocityContext();
-		context.put("genDate", new Date());
-		context.put("projectSummary", projectSummary);
-		context.put("perfData",
-				CucumberPerfUtils.buildGraphData(projectSummary));
-		context.put("averageData",
-				CucumberPerfUtils.buildAverageData(projectSummary));
+		// project reports
 		List<Summary> summaryList = new ArrayList<Summary>(reporter
 				.getFeatureSummaries().values());
 		CucumberPerfUtils.sortSummaryList(summaryList);
-		context.put("featureData", summaryList);
-		context.put("build_project", buildProject);
-		context.put("build_number", buildNumber);
-		context.put("jenkins_base", fullPluginPath);
-		return (writeReport("projectview.html", reportDirectory, template,
-				context));
+		generateReport(projectSummary, velocityEngine, reportDirectory,
+				"Project", "Feature", context, "projectview.html", summaryList);
+		return true;
 	}
-	
-	private void generateReport(Map<String, Summary> summaries,
-			VelocityEngine velocityEngine, String pluginPath,
-			File reportDirectory, String type, String subType) {
-		Template template = velocityEngine.getTemplate("/templates/combined.vm");
-		VelocityContext context = new VelocityContext();
-		context.put("genDate", new Date());
-		context.put("jenkins_base", pluginPath);
+
+	private void generateReports(Map<String, Summary> summaries,
+			VelocityEngine velocityEngine, File reportDirectory, String type,
+			String subType, VelocityContext context) {
 		for (Summary summary : summaries.values()) {
-			context.put("summaryType", type);
-			context.put("subType", subType);
-			context.put("summary", summary);
-			context.put("subData", CucumberPerfUtils
+			List<Summary> subSummaries = CucumberPerfUtils
 					.getRelevantSummaries(getSubSummaries(subType),
-							summary.getId()));
-			context.put("perfData", CucumberPerfUtils.buildGraphData(summary));
-			context.put("averageData",
-					CucumberPerfUtils.buildAverageData(summary));
-			writeReport(summary.getPageLink(), reportDirectory, template,
-					context);
+							summary.getId());
+			generateReport(summary, velocityEngine, reportDirectory, type,
+					subType, context, summary.getPageLink(), subSummaries);
 		}
+	}
+
+	private void generateReport(Summary summary, VelocityEngine velocityEngine,
+			File reportDirectory, String type, String subType,
+			VelocityContext context, String pageName, List<Summary> subSummaries) {
+		Template template = velocityEngine
+				.getTemplate("/templates/combined.vm");
+		context.put("summaryType", type);
+		context.put("subType", subType);
+		context.put("summary", summary);
+		context.put("subData", subSummaries);
+		context.put("perfData", CucumberPerfUtils.buildGraphData(summary));
+		context.put("averageData", CucumberPerfUtils.buildAverageData(summary));
+		writeReport(pageName, reportDirectory, template, context);
 	}
 
 	private void generateSortedReports(Map<String, Summary> featureSummaries,
@@ -147,11 +111,13 @@ public class ReportBuilder {
 	}
 
 	private Map<String, Summary> getSubSummaries(String lowerType) {
-		if (lowerType.equals("Step")) {
-			return reporter.getStepSummaries();
+		if (lowerType.equals("Feature")) {
+			return reporter.getFeatureSummaries();
+		} else if (lowerType.equals("Scenario")) {
+			return reporter.getScenarioSummaries();
 		}
-		// assume scenario summaries required
-		return reporter.getScenarioSummaries();
+		// assume step summaries required
+		return reporter.getStepSummaries();
 
 	}
 
@@ -216,5 +182,15 @@ public class ReportBuilder {
 			System.out.println("unable to copy image files");
 			e.printStackTrace();
 		}
+	}
+
+	private VelocityEngine setupVelocityEngine() {
+		VelocityEngine velocityEngine = new VelocityEngine();
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "class");
+		velocityEngine
+				.setProperty("class.resource.loader.class",
+						"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+		velocityEngine.init();
+		return velocityEngine;
 	}
 }

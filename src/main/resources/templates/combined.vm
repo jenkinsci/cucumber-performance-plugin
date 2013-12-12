@@ -17,9 +17,11 @@
         <div id="pageHeader">
             <div id="titleArea">Cucumber $summaryType Reports</div>
             <div id="linkArea">
-                <div id="projectLink">
-                    <a href="projectview.html">Back To Project View</a>
-                </div>
+                #if(!($summaryType.equals("Project")))
+                    <div id="projectLink">
+                        <a href="projectview.html">Back To Project View</a>
+                    </div>
+                #end
                 <div id="jenkinsLink">
                     <a href="${jenkins_base}job/$build_project">Back To Jenkins</a>
                 </div>
@@ -83,6 +85,13 @@
                 </noscript>
             </div>
             <p />
+            #if($summaryType.equals("Project"))            
+                <h3>Links to overall reports</h3>
+                <div id="summaryReports">
+                    <a href="sortedreports.html">Downloadable Reports sorted by performance</a>
+                </div>
+                <p />
+            #end
             <h3>$subType details</h3>
         </div>
         <div class="fullWidth">
