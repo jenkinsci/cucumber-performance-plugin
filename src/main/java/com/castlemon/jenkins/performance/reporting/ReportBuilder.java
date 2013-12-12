@@ -47,7 +47,7 @@ public class ReportBuilder {
 		// sorted reports
 		generateSortedReports(reporter.getFeatureSummaries(),
 				reporter.getScenarioSummaries(), reporter.getStepSummaries(),
-				velocityEngine, fullPluginPath, reportDirectory, "feature");
+				velocityEngine, reportDirectory, "feature", context);
 		// project reports
 		List<Summary> summaryList = new ArrayList<Summary>(reporter
 				.getFeatureSummaries().values());
@@ -86,12 +86,9 @@ public class ReportBuilder {
 	private void generateSortedReports(Map<String, Summary> featureSummaries,
 			Map<String, Summary> scenarioSummaries,
 			Map<String, Summary> stepSummaries, VelocityEngine velocityEngine,
-			String pluginPath, File reportDirectory, String type) {
+			File reportDirectory, String type, VelocityContext context) {
 		Template template = velocityEngine
 				.getTemplate("/templates/sortedlists.vm");
-		VelocityContext context = new VelocityContext();
-		context.put("genDate", new Date());
-		context.put("jenkins_base", pluginPath);
 		// feature summary
 		List<Summary> featureSummaryList = new ArrayList<Summary>(
 				featureSummaries.values());

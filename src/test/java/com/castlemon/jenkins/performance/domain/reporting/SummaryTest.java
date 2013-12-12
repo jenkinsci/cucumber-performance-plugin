@@ -81,7 +81,7 @@ public class SummaryTest {
 	@Test
 	public void testGetFormattedShortestDurationZero() {
 		Summary summary = new Summary();
-		Assert.assertEquals("0 ms", summary.getFormattedShortestDuration());
+		Assert.assertEquals("0 ns", summary.getFormattedShortestDuration());
 	}
 
 	@Test
@@ -95,7 +95,7 @@ public class SummaryTest {
 	@Test
 	public void testGetFormattedLongestDurationZero() {
 		Summary summary = new Summary();
-		Assert.assertEquals("0 ms", summary.getFormattedLongestDuration());
+		Assert.assertEquals("0 ns", summary.getFormattedLongestDuration());
 	}
 
 	@Test

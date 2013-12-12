@@ -483,9 +483,9 @@ public class CalculationsTest {
 		Assert.assertEquals(0l, jobOutput.getLongestDuration());
 		Assert.assertEquals(Long.MAX_VALUE, jobOutput.getShortestDuration());
 		Assert.assertEquals(0l, jobOutput.calculateAverageDuration());
-		Assert.assertEquals("0 ms", jobOutput.getFormattedLongestDuration());
-		Assert.assertEquals("0 ms", jobOutput.getFormattedShortestDuration());
-		Assert.assertEquals("0 ms", jobOutput.getFormattedAverageDuration());
+		Assert.assertEquals("0 ns", jobOutput.getFormattedLongestDuration());
+		Assert.assertEquals("0 ns", jobOutput.getFormattedShortestDuration());
+		Assert.assertEquals("0 ns", jobOutput.getFormattedAverageDuration());
 		Assert.assertEquals(0, jobOutput.getPassedSteps());
 		Assert.assertEquals(0, jobOutput.getFailedSteps());
 		Assert.assertEquals(313, jobOutput.getSkippedSteps());
@@ -604,9 +604,9 @@ public class CalculationsTest {
 		Assert.assertEquals(0l, jobOutput.getLongestDuration());
 		Assert.assertEquals(Long.MAX_VALUE, jobOutput.getShortestDuration());
 		Assert.assertEquals(0l, jobOutput.calculateAverageDuration());
-		Assert.assertEquals("0 ms", jobOutput.getFormattedLongestDuration());
-		Assert.assertEquals("0 ms", jobOutput.getFormattedShortestDuration());
-		Assert.assertEquals("0 ms", jobOutput.getFormattedAverageDuration());
+		Assert.assertEquals("0 ns", jobOutput.getFormattedLongestDuration());
+		Assert.assertEquals("0 ns", jobOutput.getFormattedShortestDuration());
+		Assert.assertEquals("0 ns", jobOutput.getFormattedAverageDuration());
 		Assert.assertEquals(312, jobOutput.getPassedSteps());
 		Assert.assertEquals(1, jobOutput.getFailedSteps());
 		Assert.assertEquals(0, jobOutput.getSkippedSteps());
