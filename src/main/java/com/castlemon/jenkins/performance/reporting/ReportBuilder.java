@@ -1,10 +1,8 @@
 package com.castlemon.jenkins.performance.reporting;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
 
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
@@ -29,8 +27,8 @@ public class ReportBuilder {
 	public boolean generateBuildReport(List<Feature> features,
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
-		copyAllResourceFiles(reportDirectory);
-		reporter.initialiseEntryMaps();
+		// copyAllResourceFiles(reportDirectory);
+		// reporter.initialiseEntryMaps();
 		// VelocityEngine velocityEngine = new VelocityEngine();
 		// velocityEngine.setProperty("resource.loader", "class");
 		// velocityEngine
@@ -57,15 +55,17 @@ public class ReportBuilder {
 	public boolean generateProjectReports(List<ProjectRun> projectRuns,
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
-		// copyResourceFiles(reportDirectory);
+		copyAllResourceFiles(reportDirectory);
 		reporter.initialiseEntryMaps();
 		Summary projectSummary = reporter.getPerformanceData(projectRuns);
 		projectSummary.setName(buildProject);
 		VelocityEngine velocityEngine = new VelocityEngine();
-		velocityEngine.setProperty("resource.loader", "class");
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "class");
 		velocityEngine
 				.setProperty("class.resource.loader.class",
 						"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+		//velocityEngine.setProperty(RuntimeConstants.VM_LIBRARY,
+		//		"/templates/macros");
 		velocityEngine.init();
 		Template template = velocityEngine.getTemplate("/templates/project.vm");
 		String fullPluginPath = getPluginUrlPath(pluginUrlPath);
