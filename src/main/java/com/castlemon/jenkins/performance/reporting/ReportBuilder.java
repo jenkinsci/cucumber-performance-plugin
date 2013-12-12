@@ -70,11 +70,11 @@ public class ReportBuilder {
 		Template template = velocityEngine.getTemplate("/templates/project.vm");
 		String fullPluginPath = getPluginUrlPath(pluginUrlPath);
 		// feature reports
-		generateReports(reporter.getFeatureSummaries(), velocityEngine,
-				fullPluginPath, reportDirectory, "feature", "scenario");
+		generateReport(reporter.getFeatureSummaries(), velocityEngine,
+				fullPluginPath, reportDirectory, "Feature", "Scenario");
 		// scenario reports
-		generateReports(reporter.getScenarioSummaries(), velocityEngine,
-				fullPluginPath, reportDirectory, "scenario", "step");
+		generateReport(reporter.getScenarioSummaries(), velocityEngine,
+				fullPluginPath, reportDirectory, "Scenario", "Step");
 		// sorted reports
 		generateSortedReports(reporter.getFeatureSummaries(),
 				reporter.getScenarioSummaries(), reporter.getStepSummaries(),
@@ -96,19 +96,20 @@ public class ReportBuilder {
 		return (writeReport("projectview.html", reportDirectory, template,
 				context));
 	}
-
-	private void generateReports(Map<String, Summary> summaries,
+	
+	private void generateReport(Map<String, Summary> summaries,
 			VelocityEngine velocityEngine, String pluginPath,
-			File reportDirectory, String type, String lowerType) {
-		Template template = velocityEngine.getTemplate("/templates/" + type
-				+ ".vm");
+			File reportDirectory, String type, String subType) {
+		Template template = velocityEngine.getTemplate("/templates/combined.vm");
 		VelocityContext context = new VelocityContext();
 		context.put("genDate", new Date());
 		context.put("jenkins_base", pluginPath);
 		for (Summary summary : summaries.values()) {
-			context.put(type + "Summary", summary);
-			context.put(lowerType + "Data", CucumberPerfUtils
-					.getRelevantSummaries(getSubSummaries(lowerType),
+			context.put("summaryType", type);
+			context.put("subType", subType);
+			context.put("summary", summary);
+			context.put("subData", CucumberPerfUtils
+					.getRelevantSummaries(getSubSummaries(subType),
 							summary.getId()));
 			context.put("perfData", CucumberPerfUtils.buildGraphData(summary));
 			context.put("averageData",
@@ -146,7 +147,7 @@ public class ReportBuilder {
 	}
 
 	private Map<String, Summary> getSubSummaries(String lowerType) {
-		if (lowerType.equals("step")) {
+		if (lowerType.equals("Step")) {
 			return reporter.getStepSummaries();
 		}
 		// assume scenario summaries required

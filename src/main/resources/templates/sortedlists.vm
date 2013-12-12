@@ -127,8 +127,7 @@
                 </tbody>
             </table>
         </div>
-</div>
-<p />
-#parse ("/templates/footer.vm")
-</body>
+        <p />
+        #parse ("/templates/footer.vm")
+    </body>
 </html>

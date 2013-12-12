@@ -2,20 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Cucumber Scenario Report</title>
+        <title>Cucumber $summaryType Report</title>
         <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
         <script type="text/javascript" src="js/jquery/jquery-1.8.2.min.js"></script>
         <script type="text/javascript" src="js/highcharts-3.0.2/highcharts.js"></script>
         <script type="text/javascript" src="js/performanceGraph.js"></script>
         <script>
-            var titleText = 'Scenario Performance'
+            var titleText = '$summaryType Performance'
             var perfData = $perfData
             var averageData = $averageData
         </script>
     </head>
     <body>
         <div id="pageHeader">
-            <div id="titleArea">Cucumber Project Reports</div>
+            <div id="titleArea">Cucumber $summaryType Reports</div>
             <div id="linkArea">
                 <div id="projectLink">
                     <a href="projectview.html">Back To Project View</a>
@@ -28,7 +28,7 @@
         </div>
         <p />
         <div class="content">
-            <h1>Scenario Report for $scenarioSummary.name</h1>
+            <h1>$summaryType Report for $summary.name</h1>
             <h3>Summary</h3>
             <p />
             <div id="summaryArea">
@@ -39,15 +39,15 @@
                         </tr>
                         <tr>
                             <td>Number of Passed Builds:</td>
-                            <td>$scenarioSummary.passedBuilds</td>
+                            <td>$summary.passedBuilds</td>
                         </tr>
                         <tr>
                             <td>Number of Failed Builds:</td>
-                            <td>$scenarioSummary.failedBuilds</td>
+                            <td>$summary.failedBuilds</td>
                         </tr>
                         <tr>
                             <td>Number of Total Builds:</td>
-                            <td>$scenarioSummary.totalBuilds</td>
+                            <td>$summary.totalBuilds</td>
                         </tr>
                     </table>
                 </div>
@@ -58,15 +58,15 @@
                         </tr>
                         <tr>
                             <td>Number of Passed Steps:</td>
-                            <td>$scenarioSummary.passedSteps</td>
+                            <td>$summary.passedSteps</td>
                         </tr>
                         <tr>
                             <td>Number of Failed Steps:</td>
-                            <td>$scenarioSummary.failedSteps</td>
+                            <td>$summary.failedSteps</td>
                         </tr>
                         <tr>
                             <td>Number of Skipped Steps:</td>
-                            <td>$scenarioSummary.skippedSteps</td>
+                            <td>$summary.skippedSteps</td>
                         </tr>
                     </table>
                 </div>
@@ -76,44 +76,54 @@
                     the details below.</div>
             </div>
             <p />
-            <h3>Scenario Performance</h3>
+            <h3>$summaryType Performance</h3>
             <div id="graphArea">
                 <noscript>
                     <p>This content requires JavaScript.</p>
                 </noscript>
             </div>
             <p />
-            <h3>Step details</h3>
+            <h3>$subType details</h3>
         </div>
         <div class="fullWidth">
-            <table class="rowsTable">
+            <table class="summaryTable">
                 <tr>
-                    <th class="coloured">Step Name</th>
+                    <th class="coloured">$subType Name</th>
+                    #if(!($subType.equals("Step")))
+                        <th class="coloured">Steps</th>
+                    #end
                     <th class="coloured">Shortest Duration</th>
                     <th class="coloured">Longest Duration</th>
                     <th class="coloured">Average Duration</th>
                 </tr>
-                #foreach ($summary in $stepData)
+                #foreach ($subSummary in $subData)
                     <tr>
-                        <td>
-                            <span class="bolded">$summary.keyword</span>
-                            $summary.name
-                            #if($summary.hasRows())
-                                <div>
-                                    <table class="summaryTable">
-                                        #foreach($row in $summary.getRows())
-                                            <tr>
-                                                #foreach($cell in $row)
-                                                    <td class="cellText">$cell</td>
-                                                #end
-                                            </tr>
-                                        #end
-                                    </table>
-                                </div>
-                            #end</td>
-                            <td>$summary.formattedShortestDuration</td>
-                            <td>$summary.formattedLongestDuration</td>
-                            <td>$summary.formattedAverageDuration</td>
+                        #if($subType.equals("Step"))
+                            <td>
+                                <span class="bolded">$subSummary.keyword</span>
+                                $subSummary.name
+                                #if($subSummary.hasRows())
+                                    <div>
+                                        <table class="summaryTable">
+                                            #foreach($row in $subSummary.getRows())
+                                                <tr>
+                                                    #foreach($cell in $row)
+                                                        <td class="cellText">$cell</td>
+                                                    #end
+                                                </tr>
+                                            #end
+                                        </table>
+                                    </div>
+                                #end</td>
+                        #else
+                            <td>
+                                <a href="$subSummary.pageLink">$subSummary.name</a>
+                            </td>
+                            <td>$subSummary.numberOfSubItems</td>
+                        #end                        
+                        <td>$subSummary.formattedShortestDuration</td>
+                        <td>$subSummary.formattedLongestDuration</td>
+                        <td>$subSummary.formattedAverageDuration</td>
                     </tr>
                 #end
             </table>
