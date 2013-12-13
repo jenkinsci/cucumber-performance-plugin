@@ -136,7 +136,8 @@ public class PerformanceReporterTest {
 		performanceReporter.initialiseEntryMaps();
 		PerformanceEntry stepEntry = performanceReporter.processStep(features
 				.get(0).getElements().get(0).getSteps().get(0), date, 115,
-				features.get(0).getElements().get(0).getId(), 0);
+				features.get(0).getElements().get(0).getId(), 0, features
+						.get(0).getElements().get(0).getName());
 		Assert.assertEquals(10957080635l, stepEntry.getElapsedTime());
 		Assert.assertEquals(1, stepEntry.getPassedSteps());
 		Assert.assertEquals(0, stepEntry.getFailedSteps());
@@ -154,7 +155,7 @@ public class PerformanceReporterTest {
 		performanceReporter.initialiseEntryMaps();
 		PerformanceEntry scenarioEntry = performanceReporter.processScenario(
 				features.get(0).getElements().get(0), date, 116, features
-						.get(0).getId(), 0);
+						.get(0).getId(), 0, features.get(0).getName());
 		Assert.assertEquals(17383328936l, scenarioEntry.getElapsedTime());
 		Assert.assertEquals(5, scenarioEntry.getPassedSteps());
 		Assert.assertEquals(0, scenarioEntry.getFailedSteps());

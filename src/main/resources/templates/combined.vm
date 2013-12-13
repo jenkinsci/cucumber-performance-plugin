@@ -88,7 +88,7 @@
             #if($summaryType.equals("Project"))            
                 <h3>Links to overall reports</h3>
                 <div id="summaryReports">
-                    <a href="sortedreports.html">Downloadable Reports sorted by performance</a>
+                    <a href="sortedreports.html">Reports sorted by performance</a>
                 </div>
                 <p />
             #end
