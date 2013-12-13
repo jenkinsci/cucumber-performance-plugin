@@ -4,7 +4,9 @@ jQuery(document).ready(function() {
 		"aaData" : sortedFeatureData,
 		"aoColumns" : [ {
 			"sType" : "string"
-		}, null, {
+		}, 
+		null, 
+		{
 			"iDataSort" : 5
 		}, {
 			"iDataSort" : 6

@@ -204,7 +204,6 @@ public class PerformanceReporterTest {
 
 	@Test
 	public void testGetPerformanceDataBasic() throws IOException {
-		long expectedDuration = 192349832481l;
 		String jsonString = testUtils.loadJsonFile("/cucumber-basic.json");
 		Assert.assertNotNull(jsonString);
 		List<Feature> features = CucumberPerfUtils.getData(jsonString);

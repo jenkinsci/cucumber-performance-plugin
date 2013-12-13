@@ -72,6 +72,7 @@
                 <thead>
                     <tr>
                         <th class="coloured">Scenario Name</th>
+                        <th class="coloured">Feature</th>
                         <th class="coloured">Steps</th>
                         <th class="coloured">Shortest Duration</th>
                         <th class="coloured">Longest Duration</th>
@@ -83,6 +84,7 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -104,7 +106,7 @@
                 <thead>
                     <tr>
                         <th class="coloured">Step Name</th>
-                        <th class="coloured">Steps</th>
+                        <th class="coloured">Scenario</th>
                         <th class="coloured">Shortest Duration</th>
                         <th class="coloured">Longest Duration</th>
                         <th class="coloured">Average Duration</th>

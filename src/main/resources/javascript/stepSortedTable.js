@@ -4,7 +4,9 @@ jQuery(document).ready(function() {
 		"aaData" : sortedStepData,
 		"aoColumns" : [ {
 			"sType" : "string"
-		}, null, {
+		}, {
+			"sType" : "string"
+		}, {
 			"iDataSort" : 5
 		}, {
 			"iDataSort" : 6

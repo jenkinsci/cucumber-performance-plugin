@@ -4,12 +4,12 @@ jQuery(document).ready(function() {
 		"aaData" : sortedScenarioData,
 		"aoColumns" : [ {
 			"sType" : "string"
-		}, null, {
-			"iDataSort" : 5
-		}, {
+		}, null, null, {
 			"iDataSort" : 6
 		}, {
 			"iDataSort" : 7
+		}, {
+			"iDataSort" : 8
 		}, {
 			"bVisible" : false
 		}, {
@@ -17,7 +17,7 @@ jQuery(document).ready(function() {
 		}, {
 			"bVisible" : false
 		} ],
-		aaSorting : [ [ 7, 'desc' ] ],
+		aaSorting : [ [ 8, 'desc' ] ],
 		"bPaginate" : false,
 		"bFilter" : false,
 		"bSort" : true,

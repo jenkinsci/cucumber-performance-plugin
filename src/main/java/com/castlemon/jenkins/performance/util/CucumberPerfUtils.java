@@ -16,6 +16,7 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import com.castlemon.jenkins.performance.domain.Feature;
+import com.castlemon.jenkins.performance.domain.enums.SummaryType;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryOrderComparator;
@@ -160,17 +161,23 @@ public class CucumberPerfUtils {
 		return formatter.print(new Period(0, durationInNanos / nanosInAMilli));
 	}
 
-	public static String generateJsonSummary(List<Summary> summaries) {
+	public static String generateJsonSummary(List<Summary> summaries,
+			SummaryType summaryType) {
 		StringBuilder output = new StringBuilder();
 		output.append("[");
 		int i = 1;
 		for (Summary summary : summaries) {
-			output.append("[" + '"' + summary.getName() + '"' + ", "
-					+ summary.getNumberOfSubItems() + ", " + '"'
-					+ summary.getFormattedShortestDuration() + '"' + ", " + '"'
-					+ summary.getFormattedLongestDuration() + '"' + ", " + '"'
-					+ summary.getFormattedAverageDuration() + '"' + ", "
-					+ summary.getShortestDuration() + ", "
+			output.append("[" + "'" + summary.getName() + "'" + ", ");
+			if (summaryType.hasSeniorSummaries()) {
+				output.append("'" + summary.getSeniorName() + "'" + ", ");
+			}
+			if (summaryType.hasSubSummaries()) {
+				output.append(summary.getNumberOfSubItems() + ", ");
+			}
+			output.append("'" + summary.getFormattedShortestDuration() + "'"
+					+ ", " + "'" + summary.getFormattedLongestDuration() + "'"
+					+ ", " + "'" + summary.getFormattedAverageDuration() + "'"
+					+ ", " + summary.getShortestDuration() + ", "
 					+ summary.getLongestDuration() + ", "
 					+ summary.calculateAverageDuration() + "]");
 			if (i < summaries.size()) {

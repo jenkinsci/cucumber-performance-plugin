@@ -36,6 +36,8 @@ public class Summary {
 
 	private String seniorId;
 
+	private String seniorName;
+
 	private int order;
 
 	private int numberOfSubItems;
@@ -222,6 +224,14 @@ public class Summary {
 
 	public void setSeniorId(String seniorId) {
 		this.seniorId = seniorId;
+	}
+
+	public String getSeniorName() {
+		return seniorName;
+	}
+
+	public void setSeniorName(String seniorName) {
+		this.seniorName = seniorName;
 	}
 
 	public int getOrder() {

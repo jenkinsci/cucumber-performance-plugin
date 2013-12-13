@@ -63,8 +63,7 @@ public class CucumberPerfRecorder extends Recorder {
 		listener.getLogger().println(
 				"[CucumberPerfRecorder] Reporting on performance for "
 						+ buildProject + " #" + buildNumber);
-		gatherJsonResultFiles(build, listener, targetBuildDirectory,
-				buildNumber, buildProject);
+		gatherJsonResultFiles(build, listener, targetBuildDirectory);
 		generateProjectReport(build, listener, targetBuildDirectory,
 				buildNumber, buildProject);
 		return true;
@@ -104,9 +103,8 @@ public class CucumberPerfRecorder extends Recorder {
 	}
 
 	private void gatherJsonResultFiles(AbstractBuild<?, ?> build,
-			BuildListener listener, File targetBuildDirectory,
-			String buildNumber, String buildProject) throws IOException,
-			InterruptedException {
+			BuildListener listener, File targetBuildDirectory)
+			throws IOException, InterruptedException {
 		File workspaceJsonReportDirectory = new File(build.getWorkspace()
 				.toURI().getPath());
 		if (StringUtils.isNotBlank(jsonReportDirectory)) {

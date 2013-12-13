@@ -101,7 +101,8 @@ public class PerformanceReporter {
 			int buildNumber, int higherOrderParam) {
 		Summary featureSummary = getRelevantSummary(feature.getId(),
 				feature.getId(), feature.getName(), featureSummaries,
-				higherOrderParam, feature.getElements().size());
+				higherOrderParam, feature.getElements().size(),
+				feature.getName());
 		PerformanceEntry featureEntry = new PerformanceEntry();
 		featureEntry.setRunDate(runDate);
 		featureEntry.setBuildNumber(buildNumber);
@@ -112,7 +113,7 @@ public class PerformanceReporter {
 		int orderParam = 0;
 		for (Elements scenario : feature.getElements()) {
 			PerformanceEntry scenarioEntry = processScenario(scenario, runDate,
-					buildNumber, feature.getId(), orderParam);
+					buildNumber, feature.getId(), orderParam, feature.getName());
 			passedSteps += scenarioEntry.getPassedSteps();
 			failedSteps += scenarioEntry.getFailedSteps();
 			skippedSteps += scenarioEntry.getSkippedSteps();
@@ -149,10 +150,11 @@ public class PerformanceReporter {
 	}
 
 	protected PerformanceEntry processScenario(Elements scenario, Date runDate,
-			int buildNumber, String featureId, int higherOrderParam) {
+			int buildNumber, String featureId, int higherOrderParam,
+			String featureName) {
 		Summary scenarioSummary = getRelevantSummary(scenario.getId(),
 				featureId, scenario.getName(), scenarioSummaries,
-				higherOrderParam, scenario.getSteps().size());
+				higherOrderParam, scenario.getSteps().size(), featureName);
 		PerformanceEntry scenarioEntry = new PerformanceEntry();
 		scenarioEntry.setRunDate(runDate);
 		scenarioEntry.setBuildNumber(buildNumber);
@@ -163,7 +165,8 @@ public class PerformanceReporter {
 		int orderParam = 0;
 		for (Step step : scenario.getSteps()) {
 			PerformanceEntry stepEntry = processStep(step, runDate,
-					buildNumber, scenario.getId(), orderParam);
+					buildNumber, scenario.getId(), orderParam,
+					scenario.getName());
 			passedSteps += stepEntry.getPassedSteps();
 			failedSteps += stepEntry.getFailedSteps();
 			skippedSteps += stepEntry.getSkippedSteps();
@@ -199,9 +202,10 @@ public class PerformanceReporter {
 
 	@SuppressWarnings("unchecked")
 	protected PerformanceEntry processStep(Step step, Date runDate,
-			int buildNumber, String scenarioId, int orderParam) {
+			int buildNumber, String scenarioId, int orderParam,
+			String scenarioName) {
 		Summary stepSummary = getRelevantSummary(step.getName(), scenarioId,
-				step.getName(), stepSummaries, orderParam, 1);
+				step.getName(), stepSummaries, orderParam, 1, scenarioName);
 		if (StringUtils.isEmpty(stepSummary.getKeyword())) {
 			stepSummary.setKeyword(step.getKeyword());
 		}
@@ -286,7 +290,8 @@ public class PerformanceReporter {
 	}
 
 	private Summary getRelevantSummary(String id, String seniorId, String name,
-			Map<String, Summary> summaries, int orderParam, int subItemCount) {
+			Map<String, Summary> summaries, int orderParam, int subItemCount,
+			String seniorName) {
 		// generate the key for the map
 		String complexKey = seniorId + id;
 		// find the right step summary to use
@@ -299,6 +304,7 @@ public class PerformanceReporter {
 			summary = new Summary();
 			summary.setId(id);
 			summary.setSeniorId(seniorId);
+			summary.setSeniorName(seniorName);
 			summary.setName(name);
 			summary.setOrder(orderParam);
 			summary.setNumberOfSubItems(subItemCount);
