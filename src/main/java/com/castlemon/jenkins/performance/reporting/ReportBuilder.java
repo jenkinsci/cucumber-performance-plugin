@@ -41,10 +41,12 @@ public class ReportBuilder {
 		context.put("jenkins_base", fullPluginPath);
 		// feature reports
 		generateReports(reporter.getFeatureSummaries(), velocityEngine,
-				reportDirectory, "Feature", "Scenario", context);
+				reportDirectory, SummaryType.FEATURE.toString(),
+				SummaryType.SCENARIO.toString(), context);
 		// scenario reports
 		generateReports(reporter.getScenarioSummaries(), velocityEngine,
-				reportDirectory, "Scenario", "Step", context);
+				reportDirectory, SummaryType.SCENARIO.toString(),
+				SummaryType.STEP.toString(), context);
 		// sorted reports
 		generateSortedReports(reporter.getFeatureSummaries(),
 				reporter.getScenarioSummaries(), reporter.getStepSummaries(),
@@ -54,7 +56,8 @@ public class ReportBuilder {
 				.getFeatureSummaries().values());
 		CucumberPerfUtils.sortSummaryList(summaryList);
 		generateReport(projectSummary, velocityEngine, reportDirectory,
-				"Project", "Feature", context, "projectview.html", summaryList);
+				SummaryType.PROJECT.toString(), SummaryType.FEATURE.toString(),
+				context, "projectview.html", summaryList);
 		return true;
 	}
 
@@ -109,9 +112,9 @@ public class ReportBuilder {
 	}
 
 	private Map<String, Summary> getSubSummaries(String lowerType) {
-		if (lowerType.equals("Feature")) {
+		if (lowerType.equals(SummaryType.FEATURE.toString())) {
 			return reporter.getFeatureSummaries();
-		} else if (lowerType.equals("Scenario")) {
+		} else if (lowerType.equals(SummaryType.SCENARIO.toString())) {
 			return reporter.getScenarioSummaries();
 		}
 		// assume step summaries required
