@@ -3,7 +3,6 @@ package com.castlemon.jenkins.performance.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +14,7 @@ import org.junit.Test;
 import com.castlemon.jenkins.performance.TestUtils;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
-import com.castlemon.jenkins.performance.reporting.PerformanceReporter;
 
 public class CucumberPerfUtilsTest {
 
@@ -181,7 +178,7 @@ public class CucumberPerfUtilsTest {
 		String[] results = CucumberPerfUtils.findJsonFiles(f.getParentFile(),
 				".json");
 		// the figure below is a count of the *.json files in src/test/resources
-		Assert.assertEquals(10, results.length);
+		Assert.assertEquals(8, results.length);
 
 	}
 
@@ -206,33 +203,4 @@ public class CucumberPerfUtilsTest {
 		Assert.assertEquals(2, features.size());
 	}
 
-	/*
-	 * This test switched off until more information available
-	 */
-	//@Test
-	public void testCucError() throws IOException {
-		String jsonString = testUtils.loadJsonFile("/cuc-error.json");
-		Assert.assertNotNull(jsonString);
-		List<Feature> features = CucumberPerfUtils.getData(jsonString);
-		Assert.assertFalse(features.isEmpty());
-		List<ProjectRun> runs = new ArrayList<ProjectRun>();
-		ProjectRun run = new ProjectRun();
-		run.setFeatures(features);
-		Date date = new Date();
-		run.setRunDate(date);
-		run.setBuildNumber(112);
-		runs.add(run);
-		PerformanceReporter performanceReporter = new PerformanceReporter();
-		performanceReporter.initialiseEntryMaps();
-		Summary jobOutput = performanceReporter.getPerformanceData(runs);
-		Assert.assertEquals(1, jobOutput.getEntries().size());
-		for (Summary scenarioSummary : performanceReporter
-				.getScenarioSummaries().values()) {
-			CucumberPerfUtils.getRelevantSummaries(
-					performanceReporter.getStepSummaries(),
-					scenarioSummary.getId());
-			assert true;
-		}
-
-	}
 }

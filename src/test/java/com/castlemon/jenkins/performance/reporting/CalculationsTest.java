@@ -33,7 +33,7 @@ public class CalculationsTest {
 	 */
 	//@Test
 	public void getFigures() throws IOException {
-		String jsonString = testUtils.loadJsonFile("/cuc-error1.json");
+		String jsonString = testUtils.loadJsonFile("/cuc-basic.json");
 		Assert.assertNotNull(jsonString);
 		List<Feature> features = CucumberPerfUtils.getData(jsonString);
 		for (Feature feature : features) {

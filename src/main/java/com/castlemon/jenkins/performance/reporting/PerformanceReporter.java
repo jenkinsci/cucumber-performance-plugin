@@ -209,19 +209,19 @@ public class PerformanceReporter {
 		if (StringUtils.isEmpty(stepSummary.getKeyword())) {
 			stepSummary.setKeyword(step.getKeyword());
 		}
-		if (step.getAdditionalProperties().size() > 0) {
-			if (stepSummary.getRows() == null) {
-				List<List<String>> rows = new ArrayList<List<String>>();
-				List<Map<String, List<String>>> rawRows = (List<Map<String, List<String>>>) step
-						.getAdditionalProperties().get(ROWS);
-				if (rawRows != null) {
-					for (Map<String, List<String>> row : rawRows) {
-						List<String> cells = row.get("cells");
-						rows.add(cells);
-					}
+		if (step.getAdditionalProperties().size() > 0
+				&& stepSummary.getRows() == null) {
+			List<List<String>> rows = new ArrayList<List<String>>();
+			List<Map<String, List<String>>> rawRows = (List<Map<String, List<String>>>) step
+					.getAdditionalProperties().get(ROWS);
+			if (rawRows != null) {
+				for (Map<String, List<String>> row : rawRows) {
+					List<String> cells = row.get("cells");
+					rows.add(cells);
 				}
-				stepSummary.setRows(rows);
 			}
+			stepSummary.setRows(rows);
+
 		}
 		PerformanceEntry stepEntry = new PerformanceEntry();
 		stepEntry.setRunDate(runDate);
