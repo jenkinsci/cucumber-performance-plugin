@@ -30,7 +30,6 @@ import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.reporting.ReportBuilder;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
-@SuppressWarnings("unchecked")
 public class CucumberPerfRecorder extends Recorder {
 
 	public final String jsonReportDirectory;
@@ -52,7 +51,7 @@ public class CucumberPerfRecorder extends Recorder {
 		listener.getLogger()
 				.println(
 						"[CucumberPerfRecorder] Starting Cucumber Performance Report generation...");
-		reportBuilder = new ReportBuilder();
+		reportBuilder = new ReportBuilder(listener);
 		File targetBuildDirectory = new File(build.getRootDir(),
 				"cucumber-perf-reports");
 		if (!targetBuildDirectory.exists()) {

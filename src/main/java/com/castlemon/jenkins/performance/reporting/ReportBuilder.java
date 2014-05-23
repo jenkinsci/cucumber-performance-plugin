@@ -1,5 +1,7 @@
 package com.castlemon.jenkins.performance.reporting;
 
+import hudson.model.BuildListener;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,8 +24,13 @@ import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ReportBuilder {
 
-	PerformanceReporter reporter = new PerformanceReporter();
-	VelocityEngine velocityEngine = setupVelocityEngine();
+	private PerformanceReporter reporter = new PerformanceReporter();
+	private VelocityEngine velocityEngine = setupVelocityEngine();
+	private BuildListener listener;
+
+	public ReportBuilder(BuildListener listener) {
+		this.listener = listener;
+	}
 
 	public boolean generateProjectReports(List<ProjectRun> projectRuns,
 			File reportDirectory, String buildProject, String buildNumber,
@@ -152,12 +159,13 @@ public class ReportBuilder {
 				"/css").getPath());
 		File targetCssDirectory = new File(reportDirectory.getAbsolutePath()
 				+ "/css");
+
 		targetCssDirectory.mkdir();
 		try {
 			FileUtils.copyDirectory(sourceCssDirectory, targetCssDirectory);
 		} catch (IOException e) {
-			System.out.println("unable to copy CSS files");
-			e.printStackTrace();
+			listener.getLogger().println("unable to copy CSS files");
+			e.printStackTrace(listener.getLogger());
 		}
 		// copy javascript
 		File sourceJsDirectory = new File(ReportBuilder.class.getResource(
@@ -168,8 +176,8 @@ public class ReportBuilder {
 		try {
 			FileUtils.copyDirectory(sourceJsDirectory, targetJsDirectory);
 		} catch (IOException e) {
-			System.out.println("unable to copy Javascript files");
-			e.printStackTrace();
+			listener.getLogger().println("unable to copy Javascript files");
+			e.printStackTrace(listener.getLogger());
 		}
 		// copy image files
 		File sourceImageDirectory = new File(ReportBuilder.class.getResource(
@@ -180,8 +188,8 @@ public class ReportBuilder {
 		try {
 			FileUtils.copyDirectory(sourceImageDirectory, targetImageDirectory);
 		} catch (IOException e) {
-			System.out.println("unable to copy image files");
-			e.printStackTrace();
+			listener.getLogger().println("unable to copy image files");
+			e.printStackTrace(listener.getLogger());
 		}
 	}
 
