@@ -1,0 +1,10 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<l:layout title="Cucumber Performance Reporting">
+		<st:include page="header" optional="true" />
+    <l:main-panel>
+      <h1>Cucumber Performance Reporting</h1>
+    ${it.myString}
+    </l:main-panel>
+  </l:layout>
+</j:jelly>

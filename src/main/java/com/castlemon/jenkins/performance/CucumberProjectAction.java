@@ -23,6 +23,10 @@ public class CucumberProjectAction implements ProminentProjectAction {
 		super();
 		this.project = project;
 	}
+	
+	public String getMyString() {
+	    return "Hello Jenkins!";
+	}
 
 	public String getDisplayName() {
 		return "Cucumber Project Performance Report";
