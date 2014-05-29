@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.reporting.ReportBuilder;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
@@ -36,6 +37,8 @@ public class CucumberPerfRecorder extends Recorder {
 	public final String pluginUrlPath;
 
 	private ReportBuilder reportBuilder;
+	
+	private Summary projectSummary;
 
 	// Fields in config.jelly must match the parameter names in the
 	// "DataBoundConstructor"
@@ -63,12 +66,12 @@ public class CucumberPerfRecorder extends Recorder {
 				"[CucumberPerfRecorder] Reporting on performance for "
 						+ buildProject + " #" + buildNumber);
 		gatherJsonResultFiles(build, listener, targetBuildDirectory);
-		generateProjectReport(build, listener, targetBuildDirectory,
+		projectSummary = generateProjectReport(build, listener, targetBuildDirectory,
 				buildNumber, buildProject);
 		return true;
 	}
 
-	private void generateProjectReport(AbstractBuild<?, ?> build,
+	private Summary generateProjectReport(AbstractBuild<?, ?> build,
 			BuildListener listener, File targetBuildDirectory,
 			String buildNumber, String buildProject) throws IOException,
 			InterruptedException {
@@ -94,11 +97,11 @@ public class CucumberPerfRecorder extends Recorder {
 		listener.getLogger().println(
 				"[CucumberPerfRecorder] running project reports on "
 						+ projectRuns.size() + " builds");
-		boolean success = reportBuilder.generateProjectReports(projectRuns,
+		Summary summary = reportBuilder.generateProjectReports(projectRuns,
 				targetBuildDirectory, buildProject, buildNumber, pluginUrlPath);
 		listener.getLogger().println(
-				"[CucumberPerfRecorder] project report generation complete - "
-						+ success);
+				"[CucumberPerfRecorder] project report generation complete");
+		return summary;
 	}
 
 	private void gatherJsonResultFiles(AbstractBuild<?, ?> build,
@@ -180,7 +183,7 @@ public class CucumberPerfRecorder extends Recorder {
 
 	@Override
 	public Action getProjectAction(AbstractProject<?, ?> project) {
-		return new CucumberProjectAction(project);
+		return new CucumberProjectAction(project, projectSummary);
 	}
 	
 

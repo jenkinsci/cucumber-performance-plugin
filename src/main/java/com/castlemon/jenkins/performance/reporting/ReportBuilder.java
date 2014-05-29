@@ -32,7 +32,7 @@ public class ReportBuilder {
 		this.listener = listener;
 	}
 
-	public boolean generateProjectReports(List<ProjectRun> projectRuns,
+	public Summary generateProjectReports(List<ProjectRun> projectRuns,
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
 		copyAllResourceFiles(reportDirectory);
@@ -65,7 +65,7 @@ public class ReportBuilder {
 		generateReport(projectSummary, velocityEngine, reportDirectory,
 				SummaryType.PROJECT.toString(), SummaryType.FEATURE.toString(),
 				context, "projectview.html", summaryList);
-		return true;
+		return projectSummary;
 	}
 
 	private void generateReports(Map<String, Summary> summaries,
@@ -168,7 +168,7 @@ public class ReportBuilder {
 			e.printStackTrace(listener.getLogger());
 		}
 		// copy javascript
-		File sourceJsDirectory = new File(ReportBuilder.class.getResource(
+		/*File sourceJsDirectory = new File(ReportBuilder.class.getResource(
 				"/javascript").getPath());
 		File targetJsDirectory = new File(reportDirectory.getAbsolutePath()
 				+ "/js");
@@ -178,7 +178,7 @@ public class ReportBuilder {
 		} catch (IOException e) {
 			listener.getLogger().println("unable to copy Javascript files");
 			e.printStackTrace(listener.getLogger());
-		}
+		}*/
 		// copy image files
 		File sourceImageDirectory = new File(ReportBuilder.class.getResource(
 				"/perfimages").getPath());
@@ -202,4 +202,6 @@ public class ReportBuilder {
 		velocityEngine.init();
 		return velocityEngine;
 	}
+
+
 }

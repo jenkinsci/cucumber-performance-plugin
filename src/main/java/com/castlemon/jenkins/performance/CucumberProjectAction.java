@@ -15,17 +15,30 @@ import javax.servlet.ServletException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
+import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
+
 public class CucumberProjectAction implements ProminentProjectAction {
 
 	private final AbstractItem project;
+	private final Summary projectSummary;
 
-	public CucumberProjectAction(AbstractItem project) {
+	public CucumberProjectAction(AbstractItem project, Summary projectSummary) {
 		super();
 		this.project = project;
+		this.projectSummary = projectSummary;
 	}
-	
-	public String getMyString() {
-	    return "Hello Jenkins!";
+
+	public Summary getProjectSummary() {
+		return projectSummary;
+	}
+
+	public String getPerformanceData() {
+		return CucumberPerfUtils.buildGraphData(projectSummary);
+	}
+
+	public String getAverageData() {
+		return CucumberPerfUtils.buildAverageData(projectSummary);
 	}
 
 	public String getDisplayName() {
