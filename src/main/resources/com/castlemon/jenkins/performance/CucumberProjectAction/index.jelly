@@ -2,6 +2,15 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 <l:layout title="Cucumber Performance Reporting">
 		<st:include page="header" optional="true" />
+		<l:header><script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/highcharts-3.0.2/highcharts.js"></script>         
+<script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/performanceGraph.js"></script>        
+<script>
+var titleText = '$summaryType Performance'
+            var perfData = ${it.performanceData}
+            var averageData = ${it.averageData}
+</script>
+</l:header>
     <l:main-panel>    
       <h1>Cucumber Performance Reporting</h1>
     <div class="content">
@@ -62,12 +71,4 @@
          </div>
     </l:main-panel>
   </l:layout>
-<script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.8.2.min.js"></script>
-<script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/highcharts-3.0.2/highcharts.js"></script>         
-<script type="text/javascript" src="/${resURL}/plugin/cucumber-perf/javascript/performanceGraph.js"></script>        
-<script>
-alert(${resURL}
-            var perfData = ${it.performanceData}
-            var averageData = ${it.averageData}
-</script> 
 </j:jelly>

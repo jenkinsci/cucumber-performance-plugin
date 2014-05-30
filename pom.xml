@@ -75,6 +75,11 @@
 	</build>
 
 	<dependencies>
+			<dependency>
+			<groupId>com.castlemon.hudson</groupId>
+			<artifactId>performance-processing</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>

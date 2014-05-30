@@ -34,11 +34,13 @@ public class CucumberProjectAction implements ProminentProjectAction {
 	}
 
 	public String getPerformanceData() {
-		return CucumberPerfUtils.buildGraphData(projectSummary);
+		//return CucumberPerfUtils.buildGraphData(projectSummary);
+		return "[]";
 	}
 
 	public String getAverageData() {
-		return CucumberPerfUtils.buildAverageData(projectSummary);
+		//return CucumberPerfUtils.buildAverageData(projectSummary);
+		return "[]";
 	}
 
 	public String getDisplayName() {
