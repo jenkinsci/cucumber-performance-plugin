@@ -3,11 +3,14 @@ package com.castlemon.jenkins.performance.util;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.joda.time.Duration;
@@ -18,16 +21,67 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.enums.SummaryType;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryOrderComparator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.xstream.XStream;
 
 public class CucumberPerfUtils {
 
 	private static int nanosInAMilli = 1000000;
+
+	public static boolean writeSummaryToDisk(ProjectSummary projectSummary,
+			File outputDirectory) {
+		XStream xstream = new XStream();
+		xstream.alias(
+				"projectSummary",
+				com.castlemon.jenkins.performance.domain.reporting.ProjectSummary.class);
+		xstream.alias(
+				"summary",
+				com.castlemon.jenkins.performance.domain.reporting.Summary.class);
+		xstream.alias(
+				"performanceEntry",
+				com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry.class);
+		File outputFile = new File(outputDirectory, "test.xml");
+		Writer writer;
+		try {
+			writer = new PrintWriter(outputFile);
+			xstream.toXML(projectSummary, writer);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public static ProjectSummary readSummaryFromDisk(File outputDirectory) {
+		XStream xstream = new XStream();
+		xstream.alias(
+				"projectSummary",
+				com.castlemon.jenkins.performance.domain.reporting.ProjectSummary.class);
+		xstream.alias(
+				"summary",
+				com.castlemon.jenkins.performance.domain.reporting.Summary.class);
+		xstream.alias(
+				"performanceEntry",
+				com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry.class);
+		String str;
+		try {
+			File inputFile = new File(outputDirectory, "test.xml");
+			str = FileUtils.readFileToString(inputFile);
+			ProjectSummary projectSummary = (ProjectSummary) xstream
+					.fromXML(str);
+			return projectSummary;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	public static List<Summary> getRelevantSummaries(
 			Map<String, Summary> summaries, String seniorId) {

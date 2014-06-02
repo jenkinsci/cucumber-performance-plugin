@@ -14,14 +14,23 @@ import org.junit.Test;
 import com.castlemon.jenkins.performance.TestUtils;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 
 public class CucumberPerfUtilsTest {
 
 	private TestUtils testUtils = new TestUtils();
 
-	// @Rule
-	// public TemporaryFolder testFolder = new TemporaryFolder();
+	@Test
+	public void testReadSummaryFromDisk() throws IOException {
+		File f = FileUtils.toFile(this.getClass().getResource("/test.xml"));
+		ProjectSummary summary = CucumberPerfUtils.readSummaryFromDisk(f
+				.getParentFile());
+		Assert.assertEquals(11, summary.getOverallSummary().getPassedBuilds());
+		Assert.assertEquals(3, summary.getFeatureSummaries().size());
+		Assert.assertEquals(11, summary.getOverallSummary().getEntries().size());
+
+	}
 
 	@Test
 	public void testGetRelevantSummariesMultiple() {

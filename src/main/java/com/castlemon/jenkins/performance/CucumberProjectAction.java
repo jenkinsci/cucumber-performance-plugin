@@ -15,32 +15,37 @@ import javax.servlet.ServletException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import com.castlemon.jenkins.performance.domain.reporting.Summary;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class CucumberProjectAction implements ProminentProjectAction {
 
 	private final AbstractItem project;
-	private final Summary projectSummary;
+	private final File reportDirectory;
 
-	public CucumberProjectAction(AbstractItem project, Summary projectSummary) {
+	public CucumberProjectAction(AbstractItem project, File reportDirectory) {
 		super();
 		this.project = project;
-		this.projectSummary = projectSummary;
+		this.reportDirectory = reportDirectory;
 	}
 
-	public Summary getProjectSummary() {
+	public ProjectSummary getProjectSummary() {
+		ProjectSummary projectSummary = CucumberPerfUtils
+				.readSummaryFromDisk(reportDirectory);
 		return projectSummary;
 	}
 
 	public String getPerformanceData() {
-		//return CucumberPerfUtils.buildGraphData(projectSummary);
-		return "[]";
+		ProjectSummary projectSummary = CucumberPerfUtils
+				.readSummaryFromDisk(reportDirectory);
+		return CucumberPerfUtils.buildGraphData(projectSummary
+				.getOverallSummary());
 	}
 
 	public String getAverageData() {
-		//return CucumberPerfUtils.buildAverageData(projectSummary);
 		return "[]";
+		// return
+		// CucumberPerfUtils.buildAverageData(projectSummary.getOverallSummary());
 	}
 
 	public String getDisplayName() {

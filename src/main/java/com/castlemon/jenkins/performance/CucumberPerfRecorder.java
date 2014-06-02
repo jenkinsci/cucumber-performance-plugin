@@ -27,7 +27,6 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
-import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.reporting.ReportBuilder;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
@@ -37,8 +36,10 @@ public class CucumberPerfRecorder extends Recorder {
 	public final String pluginUrlPath;
 
 	private ReportBuilder reportBuilder;
-	
-	private Summary projectSummary;
+
+	// private ProjectSummary projectSummary;
+
+	private File targetBuildDirectory;
 
 	// Fields in config.jelly must match the parameter names in the
 	// "DataBoundConstructor"
@@ -55,7 +56,7 @@ public class CucumberPerfRecorder extends Recorder {
 				.println(
 						"[CucumberPerfRecorder] Starting Cucumber Performance Report generation...");
 		reportBuilder = new ReportBuilder(listener);
-		File targetBuildDirectory = new File(build.getRootDir(),
+		targetBuildDirectory = new File(build.getRootDir(),
 				"cucumber-perf-reports");
 		if (!targetBuildDirectory.exists()) {
 			targetBuildDirectory.mkdirs();
@@ -66,12 +67,12 @@ public class CucumberPerfRecorder extends Recorder {
 				"[CucumberPerfRecorder] Reporting on performance for "
 						+ buildProject + " #" + buildNumber);
 		gatherJsonResultFiles(build, listener, targetBuildDirectory);
-		projectSummary = generateProjectReport(build, listener, targetBuildDirectory,
+		return generateProjectReport(build, listener, targetBuildDirectory,
 				buildNumber, buildProject);
-		return true;
+		// return true;
 	}
 
-	private Summary generateProjectReport(AbstractBuild<?, ?> build,
+	private boolean generateProjectReport(AbstractBuild<?, ?> build,
 			BuildListener listener, File targetBuildDirectory,
 			String buildNumber, String buildProject) throws IOException,
 			InterruptedException {
@@ -97,11 +98,11 @@ public class CucumberPerfRecorder extends Recorder {
 		listener.getLogger().println(
 				"[CucumberPerfRecorder] running project reports on "
 						+ projectRuns.size() + " builds");
-		Summary summary = reportBuilder.generateProjectReports(projectRuns,
+		boolean success = reportBuilder.generateProjectReports(projectRuns,
 				targetBuildDirectory, buildProject, buildNumber, pluginUrlPath);
 		listener.getLogger().println(
 				"[CucumberPerfRecorder] project report generation complete");
-		return summary;
+		return success;
 	}
 
 	private void gatherJsonResultFiles(AbstractBuild<?, ?> build,
@@ -127,6 +128,9 @@ public class CucumberPerfRecorder extends Recorder {
 			// if we are on the master
 			listener.getLogger().println(
 					"[CucumberPerfRecorder] detected master build ");
+			listener.getLogger().println(
+					"looking in "
+							+ workspaceJsonReportDirectory.getAbsolutePath());
 			String[] files = CucumberPerfUtils.findJsonFiles(
 					workspaceJsonReportDirectory, "cucumber.json");
 
@@ -183,8 +187,7 @@ public class CucumberPerfRecorder extends Recorder {
 
 	@Override
 	public Action getProjectAction(AbstractProject<?, ?> project) {
-		return new CucumberProjectAction(project, projectSummary);
+		return new CucumberProjectAction(project, targetBuildDirectory);
 	}
-	
 
 }

@@ -11,20 +11,25 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
+
 public class CucumberProjectActionTest {
 
 	@Mock
 	private AbstractProject project = Mockito.mock(AbstractProject.class);
 
 	@Mock
-	Run run = Mockito.mock(Run.class);
+	private Summary projectSummary = Mockito.mock(Summary.class);
 
-	@InjectMocks
-	private CucumberProjectAction cucumberProjectAction = new CucumberProjectAction(
-			project);
+	@Mock
+	Run run = Mockito.mock(Run.class);
 
 	@Rule
 	public TemporaryFolder testFolder = new TemporaryFolder();
+
+	@InjectMocks
+	private CucumberProjectAction cucumberProjectAction = new CucumberProjectAction(
+			project, testFolder.getRoot());
 
 	@Test
 	public void testGetDisplayName() {

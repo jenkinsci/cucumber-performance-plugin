@@ -19,6 +19,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 
 import com.castlemon.jenkins.performance.domain.enums.SummaryType;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
@@ -32,13 +33,15 @@ public class ReportBuilder {
 		this.listener = listener;
 	}
 
-	public Summary generateProjectReports(List<ProjectRun> projectRuns,
+	public boolean generateProjectReports(List<ProjectRun> projectRuns,
 			File reportDirectory, String buildProject, String buildNumber,
 			String pluginUrlPath) {
 		copyAllResourceFiles(reportDirectory);
 		reporter.initialiseEntryMaps();
-		Summary projectSummary = reporter.getPerformanceData(projectRuns);
-		projectSummary.setName(buildProject);
+		ProjectSummary projectSummary = new ProjectSummary();
+		projectSummary.setOverallSummary(reporter
+				.getPerformanceData(projectRuns));
+		projectSummary.getOverallSummary().setName(buildProject);
 		String fullPluginPath = getPluginUrlPath(pluginUrlPath);
 		// set up velocity context
 		VelocityContext context = new VelocityContext();
@@ -47,13 +50,19 @@ public class ReportBuilder {
 		context.put("build_number", buildNumber);
 		context.put("jenkins_base", fullPluginPath);
 		// feature reports
-		generateReports(reporter.getFeatureSummaries(), velocityEngine,
-				reportDirectory, SummaryType.FEATURE.toString(),
-				SummaryType.SCENARIO.toString(), context);
+		projectSummary.setFeatureSummaries(reporter.getFeatureSummaries());
+		/*
+		 * generateReports(reporter.getFeatureSummaries(), velocityEngine,
+		 * reportDirectory, SummaryType.FEATURE.toString(),
+		 * SummaryType.SCENARIO.toString(), context);
+		 */
 		// scenario reports
-		generateReports(reporter.getScenarioSummaries(), velocityEngine,
-				reportDirectory, SummaryType.SCENARIO.toString(),
-				SummaryType.STEP.toString(), context);
+		projectSummary.setScenarioSummaries(reporter.getScenarioSummaries());
+		/*
+		 * generateReports(reporter.getScenarioSummaries(), velocityEngine,
+		 * reportDirectory, SummaryType.SCENARIO.toString(),
+		 * SummaryType.STEP.toString(), context);
+		 */
 		// sorted reports
 		generateSortedReports(reporter.getFeatureSummaries(),
 				reporter.getScenarioSummaries(), reporter.getStepSummaries(),
@@ -62,10 +71,15 @@ public class ReportBuilder {
 		List<Summary> summaryList = new ArrayList<Summary>(reporter
 				.getFeatureSummaries().values());
 		CucumberPerfUtils.sortSummaryList(summaryList);
-		generateReport(projectSummary, velocityEngine, reportDirectory,
-				SummaryType.PROJECT.toString(), SummaryType.FEATURE.toString(),
-				context, "projectview.html", summaryList);
-		return projectSummary;
+		generateReport(projectSummary.getOverallSummary(), velocityEngine,
+				reportDirectory, SummaryType.PROJECT.toString(),
+				SummaryType.FEATURE.toString(), context, "projectview.html",
+				summaryList);
+		CucumberPerfUtils.writeSummaryToDisk(projectSummary, reportDirectory);
+		// projectSummary = null;
+		// projectSummary =
+		// CucumberPerfUtils.readSummaryFromDisk(reportDirectory);
+		return true;
 	}
 
 	private void generateReports(Map<String, Summary> summaries,
@@ -168,17 +182,16 @@ public class ReportBuilder {
 			e.printStackTrace(listener.getLogger());
 		}
 		// copy javascript
-		/*File sourceJsDirectory = new File(ReportBuilder.class.getResource(
-				"/javascript").getPath());
-		File targetJsDirectory = new File(reportDirectory.getAbsolutePath()
-				+ "/js");
-		targetJsDirectory.mkdir();
-		try {
-			FileUtils.copyDirectory(sourceJsDirectory, targetJsDirectory);
-		} catch (IOException e) {
-			listener.getLogger().println("unable to copy Javascript files");
-			e.printStackTrace(listener.getLogger());
-		}*/
+		/*
+		 * File sourceJsDirectory = new File(ReportBuilder.class.getResource(
+		 * "/javascript").getPath()); File targetJsDirectory = new
+		 * File(reportDirectory.getAbsolutePath() + "/js");
+		 * targetJsDirectory.mkdir(); try {
+		 * FileUtils.copyDirectory(sourceJsDirectory, targetJsDirectory); }
+		 * catch (IOException e) {
+		 * listener.getLogger().println("unable to copy Javascript files");
+		 * e.printStackTrace(listener.getLogger()); }
+		 */
 		// copy image files
 		File sourceImageDirectory = new File(ReportBuilder.class.getResource(
 				"/perfimages").getPath());
@@ -202,6 +215,5 @@ public class ReportBuilder {
 		velocityEngine.init();
 		return velocityEngine;
 	}
-
 
 }

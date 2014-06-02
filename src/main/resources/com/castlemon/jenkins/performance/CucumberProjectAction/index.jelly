@@ -14,8 +14,12 @@ var titleText = '$summaryType Performance'
     <l:main-panel>    
       <h1>Cucumber Performance Reporting</h1>
     <div class="content">
-            <h1>$summaryType Report for ${it.projectSummary.name}</h1>
-            <h3>Summary - ${resURL} - ${rootURL}</h3>
+            <h1>$summaryType Report for ${it.projectSummary.overallSummary.name}</h1>
+            <h3>Summary</h3>
+            <p />
+            Performance: ${it.performanceData}
+            <p />
+            Average: ${it.averageData}
             <p />
             <div id="summaryArea">
                 <div id="buildSummary">
