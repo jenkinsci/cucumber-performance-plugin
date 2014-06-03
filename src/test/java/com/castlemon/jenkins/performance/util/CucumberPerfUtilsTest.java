@@ -22,7 +22,7 @@ public class CucumberPerfUtilsTest {
 	private TestUtils testUtils = new TestUtils();
 
 	@Test
-	public void testReadSummaryFromDisk() throws IOException {
+	public void testReadSummaryFromDisk() throws Exception {
 		File f = FileUtils.toFile(this.getClass().getResource("/test.xml"));
 		ProjectSummary summary = CucumberPerfUtils.readSummaryFromDisk(f
 				.getParentFile());

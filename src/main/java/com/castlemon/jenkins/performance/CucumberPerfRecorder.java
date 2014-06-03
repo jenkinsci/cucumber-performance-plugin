@@ -36,6 +36,7 @@ public class CucumberPerfRecorder extends Recorder {
 	public final String pluginUrlPath;
 
 	private ReportBuilder reportBuilder;
+	//private BuildListener listener;
 
 	// private ProjectSummary projectSummary;
 
@@ -52,6 +53,7 @@ public class CucumberPerfRecorder extends Recorder {
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
 			BuildListener listener) throws IOException, InterruptedException {
+		//this.listener = listener;
 		listener.getLogger()
 				.println(
 						"[CucumberPerfRecorder] Starting Cucumber Performance Report generation...");

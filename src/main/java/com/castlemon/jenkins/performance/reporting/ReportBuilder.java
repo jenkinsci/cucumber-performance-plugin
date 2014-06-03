@@ -77,8 +77,10 @@ public class ReportBuilder {
 				summaryList);
 		CucumberPerfUtils.writeSummaryToDisk(projectSummary, reportDirectory);
 		// projectSummary = null;
-		// projectSummary =
-		// CucumberPerfUtils.readSummaryFromDisk(reportDirectory);
+		ProjectSummary newProjectSummary = CucumberPerfUtils
+				.readSummaryFromDisk(reportDirectory);
+		System.out.println("newProjectSummary: "
+				+ newProjectSummary.getOverallSummary().getName());
 		return true;
 	}
 

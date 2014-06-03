@@ -3,14 +3,25 @@ package com.castlemon.jenkins.performance.domain.reporting;
 import java.util.List;
 import java.util.Map;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
+@XStreamAlias("projectsummary")
 public class ProjectSummary {
 
+	@XStreamAlias("overallsummary")
 	private Summary overallSummary;
 
+	@XStreamImplicit
+	@XStreamAlias("projectsummaries")
 	private List<Summary> projectSummaries;
 
+	@XStreamImplicit
+	@XStreamAlias("featuresummaries")
 	private Map<String, Summary> featureSummaries;
 
+	@XStreamImplicit
+	@XStreamAlias("scenariosummaries")
 	private Map<String, Summary> scenarioSummaries;
 
 	public Summary getOverallSummary() {

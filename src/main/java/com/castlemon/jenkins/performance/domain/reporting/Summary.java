@@ -5,48 +5,67 @@ import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
 
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
+@XStreamAlias("summary")
 public class Summary {
 
 	private String id;
 
 	private String name;
 
+	@XStreamImplicit
 	private List<PerformanceEntry> entries;
 
+	@XStreamAlias("shortestduration")
 	private long shortestDuration = Long.MAX_VALUE;
 
+	@XStreamAlias("longestduration")
 	private long longestDuration;
 
+	@XStreamAlias("averageduration")
 	private long averageDuration;
 
+	@XStreamAlias("totalbuilds")
 	private int totalBuilds;
 
+	@XStreamAlias("passedbuilds")
 	private int passedBuilds;
 
+	@XStreamAlias("failedbuilds")
 	private int failedBuilds;
 
+	@XStreamAlias("reportedbuilds")
 	private int reportedBuilds;
 
+	@XStreamAlias("passedsteps")
 	private int passedSteps;
 
+	@XStreamAlias("failedsteps")
 	private int failedSteps;
 
+	@XStreamAlias("skippedsteps")
 	private int skippedSteps;
 
+	@XStreamAlias("seniorid")
 	private String seniorId;
 
+	@XStreamAlias("seniorname")
 	private String seniorName;
 
 	private int order;
 
+	@XStreamAlias("numberofsubitems")
 	private int numberOfSubItems;
 
+	@XStreamAlias("pagelink")
 	private final String pageLink;
 
 	// only used for steps
 	private String keyword;
 
+	@XStreamImplicit
 	private List<List<String>> rows;
 
 	public Summary() {

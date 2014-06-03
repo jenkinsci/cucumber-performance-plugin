@@ -36,16 +36,7 @@ public class CucumberPerfUtils {
 
 	public static boolean writeSummaryToDisk(ProjectSummary projectSummary,
 			File outputDirectory) {
-		XStream xstream = new XStream();
-		xstream.alias(
-				"projectSummary",
-				com.castlemon.jenkins.performance.domain.reporting.ProjectSummary.class);
-		xstream.alias(
-				"summary",
-				com.castlemon.jenkins.performance.domain.reporting.Summary.class);
-		xstream.alias(
-				"performanceEntry",
-				com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry.class);
+		XStream xstream = prepareXStream();
 		File outputFile = new File(outputDirectory, "test.xml");
 		Writer writer;
 		try {
@@ -60,20 +51,12 @@ public class CucumberPerfUtils {
 	}
 
 	public static ProjectSummary readSummaryFromDisk(File outputDirectory) {
-		XStream xstream = new XStream();
-		xstream.alias(
-				"projectSummary",
-				com.castlemon.jenkins.performance.domain.reporting.ProjectSummary.class);
-		xstream.alias(
-				"summary",
-				com.castlemon.jenkins.performance.domain.reporting.Summary.class);
-		xstream.alias(
-				"performanceEntry",
-				com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry.class);
+		XStream xstream = prepareXStream();
 		String str;
 		try {
 			File inputFile = new File(outputDirectory, "test.xml");
 			str = FileUtils.readFileToString(inputFile);
+			System.out.println("str: " + str);
 			ProjectSummary projectSummary = (ProjectSummary) xstream
 					.fromXML(str);
 			return projectSummary;
@@ -81,6 +64,7 @@ public class CucumberPerfUtils {
 			e.printStackTrace();
 			return null;
 		}
+
 	}
 
 	public static List<Summary> getRelevantSummaries(
@@ -94,6 +78,14 @@ public class CucumberPerfUtils {
 		}
 		sortSummaryList(summaryList);
 		return summaryList;
+	}
+
+	private static XStream prepareXStream() {
+		XStream xstream = new XStream();
+		xstream.processAnnotations(com.castlemon.jenkins.performance.domain.reporting.ProjectSummary.class);
+		xstream.processAnnotations(com.castlemon.jenkins.performance.domain.reporting.Summary.class);
+		xstream.processAnnotations(com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry.class);
+		return xstream;
 	}
 
 	public static void sortSummaryList(List<Summary> summaries) {

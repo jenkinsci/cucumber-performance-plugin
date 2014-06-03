@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.565</version>
+		<version>1.519</version>
 	</parent>
 
 	<groupId>com.castlemon.hudson</groupId>
@@ -59,11 +59,6 @@
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.castlemon.hudson</groupId>
-			<artifactId>performance-processing</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
