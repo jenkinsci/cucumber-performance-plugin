@@ -24,6 +24,10 @@ public class ProjectSummary {
 	@XStreamAlias("scenariosummaries")
 	private Map<String, Summary> scenarioSummaries;
 
+	@XStreamImplicit
+	@XStreamAlias("stepsummaries")
+	private Map<String, Summary> stepSummaries;
+
 	public Summary getOverallSummary() {
 		return overallSummary;
 	}
@@ -54,6 +58,14 @@ public class ProjectSummary {
 
 	public void setScenarioSummaries(Map<String, Summary> scenarioSummaries) {
 		this.scenarioSummaries = scenarioSummaries;
+	}
+
+	public Map<String, Summary> getStepSummaries() {
+		return stepSummaries;
+	}
+
+	public void setStepSummaries(Map<String, Summary> stepSummaries) {
+		this.stepSummaries = stepSummaries;
 	}
 
 }

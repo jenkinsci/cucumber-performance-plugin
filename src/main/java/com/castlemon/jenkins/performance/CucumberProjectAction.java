@@ -1,7 +1,6 @@
 package com.castlemon.jenkins.performance;
 
 import hudson.FilePath;
-import hudson.model.BuildListener;
 import hudson.model.ProminentProjectAction;
 import hudson.model.AbstractItem;
 import hudson.model.AbstractProject;
@@ -23,13 +22,11 @@ public class CucumberProjectAction implements ProminentProjectAction {
 
 	private final AbstractItem project;
 	private final File reportDirectory;
-	//private final BuildListener listener;
 
 	public CucumberProjectAction(AbstractItem project, File reportDirectory) {
 		super();
 		this.project = project;
 		this.reportDirectory = reportDirectory;
-		// this.listener = listener;
 	}
 
 	public ProjectSummary getProjectSummary() {
@@ -38,30 +35,23 @@ public class CucumberProjectAction implements ProminentProjectAction {
 					.readSummaryFromDisk(reportDirectory);
 			return projectSummary;
 		} catch (Exception e) {
-			//listener.getLogger().println("error reading summary ");
 			e.printStackTrace();
 			return null;
 		}
-
 	}
 
 	public String getPerformanceData() {
-		try {
-			ProjectSummary projectSummary = CucumberPerfUtils
-					.readSummaryFromDisk(reportDirectory);
-			return CucumberPerfUtils.buildGraphData(projectSummary
-					.getOverallSummary());
-		} catch (Exception e) {
-			//listener.getLogger().println("error reading performance data ");
-			e.printStackTrace();
-			return null;
-		}
+		ProjectSummary projectSummary = CucumberPerfUtils
+				.readSummaryFromDisk(reportDirectory);
+		return CucumberPerfUtils.buildGraphData(projectSummary
+				.getOverallSummary());
 	}
 
 	public String getAverageData() {
-		return "[]";
-		// return
-		// CucumberPerfUtils.buildAverageData(projectSummary.getOverallSummary());
+		ProjectSummary projectSummary = CucumberPerfUtils
+				.readSummaryFromDisk(reportDirectory);
+		return CucumberPerfUtils.buildAverageData(projectSummary
+				.getOverallSummary());
 	}
 
 	public String getDisplayName() {

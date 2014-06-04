@@ -56,10 +56,7 @@ public class CucumberPerfUtils {
 		try {
 			File inputFile = new File(outputDirectory, "test.xml");
 			str = FileUtils.readFileToString(inputFile);
-			System.out.println("str: " + str);
-			ProjectSummary projectSummary = (ProjectSummary) xstream
-					.fromXML(str);
-			return projectSummary;
+			return ((ProjectSummary) xstream.fromXML(str));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -85,6 +82,8 @@ public class CucumberPerfUtils {
 		xstream.processAnnotations(com.castlemon.jenkins.performance.domain.reporting.ProjectSummary.class);
 		xstream.processAnnotations(com.castlemon.jenkins.performance.domain.reporting.Summary.class);
 		xstream.processAnnotations(com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry.class);
+		xstream.setClassLoader(com.castlemon.jenkins.performance.domain.reporting.ProjectSummary.class
+				.getClassLoader());
 		return xstream;
 	}
 

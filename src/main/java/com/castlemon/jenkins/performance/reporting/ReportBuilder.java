@@ -39,9 +39,12 @@ public class ReportBuilder {
 		copyAllResourceFiles(reportDirectory);
 		reporter.initialiseEntryMaps();
 		ProjectSummary projectSummary = new ProjectSummary();
+		// projectSummary.setTestField("test1");
+
 		projectSummary.setOverallSummary(reporter
 				.getPerformanceData(projectRuns));
 		projectSummary.getOverallSummary().setName(buildProject);
+
 		String fullPluginPath = getPluginUrlPath(pluginUrlPath);
 		// set up velocity context
 		VelocityContext context = new VelocityContext();
@@ -64,6 +67,8 @@ public class ReportBuilder {
 		 * SummaryType.STEP.toString(), context);
 		 */
 		// sorted reports
+		// step reports
+		projectSummary.setStepSummaries(reporter.getStepSummaries());
 		generateSortedReports(reporter.getFeatureSummaries(),
 				reporter.getScenarioSummaries(), reporter.getStepSummaries(),
 				velocityEngine, reportDirectory, context);
@@ -71,10 +76,12 @@ public class ReportBuilder {
 		List<Summary> summaryList = new ArrayList<Summary>(reporter
 				.getFeatureSummaries().values());
 		CucumberPerfUtils.sortSummaryList(summaryList);
-		generateReport(projectSummary.getOverallSummary(), velocityEngine,
-				reportDirectory, SummaryType.PROJECT.toString(),
-				SummaryType.FEATURE.toString(), context, "projectview.html",
-				summaryList);
+		/*
+		 * generateReport(projectSummary.getOverallSummary(), velocityEngine,
+		 * reportDirectory, SummaryType.PROJECT.toString(),
+		 * SummaryType.FEATURE.toString(), context, "projectview.html",
+		 * summaryList);
+		 */
 		CucumberPerfUtils.writeSummaryToDisk(projectSummary, reportDirectory);
 		// projectSummary = null;
 		ProjectSummary newProjectSummary = CucumberPerfUtils
