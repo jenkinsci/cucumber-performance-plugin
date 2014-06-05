@@ -6,7 +6,6 @@ import org.apache.commons.lang.RandomStringUtils;
 
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("summary")
 public class Summary {
@@ -15,7 +14,6 @@ public class Summary {
 
 	private String name;
 
-	@XStreamImplicit
 	private List<PerformanceEntry> entries;
 
 	@XStreamAlias("shortestduration")
@@ -65,7 +63,6 @@ public class Summary {
 	// only used for steps
 	private String keyword;
 
-	@XStreamImplicit
 	private List<List<String>> rows;
 
 	public Summary() {

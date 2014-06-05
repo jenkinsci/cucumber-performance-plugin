@@ -20,19 +20,17 @@ import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class CucumberProjectAction implements ProminentProjectAction {
 
-	private final AbstractItem project;
-	private final File reportDirectory;
+	private final AbstractProject<?, ?> project;
 
-	public CucumberProjectAction(AbstractItem project, File reportDirectory) {
+	public CucumberProjectAction(AbstractProject<?, ?> project) {
 		super();
 		this.project = project;
-		this.reportDirectory = reportDirectory;
 	}
 
 	public ProjectSummary getProjectSummary() {
 		try {
 			ProjectSummary projectSummary = CucumberPerfUtils
-					.readSummaryFromDisk(reportDirectory);
+					.readSummaryFromDisk(this.dir());
 			return projectSummary;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -42,14 +40,14 @@ public class CucumberProjectAction implements ProminentProjectAction {
 
 	public String getPerformanceData() {
 		ProjectSummary projectSummary = CucumberPerfUtils
-				.readSummaryFromDisk(reportDirectory);
+				.readSummaryFromDisk(this.dir());
 		return CucumberPerfUtils.buildGraphData(projectSummary
 				.getOverallSummary());
 	}
 
 	public String getAverageData() {
 		ProjectSummary projectSummary = CucumberPerfUtils
-				.readSummaryFromDisk(reportDirectory);
+				.readSummaryFromDisk(this.dir());
 		return CucumberPerfUtils.buildAverageData(projectSummary
 				.getOverallSummary());
 	}
@@ -66,6 +64,11 @@ public class CucumberProjectAction implements ProminentProjectAction {
 		return "cucumber-perf-reports";
 	}
 
+	@SuppressWarnings("rawtypes")
+	public AbstractProject getProject() {
+		return (AbstractProject) this.project;
+	}
+
 	public void doDynamic(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException {
 		DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this,
@@ -78,17 +81,14 @@ public class CucumberProjectAction implements ProminentProjectAction {
 	protected File dir() {
 		if (this.project instanceof AbstractProject) {
 			AbstractProject abstractProject = (AbstractProject) this.project;
-
 			Run run = abstractProject.getLastCompletedBuild();
 			if (run != null) {
 				File javadocDir = getBuildArchiveDir(run);
-
 				if (javadocDir.exists()) {
 					return javadocDir;
 				}
 			}
 		}
-
 		return getProjectArchiveDir(this.project);
 	}
 
