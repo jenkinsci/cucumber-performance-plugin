@@ -31,6 +31,34 @@ public enum SummaryType {
 		return false;
 	}
 
+	public String getSubType() {
+		switch (this) {
+		case PROJECT:
+			return "Feature";
+		case FEATURE:
+			return "Scenario";
+		case SCENARIO:
+			return "Step";
+		case STEP:
+			return null;
+		}
+		return null;
+	}
+
+	public String getSubLink() {
+		switch (this) {
+		case PROJECT:
+			return "feature";
+		case FEATURE:
+			return "scenario";
+		case SCENARIO:
+			return "step";
+		case STEP:
+			return null;
+		}
+		return null;
+	}
+
 	public String toString() {
 		switch (this) {
 		case PROJECT:

@@ -1,10 +1,8 @@
 package com.castlemon.jenkins.performance;
 
-import hudson.FilePath;
 import hudson.model.ProminentProjectAction;
 import hudson.model.AbstractItem;
 import hudson.model.AbstractProject;
-import hudson.model.DirectoryBrowserSupport;
 import hudson.model.Run;
 
 import java.io.File;
@@ -25,8 +23,6 @@ public class CucumberProjectAction implements ProminentProjectAction {
 
 	private final AbstractProject<?, ?> project;
 
-	private String urlParams;
-
 	public CucumberProjectAction(AbstractProject<?, ?> project) {
 		super();
 		this.project = project;
@@ -36,20 +32,6 @@ public class CucumberProjectAction implements ProminentProjectAction {
 		ProjectSummary projectSummary = CucumberPerfUtils
 				.readSummaryFromDisk(this.dir());
 		return projectSummary;
-	}
-
-	public String getPerformanceData() {
-		ProjectSummary projectSummary = CucumberPerfUtils
-				.readSummaryFromDisk(this.dir());
-		return CucumberPerfUtils.buildGraphData(projectSummary
-				.getOverallSummary());
-	}
-
-	public String getAverageData() {
-		ProjectSummary projectSummary = CucumberPerfUtils
-				.readSummaryFromDisk(this.dir());
-		return CucumberPerfUtils.buildAverageData(projectSummary
-				.getOverallSummary());
 	}
 
 	public String getDisplayName() {
@@ -64,18 +46,22 @@ public class CucumberProjectAction implements ProminentProjectAction {
 		return "cucumber-perf-reports";
 	}
 
-	public Map<String, Summary> getFeatures() {
+	public Map<String, Summary> getFeature() {
 		ProjectSummary projectSummary = CucumberPerfUtils
 				.readSummaryFromDisk(this.dir());
-		return getSummariesByUniqueId(projectSummary.getFeatureSummaries());
+		return getSummariesByUniqueId(projectSummary.getFeatureSummaries(),
+				projectSummary.getScenarioSummaries());
 	}
 
 	private Map<String, Summary> getSummariesByUniqueId(
-			Map<String, Summary> inputSummaries) {
+			Map<String, Summary> inputSummaries,
+			Map<String, Summary> subSummaries) {
 		Map<String, Summary> outputSummaries = new HashMap<String, Summary>();
 		for (Map.Entry<String, Summary> entry : inputSummaries.entrySet()) {
-			outputSummaries.put(entry.getValue().getPageLink(),
-					entry.getValue());
+			Summary summary = entry.getValue();
+			summary.setSubSummaries((CucumberPerfUtils.getRelevantSummaries(
+					subSummaries, summary.getId())));
+			outputSummaries.put(entry.getValue().getPageLink(), summary);
 
 		}
 		return outputSummaries;
@@ -88,11 +74,12 @@ public class CucumberProjectAction implements ProminentProjectAction {
 
 	public void doDynamic(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException {
-		urlParams = req.getRestOfPath();
-		DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this,
-				new FilePath(this.dir()), "title", null, false);
-		dbs.setIndexFileName("projectview.html");
-		dbs.generateResponse(req, rsp, this);
+		/*
+		 * DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this, new
+		 * FilePath(this.dir()), "title", null, false);
+		 * dbs.setIndexFileName("projectview.html"); dbs.generateResponse(req,
+		 * rsp, this);
+		 */
 	}
 
 	@SuppressWarnings("rawtypes")
