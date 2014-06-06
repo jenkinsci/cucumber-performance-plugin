@@ -80,7 +80,7 @@
                 </tr>
 				 <j:forEach var="subSummary" items="${it.subSummaries}">
                     <tr>  
-                        <td><a href="${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a></td>
+                        <td><a href="feature/${subSummary.pageLink}">${subSummary.name}</a></td>
                         <td>${subSummary.numberOfSubItems}</td>                       
                         <td>${subSummary.formattedShortestDuration}</td>
                         <td>${subSummary.formattedLongestDuration}</td>

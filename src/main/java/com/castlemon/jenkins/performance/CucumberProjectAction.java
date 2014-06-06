@@ -19,6 +19,7 @@ import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
+@SuppressWarnings("rawtypes")
 public class CucumberProjectAction implements ProminentProjectAction {
 
 	private final AbstractProject<?, ?> project;
@@ -67,22 +68,15 @@ public class CucumberProjectAction implements ProminentProjectAction {
 		return outputSummaries;
 	}
 
-	@SuppressWarnings("rawtypes")
 	public AbstractProject getProject() {
 		return (AbstractProject) this.project;
 	}
 
 	public void doDynamic(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException {
-		/*
-		 * DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this, new
-		 * FilePath(this.dir()), "title", null, false);
-		 * dbs.setIndexFileName("projectview.html"); dbs.generateResponse(req,
-		 * rsp, this);
-		 */
+
 	}
 
-	@SuppressWarnings("rawtypes")
 	protected File dir() {
 		if (this.project instanceof AbstractProject) {
 			AbstractProject abstractProject = (AbstractProject) this.project;
