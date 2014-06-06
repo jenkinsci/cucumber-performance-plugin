@@ -29,7 +29,7 @@ public class CucumberProjectActionTest {
 
 	@InjectMocks
 	private CucumberProjectAction cucumberProjectAction = new CucumberProjectAction(
-			project, testFolder.getRoot());
+			project);
 
 	@Test
 	public void testGetDisplayName() {

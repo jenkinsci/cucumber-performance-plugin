@@ -9,6 +9,8 @@ import hudson.model.Run;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -16,11 +18,14 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class CucumberProjectAction implements ProminentProjectAction {
 
 	private final AbstractProject<?, ?> project;
+
+	private String urlParams;
 
 	public CucumberProjectAction(AbstractProject<?, ?> project) {
 		super();
@@ -28,14 +33,9 @@ public class CucumberProjectAction implements ProminentProjectAction {
 	}
 
 	public ProjectSummary getProjectSummary() {
-		try {
-			ProjectSummary projectSummary = CucumberPerfUtils
-					.readSummaryFromDisk(this.dir());
-			return projectSummary;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		ProjectSummary projectSummary = CucumberPerfUtils
+				.readSummaryFromDisk(this.dir());
+		return projectSummary;
 	}
 
 	public String getPerformanceData() {
@@ -64,6 +64,23 @@ public class CucumberProjectAction implements ProminentProjectAction {
 		return "cucumber-perf-reports";
 	}
 
+	public Map<String, Summary> getFeatures() {
+		ProjectSummary projectSummary = CucumberPerfUtils
+				.readSummaryFromDisk(this.dir());
+		return getSummariesByUniqueId(projectSummary.getFeatureSummaries());
+	}
+
+	private Map<String, Summary> getSummariesByUniqueId(
+			Map<String, Summary> inputSummaries) {
+		Map<String, Summary> outputSummaries = new HashMap<String, Summary>();
+		for (Map.Entry<String, Summary> entry : inputSummaries.entrySet()) {
+			outputSummaries.put(entry.getValue().getPageLink(),
+					entry.getValue());
+
+		}
+		return outputSummaries;
+	}
+
 	@SuppressWarnings("rawtypes")
 	public AbstractProject getProject() {
 		return (AbstractProject) this.project;
@@ -71,6 +88,7 @@ public class CucumberProjectAction implements ProminentProjectAction {
 
 	public void doDynamic(StaplerRequest req, StaplerResponse rsp)
 			throws IOException, ServletException {
+		urlParams = req.getRestOfPath();
 		DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this,
 				new FilePath(this.dir()), "title", null, false);
 		dbs.setIndexFileName("projectview.html");
