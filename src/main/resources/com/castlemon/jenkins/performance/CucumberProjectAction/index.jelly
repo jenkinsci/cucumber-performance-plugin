@@ -3,6 +3,7 @@
 <l:layout title="Cucumber Performance Reporting">
 		<st:include page="header" optional="true" />
 <l:header>
+<link rel="stylesheet" href="${rootURL}/plugin/cucumber-perf/css/main.css" type="text/css" media="screen" />
 <script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/highcharts-3.0.2/highcharts.js"></script>         
 <script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/performanceGraph.js"></script>        
