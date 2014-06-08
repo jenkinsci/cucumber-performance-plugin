@@ -54,12 +54,29 @@ public class CucumberProjectAction implements ProminentProjectAction {
 				projectSummary.getScenarioSummaries());
 	}
 
+	public Map<String, Summary> getScenario() {
+		ProjectSummary projectSummary = CucumberPerfUtils
+				.readSummaryFromDisk(this.dir());
+		return getSummariesByUniqueId(projectSummary.getScenarioSummaries(),
+				projectSummary.getStepSummaries());
+	}
+
+	public Map<String, Summary> getStep() {
+		ProjectSummary projectSummary = CucumberPerfUtils
+				.readSummaryFromDisk(this.dir());
+		Map<String, Summary> empty = new HashMap<String, Summary>();
+		return getSummariesByUniqueId(projectSummary.getScenarioSummaries(),
+				empty);
+	}
+
 	private Map<String, Summary> getSummariesByUniqueId(
 			Map<String, Summary> inputSummaries,
 			Map<String, Summary> subSummaries) {
 		Map<String, Summary> outputSummaries = new HashMap<String, Summary>();
 		for (Map.Entry<String, Summary> entry : inputSummaries.entrySet()) {
 			Summary summary = entry.getValue();
+			summary.setProject(this.project);
+			summary.setUrlName(getUrlName());
 			summary.setSubSummaries((CucumberPerfUtils.getRelevantSummaries(
 					subSummaries, summary.getId())));
 			outputSummaries.put(entry.getValue().getPageLink(), summary);

@@ -1,6 +1,7 @@
 package com.castlemon.jenkins.performance.domain.reporting;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -54,6 +55,14 @@ public class ProjectSummary {
 
 	public Collection<Summary> getFeatureSummaryList() {
 		return this.featureSummaries.values();
+	}
+
+	public Map<String, Summary> assembleAllSummaries() {
+		Map<String, Summary> allSummaries = new HashMap<String, Summary>();
+		allSummaries.putAll(this.featureSummaries);
+		allSummaries.putAll(this.scenarioSummaries);
+		allSummaries.putAll(this.stepSummaries);
+		return allSummaries;
 	}
 
 }

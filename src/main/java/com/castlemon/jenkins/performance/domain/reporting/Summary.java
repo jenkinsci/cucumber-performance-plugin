@@ -1,5 +1,7 @@
 package com.castlemon.jenkins.performance.domain.reporting;
 
+import hudson.model.AbstractProject;
+
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -74,6 +76,36 @@ public class Summary {
 
 	@XStreamOmitField
 	private List<Summary> subSummaries;
+
+	/*
+	 * this field is only used for display and should not be used in other
+	 * circumstances
+	 */
+	@XStreamOmitField
+	private AbstractProject<?, ?> project;
+
+	/*
+	 * this field is only used for display and should not be used in other
+	 * circumstances
+	 */
+	@XStreamOmitField
+	private String urlName;
+
+	public String getUrlName() {
+		return urlName;
+	}
+
+	public void setUrlName(String urlName) {
+		this.urlName = urlName;
+	}
+
+	public AbstractProject<?, ?> getProject() {
+		return project;
+	}
+
+	public void setProject(AbstractProject<?, ?> project) {
+		this.project = project;
+	}
 
 	public Summary() {
 		this.pageLink = RandomStringUtils.randomAlphabetic(5);

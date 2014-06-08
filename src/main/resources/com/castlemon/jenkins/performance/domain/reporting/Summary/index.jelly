@@ -12,7 +12,7 @@
         var averageData = ${it.averageData}
 </script>
 </l:header>
-<!-- <st:include it="${it.project}" page="sidepanel.jelly"/> -->
+<st:include it="${it.project}" page="sidepanel.jelly"/>
     <l:main-panel>    
       <h1>Cucumber Performance Reporting</h1>
     <div class="content">
@@ -73,14 +73,14 @@
             <table>
                 <tr>
                     <th>${it.summaryType.subType} Name</th>
-                    <th>sub item</th>
+                    <th>${it.summaryType.subSubType}s</th>
                     <th class="coloured">Shortest Duration</th>
                     <th class="coloured">Longest Duration</th>
                     <th class="coloured">Average Duration</th>
                 </tr>
 				 <j:forEach var="subSummary" items="${it.subSummaries}">
                     <tr>  
-                        <td><a href="feature/${subSummary.pageLink}">${subSummary.name}</a></td>
+                        <td><a href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a></td>
                         <td>${subSummary.numberOfSubItems}</td>                       
                         <td>${subSummary.formattedShortestDuration}</td>
                         <td>${subSummary.formattedLongestDuration}</td>
