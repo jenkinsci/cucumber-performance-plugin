@@ -22,7 +22,7 @@
             <div id="summaryArea">
                 <div id="buildSummary">
                     <table>
-                        <tr>
+                        <tr>'
                             <th>Build Summary</th>
                         </tr>
                         <tr>
@@ -72,16 +72,45 @@
             <p /> 
             <table>
                 <tr>
-                    <th>${it.summaryType.subType} Name</th>
-                    <th>${it.summaryType.subSubType}s</th>
+                	<j:choose>
+    					<j:when test="${it.summaryType.subType == 'Step'}">
+                    		 <th class="coloured">Steps</th>
+                    	</j:when>
+                    	<j:otherwise>
+                    		<th>${it.summaryType.subType} Name</th>
+                    		<th>${it.summaryType.subSubType}s</th>
+                    	</j:otherwise>
+                    </j:choose>
                     <th class="coloured">Shortest Duration</th>
                     <th class="coloured">Longest Duration</th>
                     <th class="coloured">Average Duration</th>
                 </tr>
 				 <j:forEach var="subSummary" items="${it.subSummaries}">
-                    <tr>  
-                        <td><a href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a></td>
-                        <td>${subSummary.numberOfSubItems}</td>                       
+                    <tr> 
+                    <j:choose>
+    					<j:when test="${it.summaryType.subType == 'Step'}">
+                    		<td>
+                                <span class="bolded">${subSummary.keyword}</span>
+                                ${subSummary.name}
+                                <j:if test="${subSummary.hasRows()}">
+                                    <div>
+                                        <table class="summaryTable">
+                                            <j:forEach var="row" items="${subSummary.rows}">
+                                                <tr>
+                                                    <j:forEach var="cell" items="${row}">
+                                                        <td class="cellText">${cell}</td>
+                                                    </j:forEach>
+                                                </tr>
+                                            </j:forEach>
+                                        </table>
+                                    </div>
+                                </j:if></td>
+                    	</j:when>
+                    	<j:otherwise> 
+                        	<td><a href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a></td>
+                        	<td>${subSummary.numberOfSubItems}</td>                       
+                        </j:otherwise>
+                    </j:choose>
                         <td>${subSummary.formattedShortestDuration}</td>
                         <td>${subSummary.formattedLongestDuration}</td>
                         <td>${subSummary.formattedAverageDuration}</td>

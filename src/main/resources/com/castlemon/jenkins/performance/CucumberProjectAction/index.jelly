@@ -73,7 +73,7 @@
             <table>
                 <tr>
                     <th>${it.projectSummary.overallSummary.summaryType.subType} Name</th>
-                    <th>sub item</th>
+                    <th>Scenarios</th>
                     <th class="coloured">Shortest Duration</th>
                     <th class="coloured">Longest Duration</th>
                     <th class="coloured">Average Duration</th>
