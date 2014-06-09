@@ -15,16 +15,16 @@
 </l:header>
 <st:include it="${it.project}" page="sidepanel.jelly"/>
     <l:main-panel>    
+        <div id="cukeperfcontent">
       <h1>Cucumber Performance Reporting</h1>
-    <div class="content">
             <h1>${it.projectSummary.overallSummary.summaryType} Report for ${it.projectSummary.overallSummary.name}</h1>
             <h3>Summary</h3>
             <p />
             <div id="summaryArea">
                 <div id="buildSummary">
-                    <table>
+                    <table class="summaryTable">
                         <tr>
-                            <th>Build Summary</th>
+                            <th class="coloured" colspan="2">Build Summary</th>
                         </tr>
                         <tr>
                             <td>Number of Passed Builds:</td>
@@ -41,9 +41,9 @@
                     </table>
                 </div>
                 <div id="stepSummary">
-                    <table>
+                    <table class="summaryTable">
                         <tr>
-                            <th colspan="2">Step Summary</th>
+                            <th class="coloured" colspan="2">Step Summary</th>
                         </tr>
                         <tr>
                             <td>Number of Passed Steps:</td>
@@ -59,6 +59,7 @@
                         </tr>
                     </table>
                 </div>
+                <div class="clear"></div>
                 <p />
                 <div class="emphasised">Only successful builds are included in
                     the details below.</div>
@@ -70,11 +71,13 @@
                     <p>This content requires JavaScript.</p>
                 </noscript>
             </div>
-            <p /> 
-            <table>
+            <p />
+            <h3>${it.projectSummary.overallSummary.summaryType.subType} details</h3>       
+        <div class="fullWidth"> 
+            <table class="summaryTable">
                 <tr>
-                    <th>${it.projectSummary.overallSummary.summaryType.subType} Name</th>
-                    <th>Scenarios</th>
+                    <th class="coloured">${it.projectSummary.overallSummary.summaryType.subType} Name</th>
+                    <th class="coloured">Scenarios</th>
                     <th class="coloured">Shortest Duration</th>
                     <th class="coloured">Longest Duration</th>
                     <th class="coloured">Average Duration</th>
@@ -89,7 +92,7 @@
                     </tr>
                 </j:forEach>
             </table>           
-         </div>
+         </div> </div>
     </l:main-panel>
   </l:layout>
 </j:jelly>
