@@ -4,7 +4,7 @@
 		<st:include page="header" optional="true" />
 <l:header>
 <link rel="stylesheet" href="${rootURL}/plugin/cucumber-perf/css/main.css" type="text/css" media="screen" />
-<script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/highcharts-3.0.2/highcharts.js"></script>         
 <script type="text/javascript" src="${rootURL}/plugin/cucumber-perf/javascript/performanceGraph.js"></script>        
 <script type="text/javascript">
@@ -74,7 +74,8 @@
             <p /> 
             <h3>${it.summaryType.subType} details</h3>       
         <div class="fullWidth"> 
-            <table class="summaryTable">
+            <table id="subTable" class="summaryTable">
+            <thead>
                 <tr>
                 	<j:choose>
     					<j:when test="${it.summaryType.subType == 'Step'}">
@@ -89,6 +90,8 @@
                     <th class="coloured">Longest Duration</th>
                     <th class="coloured">Average Duration</th>
                 </tr>
+        	</thead>
+        	<tbody>
 				 <j:forEach var="subSummary" items="${it.subSummaries}">
                     <tr> 
                     <j:choose>
@@ -120,6 +123,7 @@
                         <td>${subSummary.formattedAverageDuration}</td>
                     </tr>
                 </j:forEach>
+         	</tbody>
             </table>           
          </div></div>
     </l:main-panel>

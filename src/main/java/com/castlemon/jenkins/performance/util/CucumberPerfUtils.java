@@ -19,8 +19,6 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import com.castlemon.jenkins.performance.domain.Feature;
-import com.castlemon.jenkins.performance.domain.enums.SummaryType;
-import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryOrderComparator;
@@ -91,65 +89,9 @@ public class CucumberPerfUtils {
 		Collections.sort(summaries, new SummaryOrderComparator());
 	}
 
-	public static String buildGraphData(Summary summary) {
-		StringBuilder output = new StringBuilder();
-		output.append("[");
-		int i = 1;
-		for (PerformanceEntry run : summary.getEntries()) {
-			if (run.isPassed()) {
-				output.append("["
-						+ run.getBuildNumber()
-						+ ", "
-						+ getDurationInSeconds(run.getElapsedTime()
-								/ nanosInAMilli) + "]");
-				if (i < summary.getEntries().size()) {
-					output.append(",");
-				}
-			}
-			i++;
-		}
-		output.append("]");
-		return output.toString();
-	}
-
-	public static String buildAverageData(Summary summary) {
-		long totalDuration = 0l;
-		long executionCount = 0l;
-		StringBuilder output = new StringBuilder();
-		for (PerformanceEntry run : summary.getEntries()) {
-			if (run.isPassed()) {
-				totalDuration += run.getElapsedTime();
-				executionCount++;
-			}
-		}
-		long average = 0l;
-		if (executionCount > 0) {
-			average = totalDuration / executionCount;
-		}
-		output.append("[");
-		int i = 1;
-		for (PerformanceEntry run : summary.getEntries()) {
-			if (run.isPassed()) {
-				output.append("[" + run.getBuildNumber() + ", "
-						+ getDurationInSeconds(average / nanosInAMilli) + "]");
-				if (i < summary.getEntries().size()) {
-					output.append(",");
-				}
-			}
-			i++;
-		}
-		output.append("]");
-		return output.toString();
-	}
-
 	public static long getDurationInSeconds(Long duration) {
 		Duration minutes = new Duration(duration);
 		return minutes.getStandardSeconds();
-	}
-
-	public static long getDurationInMinutes(Long duration) {
-		Duration minutes = new Duration(duration);
-		return minutes.getStandardMinutes();
 	}
 
 	public static String[] findJsonFiles(File targetDirectory, String filename) {
@@ -204,34 +146,6 @@ public class CucumberPerfUtils {
 				.appendSeparator(" ").appendMillis().appendSuffix(" ms", " ms")
 				.toFormatter();
 		return formatter.print(new Period(0, durationInNanos / nanosInAMilli));
-	}
-
-	public static String generateJsonSummary(List<Summary> summaries,
-			SummaryType summaryType) {
-		StringBuilder output = new StringBuilder();
-		output.append("[");
-		int i = 1;
-		for (Summary summary : summaries) {
-			output.append("[" + "'" + summary.getName() + "'" + ", ");
-			if (summaryType.hasSeniorSummaries()) {
-				output.append("'" + summary.getSeniorName() + "'" + ", ");
-			}
-			if (summaryType.hasSubSummaries()) {
-				output.append(summary.getNumberOfSubItems() + ", ");
-			}
-			output.append("'" + summary.getFormattedShortestDuration() + "'"
-					+ ", " + "'" + summary.getFormattedLongestDuration() + "'"
-					+ ", " + "'" + summary.getFormattedAverageDuration() + "'"
-					+ ", " + summary.getShortestDuration() + ", "
-					+ summary.getLongestDuration() + ", "
-					+ summary.calculateAverageDuration() + "]");
-			if (i < summaries.size()) {
-				output.append(",");
-			}
-			i++;
-		}
-		output.append("]");
-		return output.toString();
 	}
 
 	private static String loadJsonFile(File targetBuildDirectory,

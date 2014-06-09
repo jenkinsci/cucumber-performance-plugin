@@ -53,7 +53,7 @@ public class CucumberPerfRecorder extends Recorder {
 		listener.getLogger()
 				.println(
 						"[CucumberPerfRecorder] Starting Cucumber Performance Report generation...");
-		reportBuilder = new ReportBuilder(listener);
+		reportBuilder = new ReportBuilder();
 		targetBuildDirectory = new File(build.getRootDir(),
 				"cucumber-perf-reports");
 		if (!targetBuildDirectory.exists()) {
@@ -67,7 +67,6 @@ public class CucumberPerfRecorder extends Recorder {
 		gatherJsonResultFiles(build, listener, targetBuildDirectory);
 		return generateProjectReport(build, listener, targetBuildDirectory,
 				buildNumber, buildProject);
-		// return true;
 	}
 
 	private boolean generateProjectReport(AbstractBuild<?, ?> build,

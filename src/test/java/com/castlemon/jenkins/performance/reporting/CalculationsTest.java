@@ -31,7 +31,7 @@ public class CalculationsTest {
 	/*
 	 * Used only to gather the duration information to import into Excel
 	 */
-	//@Test
+	// @Test
 	public void getFigures() throws IOException {
 		String jsonString = testUtils.loadJsonFile("/cuc-basic.json");
 		Assert.assertNotNull(jsonString);
@@ -115,12 +115,12 @@ public class CalculationsTest {
 		Assert.assertEquals(23251577640l,
 				firstScenarioSummary.calculateAverageDuration());
 		// Test average calculations
-		String buildData = CucumberPerfUtils.buildGraphData(jobOutput);
-		String averageData = CucumberPerfUtils.buildAverageData(jobOutput);
 		long durationInSeconds = CucumberPerfUtils
 				.getDurationInSeconds(378363603637l / 1000000);
-		Assert.assertEquals("[[112, " + durationInSeconds + "]]", buildData);
-		Assert.assertEquals("[[112, " + durationInSeconds + "]]", averageData);
+		Assert.assertEquals("[[112, " + durationInSeconds + "]]",
+				jobOutput.getGraphData());
+		Assert.assertEquals("[[112, " + durationInSeconds + "]]",
+				jobOutput.getAverageData());
 	}
 
 	@Test
@@ -178,12 +178,12 @@ public class CalculationsTest {
 		Assert.assertEquals(20518023874l,
 				firstScenarioSummary.calculateAverageDuration());
 		// Test average calculations
-		String buildData = CucumberPerfUtils.buildGraphData(jobOutput);
-		String averageData = CucumberPerfUtils.buildAverageData(jobOutput);
 		long durationInSeconds = CucumberPerfUtils
 				.getDurationInSeconds(392534015855l / 1000000);
-		Assert.assertEquals("[[112, " + durationInSeconds + "]]", buildData);
-		Assert.assertEquals("[[112, " + durationInSeconds + "]]", averageData);
+		Assert.assertEquals("[[112, " + durationInSeconds + "]]",
+				jobOutput.getGraphData());
+		Assert.assertEquals("[[112, " + durationInSeconds + "]]",
+				jobOutput.getAverageData());
 	}
 
 	@Test
@@ -241,12 +241,12 @@ public class CalculationsTest {
 		Assert.assertEquals(9704227551l,
 				firstScenarioSummary.calculateAverageDuration());
 		// Test average calculations
-		String buildData = CucumberPerfUtils.buildGraphData(jobOutput);
-		String averageData = CucumberPerfUtils.buildAverageData(jobOutput);
 		long durationInSeconds = CucumberPerfUtils
 				.getDurationInSeconds(113596081587l / 1000000);
-		Assert.assertEquals("[[112, " + durationInSeconds + "]]", buildData);
-		Assert.assertEquals("[[112, " + durationInSeconds + "]]", averageData);
+		Assert.assertEquals("[[112, " + durationInSeconds + "]]",
+				jobOutput.getGraphData());
+		Assert.assertEquals("[[112, " + durationInSeconds + "]]",
+				jobOutput.getAverageData());
 	}
 
 	@Test
@@ -332,8 +332,6 @@ public class CalculationsTest {
 		Assert.assertEquals(1811173309l,
 				thirdFeatureSummary.calculateAverageDuration());
 		// Test average calculations
-		String buildData = CucumberPerfUtils.buildGraphData(jobOutput);
-		String averageData = CucumberPerfUtils.buildAverageData(jobOutput);
 		long durationOneInSeconds = CucumberPerfUtils
 				.getDurationInSeconds(378363603637l / 1000000);
 		long durationTwoInSeconds = CucumberPerfUtils
@@ -341,9 +339,9 @@ public class CalculationsTest {
 		long averageInSeconds = CucumberPerfUtils
 				.getDurationInSeconds(385448809746l / 1000000);
 		Assert.assertEquals("[[112, " + durationOneInSeconds + "],[113, "
-				+ durationTwoInSeconds + "]]", buildData);
+				+ durationTwoInSeconds + "]]", jobOutput.getGraphData());
 		Assert.assertEquals("[[112, " + averageInSeconds + "],[113, "
-				+ averageInSeconds + "]]", averageData);
+				+ averageInSeconds + "]]", jobOutput.getAverageData());
 	}
 
 	@Test
@@ -442,8 +440,6 @@ public class CalculationsTest {
 		Assert.assertEquals(1211188946l,
 				thirdFeatureSummary.calculateAverageDuration());
 		// Test average calculations
-		String buildData = CucumberPerfUtils.buildGraphData(jobOutput);
-		String averageData = CucumberPerfUtils.buildAverageData(jobOutput);
 		long durationOneInSeconds = CucumberPerfUtils
 				.getDurationInSeconds(378363603637l / 1000000);
 		long durationTwoInSeconds = CucumberPerfUtils
@@ -454,10 +450,10 @@ public class CalculationsTest {
 				.getDurationInSeconds(294831233693l / 1000000);
 		Assert.assertEquals("[[112, " + durationOneInSeconds + "],[113, "
 				+ durationTwoInSeconds + "],[114, " + durationThreeInSeconds
-				+ "]]", buildData);
+				+ "]]", jobOutput.getGraphData());
 		Assert.assertEquals("[[112, " + averageInSeconds + "],[113, "
 				+ averageInSeconds + "],[114, " + averageInSeconds + "]]",
-				averageData);
+				jobOutput.getAverageData());
 	}
 
 	@Test
@@ -510,8 +506,8 @@ public class CalculationsTest {
 		Assert.assertEquals(0l, firstScenarioSummary.getLongestDuration());
 		Assert.assertEquals(0l, firstScenarioSummary.calculateAverageDuration());
 		// Test average calculations
-		Assert.assertEquals("[]", CucumberPerfUtils.buildGraphData(jobOutput));
-		Assert.assertEquals("[]", CucumberPerfUtils.buildAverageData(jobOutput));
+		Assert.assertEquals("[]", jobOutput.getGraphData());
+		Assert.assertEquals("[]", jobOutput.getAverageData());
 	}
 
 	@Test
@@ -707,12 +703,12 @@ public class CalculationsTest {
 		Assert.assertEquals(1514515115l,
 				thirdFeatureSummary.calculateAverageDuration());
 		// Test average calculations
-		String buildData = CucumberPerfUtils.buildGraphData(jobOutput);
-		String averageData = CucumberPerfUtils.buildAverageData(jobOutput);
 		long durationInSeconds = CucumberPerfUtils
 				.getDurationInSeconds(378363603637l / 1000000);
-		Assert.assertEquals("[[112, " + durationInSeconds + "],]", buildData);
-		Assert.assertEquals("[[112, " + durationInSeconds + "],]", averageData);
+		Assert.assertEquals("[[112, " + durationInSeconds + "],]",
+				jobOutput.getGraphData());
+		Assert.assertEquals("[[112, " + durationInSeconds + "],]",
+				jobOutput.getAverageData());
 	}
 
 }

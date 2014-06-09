@@ -92,8 +92,7 @@ public class CucumberPerfUtilsTest {
 		Summary projectSummary = new Summary();
 		projectSummary.setEntries(runs);
 		String expectedReturn = "[[1, 5],[2, 6]]";
-		Assert.assertEquals(expectedReturn,
-				CucumberPerfUtils.buildGraphData(projectSummary));
+		Assert.assertEquals(expectedReturn, projectSummary.getGraphData());
 	}
 
 	@Test
@@ -112,8 +111,7 @@ public class CucumberPerfUtilsTest {
 		Summary projectSummary = new Summary();
 		projectSummary.setEntries(runs);
 		String expectedReturn = "[[2, 6]]";
-		Assert.assertEquals(expectedReturn,
-				CucumberPerfUtils.buildGraphData(projectSummary));
+		Assert.assertEquals(expectedReturn, projectSummary.getGraphData());
 	}
 
 	@Test
@@ -132,13 +130,7 @@ public class CucumberPerfUtilsTest {
 		Summary projectSummary = new Summary();
 		projectSummary.setEntries(runs);
 		String expectedReturn = "[[1, 5],[2, 5]]";
-		Assert.assertEquals(expectedReturn,
-				CucumberPerfUtils.buildAverageData(projectSummary));
-	}
-
-	@Test
-	public void testGetDurationInMinutes() {
-		Assert.assertEquals(3, CucumberPerfUtils.getDurationInMinutes(180000l));
+		Assert.assertEquals(expectedReturn, projectSummary.getAverageData());
 	}
 
 	@Test
