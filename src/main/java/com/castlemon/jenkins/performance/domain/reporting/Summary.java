@@ -108,7 +108,7 @@ public class Summary {
 	}
 
 	public Summary() {
-		this.pageLink = RandomStringUtils.randomAlphabetic(5);
+		this.pageLink = RandomStringUtils.randomAlphabetic(10);
 	}
 
 	public String getPageLink() {

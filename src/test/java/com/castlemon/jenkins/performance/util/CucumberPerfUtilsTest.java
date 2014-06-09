@@ -26,9 +26,9 @@ public class CucumberPerfUtilsTest {
 		File f = FileUtils.toFile(this.getClass().getResource("/test.xml"));
 		ProjectSummary summary = CucumberPerfUtils.readSummaryFromDisk(f
 				.getParentFile());
-		Assert.assertEquals(11, summary.getOverallSummary().getPassedBuilds());
+		Assert.assertEquals(1, summary.getOverallSummary().getPassedBuilds());
 		Assert.assertEquals(3, summary.getFeatureSummaries().size());
-		Assert.assertEquals(11, summary.getOverallSummary().getEntries().size());
+		Assert.assertEquals(1, summary.getOverallSummary().getEntries().size());
 
 	}
 
