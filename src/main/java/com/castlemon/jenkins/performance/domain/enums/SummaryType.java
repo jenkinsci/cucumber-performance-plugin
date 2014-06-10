@@ -3,6 +3,10 @@ package com.castlemon.jenkins.performance.domain.enums;
 public enum SummaryType {
 	PROJECT, FEATURE, SCENARIO, STEP;
 
+	/*
+	 * the default case for this enum will always be STEP
+	 */
+
 	public boolean hasSeniorSummaries() {
 		switch (this) {
 		case PROJECT:
@@ -11,10 +15,9 @@ public enum SummaryType {
 			return false;
 		case SCENARIO:
 			return true;
-		case STEP:
+		default:
 			return true;
 		}
-		return false;
 	}
 
 	public boolean hasSubSummaries() {
@@ -25,10 +28,9 @@ public enum SummaryType {
 			return true;
 		case SCENARIO:
 			return true;
-		case STEP:
+		default:
 			return false;
 		}
-		return false;
 	}
 
 	public String getSubType() {
@@ -39,10 +41,9 @@ public enum SummaryType {
 			return "Scenario";
 		case SCENARIO:
 			return "Step";
-		case STEP:
+		default:
 			return null;
 		}
-		return null;
 	}
 
 	public String getSubSubType() {
@@ -53,10 +54,9 @@ public enum SummaryType {
 			return "Step";
 		case SCENARIO:
 			return null;
-		case STEP:
+		default:
 			return null;
 		}
-		return null;
 	}
 
 	public String getSubLink() {
@@ -67,10 +67,9 @@ public enum SummaryType {
 			return "scenario";
 		case SCENARIO:
 			return "step";
-		case STEP:
+		default:
 			return null;
 		}
-		return null;
 	}
 
 	public String toString() {
@@ -81,9 +80,8 @@ public enum SummaryType {
 			return "Feature";
 		case SCENARIO:
 			return "Scenario";
-		case STEP:
+		default:
 			return "Step";
 		}
-		return null;
 	}
 }

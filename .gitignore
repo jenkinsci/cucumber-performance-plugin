@@ -5,3 +5,5 @@ work/**
 velocity.*
 .settings/**
 /target
+/.idea
+/cucumber-perf.iml
