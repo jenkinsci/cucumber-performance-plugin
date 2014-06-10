@@ -96,7 +96,7 @@ public class CucumberPerfRecorder extends Recorder {
 				"[CucumberPerfRecorder] running project reports on "
 						+ projectRuns.size() + " builds");
 		boolean success = reportBuilder.generateProjectReports(projectRuns,
-				targetBuildDirectory, buildProject, buildNumber, pluginUrlPath);
+				targetBuildDirectory, buildProject);
 		listener.getLogger().println(
 				"[CucumberPerfRecorder] project report generation complete");
 		return success;

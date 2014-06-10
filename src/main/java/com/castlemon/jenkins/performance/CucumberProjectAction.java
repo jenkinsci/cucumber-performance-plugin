@@ -6,14 +6,8 @@ import hudson.model.AbstractProject;
 import hudson.model.Run;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.ServletException;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
@@ -89,10 +83,12 @@ public class CucumberProjectAction implements ProminentProjectAction {
 		return (AbstractProject) this.project;
 	}
 
-	public void doDynamic(StaplerRequest req, StaplerResponse rsp)
-			throws IOException, ServletException {
-
-	}
+	/*
+	 * public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws
+	 * IOException, ServletException {
+	 * 
+	 * }
+	 */
 
 	protected File dir() {
 		if (this.project instanceof AbstractProject) {

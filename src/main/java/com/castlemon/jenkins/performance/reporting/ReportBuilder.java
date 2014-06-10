@@ -12,8 +12,7 @@ import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 public class ReportBuilder {
 
 	public boolean generateProjectReports(List<ProjectRun> projectRuns,
-			File reportDirectory, String buildProject, String buildNumber,
-			String pluginUrlPath) {
+			File reportDirectory, String buildProject) {
 		PerformanceReporter reporter = new PerformanceReporter();
 		reporter.initialiseEntryMaps();
 		ProjectSummary projectSummary = new ProjectSummary();

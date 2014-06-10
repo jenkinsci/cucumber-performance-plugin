@@ -35,7 +35,7 @@ public class CucumberPerfUtils {
 	public static boolean writeSummaryToDisk(ProjectSummary projectSummary,
 			File outputDirectory) {
 		XStream xstream = prepareXStream();
-		File outputFile = new File(outputDirectory, "test.xml");
+		File outputFile = new File(outputDirectory, "cukeperf.xml");
 		Writer writer;
 		try {
 			writer = new PrintWriter(outputFile);
@@ -52,7 +52,7 @@ public class CucumberPerfUtils {
 		XStream xstream = prepareXStream();
 		String str;
 		try {
-			File inputFile = new File(outputDirectory, "test.xml");
+			File inputFile = new File(outputDirectory, "cukeperf.xml");
 			str = FileUtils.readFileToString(inputFile);
 			return ((ProjectSummary) xstream.fromXML(str));
 		} catch (Exception e) {

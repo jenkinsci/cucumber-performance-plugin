@@ -9,7 +9,9 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import com.castlemon.jenkins.performance.TestUtils;
 import com.castlemon.jenkins.performance.domain.Feature;
@@ -21,15 +23,31 @@ public class CucumberPerfUtilsTest {
 
 	private TestUtils testUtils = new TestUtils();
 
+	@Rule
+	public TemporaryFolder testFolder = new TemporaryFolder();
+
+	@Test
+	public void testWriteSummaryToDisk() {
+		ProjectSummary summary = new ProjectSummary();
+		CucumberPerfUtils.writeSummaryToDisk(summary, testFolder.getRoot());
+		Assert.assertEquals(1, testFolder.getRoot().listFiles().length);
+	}
+
 	@Test
 	public void testReadSummaryFromDisk() throws Exception {
-		File f = FileUtils.toFile(this.getClass().getResource("/test.xml"));
+		File f = FileUtils.toFile(this.getClass().getResource("/cukeperf.xml"));
 		ProjectSummary summary = CucumberPerfUtils.readSummaryFromDisk(f
 				.getParentFile());
 		Assert.assertEquals(1, summary.getOverallSummary().getPassedBuilds());
 		Assert.assertEquals(3, summary.getFeatureSummaries().size());
 		Assert.assertEquals(1, summary.getOverallSummary().getEntries().size());
+	}
 
+	@Test
+	public void testReadSummaryFromDiskException() throws Exception {
+		File f = FileUtils
+				.toFile(this.getClass().getResource("/notexists.xml"));
+		Assert.assertNull(CucumberPerfUtils.readSummaryFromDisk(null));
 	}
 
 	@Test
