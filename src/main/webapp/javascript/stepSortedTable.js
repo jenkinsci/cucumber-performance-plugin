@@ -1,7 +1,6 @@
 jQuery(document).ready(function() {
 	/* Step-level table */
 	jQuery('#sortedStepTable').dataTable({
-		"aaData" : sortedStepData,
 		"aoColumns" : [ {
 			"sType" : "string"
 		}, {
@@ -20,9 +19,9 @@ jQuery(document).ready(function() {
 			"bVisible" : false
 		} ],
 		aaSorting : [ [ 7, 'desc' ] ],
-		"bPaginate" : false,
+		"bPaginate" : true,
 		"bFilter" : false,
 		"bSort" : true,
-		"bInfo" : false
+		"bInfo" : true
 	});
 });

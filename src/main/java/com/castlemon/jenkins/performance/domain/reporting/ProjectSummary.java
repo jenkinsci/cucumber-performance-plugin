@@ -57,12 +57,26 @@ public class ProjectSummary {
 		return this.featureSummaries.values();
 	}
 
+	public Collection<Summary> getScenarioSummaryList() {
+		return this.scenarioSummaries.values();
+	}
+
+	public Collection<Summary> getStepSummaryList() {
+		return this.stepSummaries.values();
+	}
+
 	public Map<String, Summary> assembleAllSummaries() {
 		Map<String, Summary> allSummaries = new HashMap<String, Summary>();
 		allSummaries.putAll(this.featureSummaries);
 		allSummaries.putAll(this.scenarioSummaries);
 		allSummaries.putAll(this.stepSummaries);
 		return allSummaries;
+	}
+
+	public Collection<Summary> getSortedFeatureSummaryList() {
+		Collection<Summary> interimSummaries = this.featureSummaries.values();
+
+		return this.featureSummaries.values();
 	}
 
 }

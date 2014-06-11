@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+@SuppressWarnings("rawtypes")
 public class CucumberPerfRecorderTest {
 
 	String jsonReportDirectory = "";

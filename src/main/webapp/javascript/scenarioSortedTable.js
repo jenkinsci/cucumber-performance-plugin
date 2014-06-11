@@ -1,7 +1,6 @@
 jQuery(document).ready(function() {
 	/* Scenario-level table */
 	jQuery('#sortedScenarioTable').dataTable({
-		"aaData" : sortedScenarioData,
 		"aoColumns" : [ {
 			"sType" : "string"
 		}, null, null, {

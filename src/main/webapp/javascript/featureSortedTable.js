@@ -1,7 +1,6 @@
 jQuery(document).ready(function() {
 	/* Feature-level table */
 	jQuery('#sortedFeatureTable').dataTable({
-		"aaData" : sortedFeatureData,
 		"aoColumns" : [ {
 			"sType" : "string"
 		}, 
