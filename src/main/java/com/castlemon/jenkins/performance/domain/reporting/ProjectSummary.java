@@ -27,7 +27,7 @@ public class ProjectSummary {
 	private Map<String, Summary> stepSummaries;
 
 	@XStreamOmitField
-	private static final int numberOfSummariesToDisplay = 20;
+	private int numberOfSummariesToDisplay;
 
 	public Summary getOverallSummary() {
 		return overallSummary;
@@ -105,6 +105,14 @@ public class ProjectSummary {
 			return interimList;
 		}
 		return (new ArrayList<Summary>(interimList.subList(0, count)));
+	}
+
+	public int getNumberOfSummariesToDisplay() {
+		return numberOfSummariesToDisplay;
+	}
+
+	public void setNumberOfSummariesToDisplay(int numberOfSummariesToDisplay) {
+		this.numberOfSummariesToDisplay = numberOfSummariesToDisplay;
 	}
 
 }

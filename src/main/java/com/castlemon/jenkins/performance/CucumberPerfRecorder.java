@@ -33,7 +33,7 @@ import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 public class CucumberPerfRecorder extends Recorder {
 
 	public final String jsonReportDirectory;
-	public final String pluginUrlPath;
+	public final int countOfSortedSummaries;
 
 	private ReportBuilder reportBuilder;
 
@@ -42,9 +42,14 @@ public class CucumberPerfRecorder extends Recorder {
 	// Fields in config.jelly must match the parameter names in the
 	// "DataBoundConstructor"
 	@DataBoundConstructor
-	public CucumberPerfRecorder(String jsonReportDirectory, String pluginUrlPath) {
+	public CucumberPerfRecorder(String jsonReportDirectory,
+			int countOfSortedSummaries) {
 		this.jsonReportDirectory = jsonReportDirectory;
-		this.pluginUrlPath = pluginUrlPath;
+		if (countOfSortedSummaries == 0) {
+			this.countOfSortedSummaries = 20;
+		} else {
+			this.countOfSortedSummaries = countOfSortedSummaries;
+		}
 	}
 
 	@Override
@@ -184,7 +189,7 @@ public class CucumberPerfRecorder extends Recorder {
 
 	@Override
 	public Action getProjectAction(AbstractProject<?, ?> project) {
-		return new CucumberProjectAction(project);
+		return new CucumberProjectAction(project, countOfSortedSummaries);
 	}
 
 }

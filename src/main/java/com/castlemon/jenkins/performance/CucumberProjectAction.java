@@ -17,15 +17,18 @@ import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 public class CucumberProjectAction implements ProminentProjectAction {
 
 	private final AbstractProject<?, ?> project;
+	private final ProjectSummary projectSummary;
 
-	public CucumberProjectAction(AbstractProject<?, ?> project) {
+	public CucumberProjectAction(AbstractProject<?, ?> project,
+			int countOfSortedSummaries) {
 		super();
 		this.project = project;
+		this.projectSummary = CucumberPerfUtils.readSummaryFromDisk(this.dir());
+		this.projectSummary
+				.setNumberOfSummariesToDisplay(countOfSortedSummaries);
 	}
 
 	public ProjectSummary getProjectSummary() {
-		ProjectSummary projectSummary = CucumberPerfUtils
-				.readSummaryFromDisk(this.dir());
 		return projectSummary;
 	}
 
@@ -42,22 +45,22 @@ public class CucumberProjectAction implements ProminentProjectAction {
 	}
 
 	public Map<String, Summary> getFeature() {
-		ProjectSummary projectSummary = CucumberPerfUtils
-				.readSummaryFromDisk(this.dir());
+		// ProjectSummary projectSummary = CucumberPerfUtils
+		// .readSummaryFromDisk(this.dir());
 		return getSummariesByUniqueId(projectSummary.getFeatureSummaries(),
 				projectSummary.getScenarioSummaries());
 	}
 
 	public Map<String, Summary> getScenario() {
-		ProjectSummary projectSummary = CucumberPerfUtils
-				.readSummaryFromDisk(this.dir());
+		// ProjectSummary projectSummary = CucumberPerfUtils
+		// .readSummaryFromDisk(this.dir());
 		return getSummariesByUniqueId(projectSummary.getScenarioSummaries(),
 				projectSummary.getStepSummaries());
 	}
 
 	public Map<String, Summary> getStep() {
-		ProjectSummary projectSummary = CucumberPerfUtils
-				.readSummaryFromDisk(this.dir());
+		// ProjectSummary projectSummary = CucumberPerfUtils
+		// .readSummaryFromDisk(this.dir());
 		Map<String, Summary> empty = new HashMap<String, Summary>();
 		return getSummariesByUniqueId(projectSummary.getScenarioSummaries(),
 				empty);
