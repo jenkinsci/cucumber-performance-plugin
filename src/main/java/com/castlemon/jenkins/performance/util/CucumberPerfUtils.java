@@ -34,11 +34,10 @@ public class CucumberPerfUtils {
 
 	public static boolean writeSummaryToDisk(ProjectSummary projectSummary,
 			File outputDirectory) {
-		XStream xstream = prepareXStream();
-		File outputFile = new File(outputDirectory, "cukeperf.xml");
-		Writer writer;
 		try {
-			writer = new PrintWriter(outputFile);
+			XStream xstream = prepareXStream();
+			File outputFile = new File(outputDirectory, "cukeperf.xml");
+			Writer writer = new PrintWriter(outputFile);
 			xstream.toXML(projectSummary, writer);
 			return true;
 		} catch (Exception e) {

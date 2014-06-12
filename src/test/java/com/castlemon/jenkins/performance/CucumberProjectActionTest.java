@@ -26,17 +26,13 @@ public class CucumberProjectActionTest {
 	private AbstractProject project = Mockito.mock(AbstractProject.class);
 
 	@Mock
-	private Summary projectSummary = Mockito.mock(Summary.class);
-
-	@Mock
 	Run run = Mockito.mock(Run.class);
 
 	@Rule
 	public TemporaryFolder testFolder = new TemporaryFolder();
 
 	@InjectMocks
-	private CucumberProjectAction cucumberProjectAction = new CucumberProjectAction(
-			project);
+	private CucumberProjectAction cucumberProjectAction;
 
 	@Before
 	public void setup() throws IOException {
@@ -47,6 +43,7 @@ public class CucumberProjectActionTest {
 		Run run = Mockito.mock(Run.class);
 		Mockito.when(run.getRootDir()).thenReturn(testFolder.getRoot());
 		Mockito.when(project.getLastCompletedBuild()).thenReturn(run);
+		cucumberProjectAction = new CucumberProjectAction(project, 20);
 	}
 
 	@Test
@@ -77,9 +74,10 @@ public class CucumberProjectActionTest {
 
 	@Test
 	public void testGetProjectSummaryFromProject() throws IOException {
-		Mockito.when(project.getLastCompletedBuild()).thenReturn(null);
-		Mockito.when(project.getRootDir()).thenReturn(testFolder.getRoot());
-		ProjectSummary summary = cucumberProjectAction.getProjectSummary();
+        Mockito.when(project.getLastCompletedBuild()).thenReturn(null);
+        Mockito.when(project.getRootDir()).thenReturn(testFolder.getRoot());
+        CucumberProjectAction tempCucumberProjectAction = new CucumberProjectAction(project, 20);
+		ProjectSummary summary = tempCucumberProjectAction.getProjectSummary();
 		Assert.assertEquals(1, summary.getOverallSummary().getPassedBuilds());
 		Assert.assertEquals(3, summary.getFeatureSummaries().size());
 		Assert.assertEquals(1, summary.getOverallSummary().getEntries().size());

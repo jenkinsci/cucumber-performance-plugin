@@ -45,22 +45,16 @@ public class CucumberProjectAction implements ProminentProjectAction {
 	}
 
 	public Map<String, Summary> getFeature() {
-		// ProjectSummary projectSummary = CucumberPerfUtils
-		// .readSummaryFromDisk(this.dir());
 		return getSummariesByUniqueId(projectSummary.getFeatureSummaries(),
 				projectSummary.getScenarioSummaries());
 	}
 
 	public Map<String, Summary> getScenario() {
-		// ProjectSummary projectSummary = CucumberPerfUtils
-		// .readSummaryFromDisk(this.dir());
 		return getSummariesByUniqueId(projectSummary.getScenarioSummaries(),
 				projectSummary.getStepSummaries());
 	}
 
 	public Map<String, Summary> getStep() {
-		// ProjectSummary projectSummary = CucumberPerfUtils
-		// .readSummaryFromDisk(this.dir());
 		Map<String, Summary> empty = new HashMap<String, Summary>();
 		return getSummariesByUniqueId(projectSummary.getScenarioSummaries(),
 				empty);
@@ -85,13 +79,6 @@ public class CucumberProjectAction implements ProminentProjectAction {
 	public AbstractProject getProject() {
 		return (AbstractProject) this.project;
 	}
-
-	/*
-	 * public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws
-	 * IOException, ServletException {
-	 * 
-	 * }
-	 */
 
 	protected File dir() {
 		if (this.project instanceof AbstractProject) {

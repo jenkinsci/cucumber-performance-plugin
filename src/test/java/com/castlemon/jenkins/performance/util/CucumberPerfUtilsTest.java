@@ -29,7 +29,8 @@ public class CucumberPerfUtilsTest {
 	@Test
 	public void testWriteSummaryToDisk() {
 		ProjectSummary summary = new ProjectSummary();
-		CucumberPerfUtils.writeSummaryToDisk(summary, testFolder.getRoot());
+		Assert.assertTrue(CucumberPerfUtils.writeSummaryToDisk(summary,
+				testFolder.getRoot()));
 		Assert.assertEquals(1, testFolder.getRoot().listFiles().length);
 	}
 
