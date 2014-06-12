@@ -22,6 +22,7 @@ jQuery(document).ready(function() {
 		"bPaginate" : true,
 		"bFilter" : false,
 		"bSort" : true,
-		"bInfo" : true
+		"bInfo" : true,
+		"pagingType": "full_numbers"
 	});
 });

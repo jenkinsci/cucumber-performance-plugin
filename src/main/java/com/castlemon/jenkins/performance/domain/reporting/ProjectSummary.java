@@ -1,10 +1,15 @@
 package com.castlemon.jenkins.performance.domain.reporting;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryAverageDurationDescComparator;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("projectsummary")
 public class ProjectSummary {
@@ -20,6 +25,9 @@ public class ProjectSummary {
 
 	@XStreamAlias("stepsummaries")
 	private Map<String, Summary> stepSummaries;
+
+	@XStreamOmitField
+	private static final int numberOfSummariesToDisplay = 20;
 
 	public Summary getOverallSummary() {
 		return overallSummary;
@@ -74,9 +82,29 @@ public class ProjectSummary {
 	}
 
 	public Collection<Summary> getSortedFeatureSummaryList() {
-		Collection<Summary> interimSummaries = this.featureSummaries.values();
+		return extractSlowestSummaries(numberOfSummariesToDisplay,
+				this.featureSummaries.values());
+	}
 
-		return this.featureSummaries.values();
+	public Collection<Summary> getSortedScenarioSummaryList() {
+		return extractSlowestSummaries(numberOfSummariesToDisplay,
+				this.scenarioSummaries.values());
+	}
+
+	public Collection<Summary> getSortedStepSummaryList() {
+		return extractSlowestSummaries(numberOfSummariesToDisplay,
+				this.stepSummaries.values());
+	}
+
+	private List<Summary> extractSlowestSummaries(int count,
+			Collection<Summary> interimSummaries) {
+		List<Summary> interimList = new ArrayList<Summary>(interimSummaries);
+		Collections.sort(interimList,
+				new SummaryAverageDurationDescComparator());
+		if (interimList.size() <= count) {
+			return interimList;
+		}
+		return (new ArrayList<Summary>(interimList.subList(0, count)));
 	}
 
 }

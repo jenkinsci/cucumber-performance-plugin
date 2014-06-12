@@ -57,7 +57,7 @@ public class SummaryAverageDurationComparatorTest {
 	public void summary2Bigger() {
 		SummaryAverageDurationDescComparator summaryAverageDurationDescComparator = new SummaryAverageDurationDescComparator();
 		Assert.assertTrue(summaryAverageDurationDescComparator.compare(
-				summary1, summary2) < 0);
+				summary2, summary1) < 0);
 	}
 
 	@Test
