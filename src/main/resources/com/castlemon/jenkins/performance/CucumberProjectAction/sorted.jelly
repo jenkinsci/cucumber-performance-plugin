@@ -90,7 +90,7 @@
 									items="${it.projectSummary.sortedScenarioSummaryList}">
 									<tr>
 										<td><a
-											href="${rootURL}/${it.project.url}${it.urlName}/${it.projectSummary.overallSummary.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a></td>
+											href="${rootURL}/${it.project.url}${it.urlName}/scenario/${subSummary.pageLink}">${subSummary.name}</a></td>
 										<td>${subSummary.seniorName}</td>
 										<td>${subSummary.numberOfSubItems}</td>
 										<td>${subSummary.formattedShortestDuration}</td>
@@ -131,8 +131,7 @@
 								<j:forEach var="subSummary"
 									items="${it.projectSummary.sortedStepSummaryList}">
 									<tr>
-										<td><a
-											href="${rootURL}/${it.project.url}${it.urlName}/${it.projectSummary.overallSummary.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a></td>
+										<td>${subSummary.name}</td>
 										<td>${subSummary.seniorName}</td>
 										<td>${subSummary.formattedShortestDuration}</td>
 										<td>${subSummary.formattedLongestDuration}</td>

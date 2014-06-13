@@ -7,3 +7,6 @@ velocity.*
 /target
 /.idea
 /cucumber-perf.iml
+/testingInfo/JavaTest/.idea
+/testingInfo/JavaTest/JavaTest.iml
+/testingInfo/JavaTest/target/classes/com/castlemon/javatest
