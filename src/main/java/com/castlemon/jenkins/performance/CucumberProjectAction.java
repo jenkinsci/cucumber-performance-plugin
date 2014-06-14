@@ -24,8 +24,10 @@ public class CucumberProjectAction implements ProminentProjectAction {
 		super();
 		this.project = project;
 		this.projectSummary = CucumberPerfUtils.readSummaryFromDisk(this.dir());
-		this.projectSummary
-				.setNumberOfSummariesToDisplay(countOfSortedSummaries);
+		if (this.projectSummary != null) {
+			this.projectSummary
+					.setNumberOfSummariesToDisplay(countOfSortedSummaries);
+		}
 	}
 
 	public ProjectSummary getProjectSummary() {
