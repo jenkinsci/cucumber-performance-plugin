@@ -131,7 +131,9 @@
 								<j:forEach var="subSummary"
 									items="${it.projectSummary.sortedStepSummaryList}">
 									<tr>
-										<td>${subSummary.name}</td>
+										<td><span class="bolded">${subSummary.keyword}</span> <a
+											href="${rootURL}/${it.project.url}${it.urlName}/step/${subSummary.pageLink}">${subSummary.name}</a>
+										</td>
 										<td>${subSummary.seniorName}</td>
 										<td>${subSummary.formattedShortestDuration}</td>
 										<td>${subSummary.formattedLongestDuration}</td>

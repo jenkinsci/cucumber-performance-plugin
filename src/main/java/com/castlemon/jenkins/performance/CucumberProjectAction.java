@@ -58,8 +58,7 @@ public class CucumberProjectAction implements ProminentProjectAction {
 
 	public Map<String, Summary> getStep() {
 		Map<String, Summary> empty = new HashMap<String, Summary>();
-		return getSummariesByUniqueId(projectSummary.getScenarioSummaries(),
-				empty);
+		return getSummariesByUniqueId(projectSummary.getStepSummaries(), empty);
 	}
 
 	private Map<String, Summary> getSummariesByUniqueId(
