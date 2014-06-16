@@ -30,10 +30,9 @@
 						<h3>Summary</h3>
 						<p />
 						<div id="summaryArea">
-							<div id="buildSummary">
 								<table class="summaryTable">
 									<tr>
-										<th class="coloured" colspan="2">Build Summary</th>
+										<th class="coloured" colspan="2">Build Summary for this ${it.projectSummary.overallSummary.summaryType}</th>
 									</tr>
 									<tr>
 										<td>Number of Passed Builds:</td>
@@ -48,27 +47,6 @@
 										<td>${it.projectSummary.overallSummary.totalBuilds}</td>
 									</tr>
 								</table>
-							</div>
-							<div id="stepSummary">
-								<table class="summaryTable">
-									<tr>
-										<th class="coloured" colspan="2">Step Summary</th>
-									</tr>
-									<tr>
-										<td>Number of Passed Steps:</td>
-										<td>${it.projectSummary.overallSummary.passedSteps}</td>
-									</tr>
-									<tr>
-										<td>Number of Failed Steps:</td>
-										<td>${it.projectSummary.overallSummary.failedSteps}</td>
-									</tr>
-									<tr>
-										<td>Number of Skipped Steps:</td>
-										<td>${it.projectSummary.overallSummary.skippedSteps}</td>
-									</tr>
-								</table>
-							</div>
-							<div class="clear"></div>
 							<p />
 							<div class="emphasised">Only successful builds are included
 								in the details below.</div>

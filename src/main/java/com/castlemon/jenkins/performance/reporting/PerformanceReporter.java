@@ -246,7 +246,7 @@ public class PerformanceReporter {
 				stepEntry.setElapsedTime(result.getDuration());
 				stepEntry.setPassedSteps(1);
 				stepEntry.setPassed(true);
-				stepSummary.incrementFailedBuilds();
+				stepSummary.incrementPassedBuilds();
 			} else {
 				System.err.println("Unexpected build result: '" + status + "'");
 			}

@@ -61,6 +61,9 @@ public class Summary {
 	@XStreamAlias("seniorname")
 	private String seniorName;
 
+    @XStreamAlias("seniorpagelink")
+    private String seniorPageLink;
+
 	private int order;
 
 	@XStreamAlias("numberofsubitems")
@@ -393,5 +396,13 @@ public class Summary {
 	public void setSubSummaries(List<Summary> subSummaries) {
 		this.subSummaries = subSummaries;
 	}
+
+    public String getSeniorPageLink() {
+        return seniorPageLink;
+    }
+
+    public void setSeniorPageLink(String seniorPageLink) {
+        this.seniorPageLink = seniorPageLink;
+    }
 
 }

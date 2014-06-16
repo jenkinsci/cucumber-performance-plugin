@@ -100,7 +100,7 @@ public class CucumberProjectActionTest {
 	@Test
 	public void testGetStep() throws IOException {
 		Map<String, Summary> stepCollection = cucumberProjectAction.getStep();
-		Assert.assertEquals(17, stepCollection.size());
+		Assert.assertEquals(313, stepCollection.size());
 	}
 
 	@Test
