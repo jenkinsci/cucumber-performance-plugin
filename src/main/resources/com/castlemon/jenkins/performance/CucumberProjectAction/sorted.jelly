@@ -1,0 +1,153 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<l:layout title="Cucumber Performance Reporting">
+		<st:include page="header" optional="true" />
+		<l:header>
+			<link rel="stylesheet"
+				href="${rootURL}/plugin/cucumber-perf/css/main.css" type="text/css"
+				media="screen" />
+			<link rel="stylesheet"
+				href="${rootURL}/plugin/cucumber-perf/css/jquery.dataTables.css"
+				type="text/css" media="screen" />
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.10.2.min.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery.dataTables.min.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/featureSortedTable.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/scenarioSortedTable.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/stepSortedTable.js"></script>
+		</l:header>
+		<st:include it="${it.project}" page="sidepanel.jelly" />
+		<l:main-panel>
+			<div id="cukeperfcontent">
+				<h1>Cucumber Performance Reporting</h1>
+				<!-- feature reporting -->
+				<div>
+					<h3>Worst-performing features (by average duration)</h3>
+					<p>Click on the column name to change the sorting.</p>
+					<div class="fullWidth">
+						<table id="sortedFeatureTable" class="summaryTable">
+							<thead>
+								<tr>
+									<th class="coloured">Feature Name</th>
+									<th class="coloured">Scenarios</th>
+									<th class="coloured">Shortest Duration</th>
+									<th class="coloured">Longest Duration</th>
+									<th class="coloured">Average Duration</th>
+									<th class="coloured">S</th>
+									<th class="coloured">L</th>
+									<th class="coloured">A</th>
+								</tr>
+							</thead>
+							<tbody>
+								<j:forEach var="subSummary"
+									items="${it.projectSummary.sortedFeatureSummaryList}">
+									<tr>
+										<td><a
+											href="${rootURL}/${it.project.url}${it.urlName}/${it.projectSummary.overallSummary.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a></td>
+										<td>${subSummary.numberOfSubItems}</td>
+										<td>${subSummary.formattedShortestDuration}</td>
+										<td>${subSummary.formattedLongestDuration}</td>
+										<td>${subSummary.formattedAverageDuration}</td>
+										<td>${subSummary.shortestDuration}</td>
+										<td>${subSummary.longestDuration}</td>
+										<td>${subSummary.averageDuration}</td>
+									</tr>
+								</j:forEach>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<p class="clear" />
+				<p />
+				<hr />
+				<p />
+				<!-- scenario reporting -->
+				<div>
+					<h3>Worst-performing scenarios (by average duration)</h3>
+					<p>Click on the column name to change the sorting.</p>
+					<div class="fullWidth">
+						<table id="sortedScenarioTable" class="summaryTable">
+							<thead>
+								<tr>
+									<th class="coloured">Scenario Name</th>
+									<th class="coloured">Feature</th>
+									<th class="coloured">Steps</th>
+									<th class="coloured">Shortest Duration</th>
+									<th class="coloured">Longest Duration</th>
+									<th class="coloured">Average Duration</th>
+									<th class="coloured">S</th>
+									<th class="coloured">L</th>
+									<th class="coloured">A</th>
+								</tr>
+							</thead>
+							<tbody>
+								<j:forEach var="subSummary"
+									items="${it.projectSummary.sortedScenarioSummaryList}">
+									<tr>
+										<td><a
+											href="${rootURL}/${it.project.url}${it.urlName}/scenario/${subSummary.pageLink}">${subSummary.name}</a></td>
+										<td>${subSummary.seniorName}</td>
+										<td>${subSummary.numberOfSubItems}</td>
+										<td>${subSummary.formattedShortestDuration}</td>
+										<td>${subSummary.formattedLongestDuration}</td>
+										<td>${subSummary.formattedAverageDuration}</td>
+										<td>${subSummary.shortestDuration}</td>
+										<td>${subSummary.longestDuration}</td>
+										<td>${subSummary.averageDuration}</td>
+									</tr>
+								</j:forEach>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<p class="clear" />
+				<p />
+				<hr />
+				<p />
+				<!-- step reporting -->
+				<div>
+					<h3>Worst-performing scenarios (by average duration)</h3>
+					<p>Click on the column name to change the sorting.</p>
+					<div class="fullWidth">
+						<table id="sortedStepTable" class="summaryTable">
+							<thead>
+								<tr>
+									<th class="coloured">Step Name</th>
+									<th class="coloured">Scenario</th>
+									<th class="coloured">Shortest Duration</th>
+									<th class="coloured">Longest Duration</th>
+									<th class="coloured">Average Duration</th>
+									<th class="coloured">S</th>
+									<th class="coloured">L</th>
+									<th class="coloured">A</th>
+								</tr>
+							</thead>
+							<tbody>
+								<j:forEach var="subSummary"
+									items="${it.projectSummary.sortedStepSummaryList}">
+									<tr>
+										<td><span class="bolded">${subSummary.keyword}</span> <a
+											href="${rootURL}/${it.project.url}${it.urlName}/step/${subSummary.pageLink}">${subSummary.name}</a>
+										</td>
+										<td>${subSummary.seniorName}</td>
+										<td>${subSummary.formattedShortestDuration}</td>
+										<td>${subSummary.formattedLongestDuration}</td>
+										<td>${subSummary.formattedAverageDuration}</td>
+										<td>${subSummary.shortestDuration}</td>
+										<td>${subSummary.longestDuration}</td>
+										<td>${subSummary.averageDuration}</td>
+									</tr>
+								</j:forEach>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</l:main-panel>
+	</l:layout>
+</j:jelly>

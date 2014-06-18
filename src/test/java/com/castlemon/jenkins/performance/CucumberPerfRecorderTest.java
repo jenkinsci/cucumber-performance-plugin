@@ -1,31 +1,54 @@
 package com.castlemon.jenkins.performance;
 
-import hudson.model.Action;
 import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.Run;
 import hudson.tasks.BuildStepMonitor;
 import junit.framework.Assert;
-
+import org.apache.commons.io.FileUtils;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
+import java.io.IOException;
+
+@SuppressWarnings("rawtypes")
 public class CucumberPerfRecorderTest {
 
-	String jsonReportDirectory = "";
-	String pluginUrlPath = "";
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
+    String jsonReportDirectory = "";
+    int countOfSummaries = 10;
+    CucumberPerfRecorder cucumberPerfRecorder = new CucumberPerfRecorder(
+            jsonReportDirectory, countOfSummaries);
+    AbstractProject project = Mockito.mock(AbstractProject.class);
 
-	CucumberPerfRecorder cucumberPerfRecorder = new CucumberPerfRecorder(
-			jsonReportDirectory, pluginUrlPath);
 
-	@Test
-	public void testGetRequiredMonitorService() {
-		Assert.assertEquals(BuildStepMonitor.NONE,
-				cucumberPerfRecorder.getRequiredMonitorService());
-	}
+    @Before
+    public void setup() throws IOException {
+        testFolder.newFolder("cucumber-perf-reports");
+        FileUtils.copyFile(
+                FileUtils.toFile(this.getClass().getResource("/cukeperf.xml")),
+                testFolder.newFile("cucumber-perf-reports/cukeperf.xml"));
+        Run run = Mockito.mock(Run.class);
+        Mockito.when(run.getRootDir()).thenReturn(testFolder.getRoot());
+        Mockito.when(project.getLastCompletedBuild()).thenReturn(run);
+        Mockito.when(project.getName()).thenReturn("TestP");
 
-	@Test
-	public void testGetProjectAction() {
-		AbstractProject project = Mockito.mock(AbstractProject.class);
-		Assert.assertTrue(cucumberPerfRecorder.getProjectAction(project) instanceof Action);
-	}
+    }
+
+    @Test
+    public void testGetRequiredMonitorService() {
+        Assert.assertEquals(BuildStepMonitor.NONE,
+                cucumberPerfRecorder.getRequiredMonitorService());
+    }
+
+    @Test
+    public void testGetProjectAction() {
+        Assert.assertTrue(cucumberPerfRecorder.getProjectAction(project) instanceof Action);
+    }
+
 
 }

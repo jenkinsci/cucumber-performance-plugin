@@ -1,15 +1,16 @@
 jQuery(document).ready(function() {
-	/* Scenario-level table */
-	jQuery('#sortedScenarioTable').dataTable({
-		"aaData" : sortedScenarioData,
+	/* Feature-level table */
+	jQuery('#sortedFeatureTable').dataTable({
 		"aoColumns" : [ {
 			"sType" : "string"
-		}, null, null, {
+		}, 
+		null, 
+		{
+			"iDataSort" : 5
+		}, {
 			"iDataSort" : 6
 		}, {
 			"iDataSort" : 7
-		}, {
-			"iDataSort" : 8
 		}, {
 			"bVisible" : false
 		}, {
@@ -17,10 +18,11 @@ jQuery(document).ready(function() {
 		}, {
 			"bVisible" : false
 		} ],
-		aaSorting : [ [ 8, 'desc' ] ],
-		"bPaginate" : false,
+		aaSorting : [ [ 7, 'desc' ] ],
+		"bPaginate" : true,
 		"bFilter" : false,
 		"bSort" : true,
-		"bInfo" : false
+		"bInfo" : true,
+		"pagingType": "full_numbers"
 	});
 });

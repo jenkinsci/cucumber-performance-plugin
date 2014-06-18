@@ -2,18 +2,27 @@ package com.castlemon.jenkins.performance.domain.reporting;
 
 import java.util.Date;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+@XStreamAlias("performanceentry")
 public class PerformanceEntry {
 
+	@XStreamAlias("buildnumber")
 	private int buildNumber;
 
+	@XStreamAlias("elapsedtime")
 	private long elapsedTime;
 
+	@XStreamAlias("rundate")
 	private Date runDate;
 
+	@XStreamAlias("passedsteps")
 	private int passedSteps;
 
+	@XStreamAlias("failedsteps")
 	private int failedSteps;
 
+	@XStreamAlias("skippedsteps")
 	private int skippedSteps;
 
 	private boolean passed;

@@ -3,11 +3,14 @@ package com.castlemon.jenkins.performance.util;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.joda.time.Duration;
@@ -16,18 +19,47 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import com.castlemon.jenkins.performance.domain.Feature;
-import com.castlemon.jenkins.performance.domain.enums.SummaryType;
-import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryOrderComparator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.xstream.XStream;
 
 public class CucumberPerfUtils {
 
 	private static int nanosInAMilli = 1000000;
+
+	public static boolean writeSummaryToDisk(ProjectSummary projectSummary,
+			File outputDirectory) {
+		try {
+			XStream xstream = prepareXStream();
+			File outputFile = new File(outputDirectory, "cukeperf.xml");
+			Writer writer = new PrintWriter(outputFile);
+			xstream.toXML(projectSummary, writer);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public static ProjectSummary readSummaryFromDisk(File outputDirectory) {
+		XStream xstream = prepareXStream();
+		String str;
+		try {
+			File inputFile = new File(outputDirectory, "cukeperf.xml");
+			str = FileUtils.readFileToString(inputFile);
+			return ((ProjectSummary) xstream.fromXML(str));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
 
 	public static List<Summary> getRelevantSummaries(
 			Map<String, Summary> summaries, String seniorId) {
@@ -42,69 +74,23 @@ public class CucumberPerfUtils {
 		return summaryList;
 	}
 
+	private static XStream prepareXStream() {
+		XStream xstream = new XStream();
+		xstream.processAnnotations(com.castlemon.jenkins.performance.domain.reporting.ProjectSummary.class);
+		xstream.processAnnotations(com.castlemon.jenkins.performance.domain.reporting.Summary.class);
+		xstream.processAnnotations(com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry.class);
+		xstream.setClassLoader(com.castlemon.jenkins.performance.domain.reporting.ProjectSummary.class
+				.getClassLoader());
+		return xstream;
+	}
+
 	public static void sortSummaryList(List<Summary> summaries) {
 		Collections.sort(summaries, new SummaryOrderComparator());
-	}
-
-	public static String buildGraphData(Summary summary) {
-		StringBuilder output = new StringBuilder();
-		output.append("[");
-		int i = 1;
-		for (PerformanceEntry run : summary.getEntries()) {
-			if (run.isPassed()) {
-				output.append("["
-						+ run.getBuildNumber()
-						+ ", "
-						+ getDurationInSeconds(run.getElapsedTime()
-								/ nanosInAMilli) + "]");
-				if (i < summary.getEntries().size()) {
-					output.append(",");
-				}
-			}
-			i++;
-		}
-		output.append("]");
-		return output.toString();
-	}
-
-	public static String buildAverageData(Summary summary) {
-		long totalDuration = 0l;
-		long executionCount = 0l;
-		StringBuilder output = new StringBuilder();
-		for (PerformanceEntry run : summary.getEntries()) {
-			if (run.isPassed()) {
-				totalDuration += run.getElapsedTime();
-				executionCount++;
-			}
-		}
-		long average = 0l;
-		if (executionCount > 0) {
-			average = totalDuration / executionCount;
-		}
-		output.append("[");
-		int i = 1;
-		for (PerformanceEntry run : summary.getEntries()) {
-			if (run.isPassed()) {
-				output.append("[" + run.getBuildNumber() + ", "
-						+ getDurationInSeconds(average / nanosInAMilli) + "]");
-				if (i < summary.getEntries().size()) {
-					output.append(",");
-				}
-			}
-			i++;
-		}
-		output.append("]");
-		return output.toString();
 	}
 
 	public static long getDurationInSeconds(Long duration) {
 		Duration minutes = new Duration(duration);
 		return minutes.getStandardSeconds();
-	}
-
-	public static long getDurationInMinutes(Long duration) {
-		Duration minutes = new Duration(duration);
-		return minutes.getStandardMinutes();
 	}
 
 	public static String[] findJsonFiles(File targetDirectory, String filename) {
@@ -159,34 +145,6 @@ public class CucumberPerfUtils {
 				.appendSeparator(" ").appendMillis().appendSuffix(" ms", " ms")
 				.toFormatter();
 		return formatter.print(new Period(0, durationInNanos / nanosInAMilli));
-	}
-
-	public static String generateJsonSummary(List<Summary> summaries,
-			SummaryType summaryType) {
-		StringBuilder output = new StringBuilder();
-		output.append("[");
-		int i = 1;
-		for (Summary summary : summaries) {
-			output.append("[" + "'" + summary.getName() + "'" + ", ");
-			if (summaryType.hasSeniorSummaries()) {
-				output.append("'" + summary.getSeniorName() + "'" + ", ");
-			}
-			if (summaryType.hasSubSummaries()) {
-				output.append(summary.getNumberOfSubItems() + ", ");
-			}
-			output.append("'" + summary.getFormattedShortestDuration() + "'"
-					+ ", " + "'" + summary.getFormattedLongestDuration() + "'"
-					+ ", " + "'" + summary.getFormattedAverageDuration() + "'"
-					+ ", " + summary.getShortestDuration() + ", "
-					+ summary.getLongestDuration() + ", "
-					+ summary.calculateAverageDuration() + "]");
-			if (i < summaries.size()) {
-				output.append(",");
-			}
-			i++;
-		}
-		output.append("]");
-		return output.toString();
 	}
 
 	private static String loadJsonFile(File targetBuildDirectory,

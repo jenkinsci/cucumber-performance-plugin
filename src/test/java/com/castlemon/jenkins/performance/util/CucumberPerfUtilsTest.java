@@ -9,19 +9,47 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import com.castlemon.jenkins.performance.TestUtils;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
 
 public class CucumberPerfUtilsTest {
 
 	private TestUtils testUtils = new TestUtils();
 
-	// @Rule
-	// public TemporaryFolder testFolder = new TemporaryFolder();
+	@Rule
+	public TemporaryFolder testFolder = new TemporaryFolder();
+
+	@Test
+	public void testWriteSummaryToDisk() {
+		ProjectSummary summary = new ProjectSummary();
+		Assert.assertTrue(CucumberPerfUtils.writeSummaryToDisk(summary,
+				testFolder.getRoot()));
+		Assert.assertEquals(1, testFolder.getRoot().listFiles().length);
+	}
+
+	@Test
+	public void testReadSummaryFromDisk() throws Exception {
+		File f = FileUtils.toFile(this.getClass().getResource("/cukeperf.xml"));
+		ProjectSummary summary = CucumberPerfUtils.readSummaryFromDisk(f
+				.getParentFile());
+		Assert.assertEquals(1, summary.getOverallSummary().getPassedBuilds());
+		Assert.assertEquals(3, summary.getFeatureSummaries().size());
+		Assert.assertEquals(1, summary.getOverallSummary().getEntries().size());
+	}
+
+	@Test
+	public void testReadSummaryFromDiskException() throws Exception {
+		File f = FileUtils
+				.toFile(this.getClass().getResource("/notexists.xml"));
+		Assert.assertNull(CucumberPerfUtils.readSummaryFromDisk(null));
+	}
 
 	@Test
 	public void testGetRelevantSummariesMultiple() {
@@ -83,8 +111,7 @@ public class CucumberPerfUtilsTest {
 		Summary projectSummary = new Summary();
 		projectSummary.setEntries(runs);
 		String expectedReturn = "[[1, 5],[2, 6]]";
-		Assert.assertEquals(expectedReturn,
-				CucumberPerfUtils.buildGraphData(projectSummary));
+		Assert.assertEquals(expectedReturn, projectSummary.getGraphData());
 	}
 
 	@Test
@@ -103,8 +130,7 @@ public class CucumberPerfUtilsTest {
 		Summary projectSummary = new Summary();
 		projectSummary.setEntries(runs);
 		String expectedReturn = "[[2, 6]]";
-		Assert.assertEquals(expectedReturn,
-				CucumberPerfUtils.buildGraphData(projectSummary));
+		Assert.assertEquals(expectedReturn, projectSummary.getGraphData());
 	}
 
 	@Test
@@ -123,13 +149,7 @@ public class CucumberPerfUtilsTest {
 		Summary projectSummary = new Summary();
 		projectSummary.setEntries(runs);
 		String expectedReturn = "[[1, 5],[2, 5]]";
-		Assert.assertEquals(expectedReturn,
-				CucumberPerfUtils.buildAverageData(projectSummary));
-	}
-
-	@Test
-	public void testGetDurationInMinutes() {
-		Assert.assertEquals(3, CucumberPerfUtils.getDurationInMinutes(180000l));
+		Assert.assertEquals(expectedReturn, projectSummary.getAverageData());
 	}
 
 	@Test

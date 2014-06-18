@@ -1,39 +1,32 @@
-body {
-	font-family: Arial, sans-serif;
-	font-size: 13px;
-	font-weight: normal;
-	margin: 0;
-}
-
-h1 {
+#cukeperfcontent h1 {
 	font-family: Trebuchet, Arial, sans-serif;
 	font-size: 20px;
 	font-weight: bold;
 	color: #AD0000;
 }
 
-h3 {
+#cukeperfcontent h3 {
 	font-family: Trebuchet, Arial, sans-serif;
 	font-size: 16px;
 	font-weight: bold;
 	color: #AD0000;
 }
 
-tr:nth-child(even) {
+#cukeperfcontent tr:nth-child(even) {
 	background-color: #EBEBEB;
 }
 
-th.coloured {
+#cukeperfcontent th.coloured {
 	font-size: 13px;
 	font-weight: bold;
 	color: #AD0000;
-	background-color: #FAEEEE;
+	 background-color: #FAEEEE; 
+	/* background-color: #f0f0f0; */
 	text-align: center;
 	border: 1px solid black;
 }
 
-td {
-	font-size: 12px;
+#cukeperfcontent td {
 	font-weight: normal;
 	color: #5C5C5C;
 	padding-left: 15px;
@@ -41,60 +34,27 @@ td {
 	border: 1px solid black;
 }
 
-.clear {
+#cukeperfcontent .clear {
 	clear: both;
 }
 
-.content {
-	width: 960px;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#pageHeader {
-	margin: 0;
-	padding: 5px 5px 5px 5px;
-	width: 100%;
-	background-color: #EDEFF2;
-	border-bottom: 2px solid #AD0000;
-}
-
-#titleArea {
-	width: 30%;
-	font-size: 27px;
-	float: left;
-}
-
-#linkArea {
-	width: 60%;
-	font-size: 12px;
-	font-weight: bold;
-	color: #4D6EBA;
-	float: left;
-	text-align: right;
-}
-
-#jenkinsLink {
-	padding-top: 10px;
-}
-
-#summaryArea {
+#cukeperfcontent #summaryArea {
 	margin-left: auto;
 	margin-right: auto;
 	width: 90%;
 }
 
-#buildSummary {
+#cukeperfcontent #buildSummary {
 	width: 50%;
 	float: left;
 }
 
-#stepSummary {
+#cukeperfcontent #stepSummary {
 	width: 50%;
 	float: left;
 }
 
-#graphArea {
+#cukeperfcontent #graphArea {
 	margin-left: auto;
 	margin-right: auto;
 	width: 90%;
@@ -103,28 +63,12 @@ td {
 	height: 400px;
 }
 
-.fullWidth {
+#cukeperfcontent .fullWidth {
 	margin-left: auto;
 	margin-right: auto;
-	width: 1080px;
 }
 
-#pageFooter {
-	font-family: Trebuchet, Arial, sans-serif;
-	margin-left: auto;
-	margin-right: auto;
-	width: 100%;
-	color: 12px #8C8C8C;
-	text-align: center;
-	font-size: 12px;
-	font-weight: normal;
-	font-style: italic;
-	background-color: #EDEFF2;
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
-.summaryTable {
+#cukeperfcontent .summaryTable {
 	border: 1px solid black;
 	margin-left: auto;
 	margin-right: auto;
@@ -132,7 +76,7 @@ td {
 	border-collapse: collapse;
 }
 
-.rowsTable {
+#cukeperfcontent .rowsTable {
 	border: 1px solid black;
 	margin-left: auto;
 	margin-right: auto;
@@ -140,13 +84,13 @@ td {
 	border-collapse: collapse;
 }
 
-.cellText {
+#cukeperfcontent .cellText {
 	font-size: 9px;
 	background-color: #ffffff;
 	align: left;
 }
 
-.emphasised {
+#cukeperfcontent .emphasised {
 	font-size: 12px;
 	font-weight: bold;
 	color: #AD0000;
@@ -157,7 +101,7 @@ td {
 	font-style: italic;
 }
 
-.bolded {
+#cukeperfcontent .bolded {
 	font-weight: bold;
 	font-style: italic;
 }

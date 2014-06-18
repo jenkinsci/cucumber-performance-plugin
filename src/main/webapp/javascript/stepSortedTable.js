@@ -1,12 +1,11 @@
 jQuery(document).ready(function() {
-	/* Feature-level table */
-	jQuery('#sortedFeatureTable').dataTable({
-		"aaData" : sortedFeatureData,
+	/* Step-level table */
+	jQuery('#sortedStepTable').dataTable({
 		"aoColumns" : [ {
 			"sType" : "string"
-		}, 
-		null, 
-		{
+		}, {
+			"sType" : "string"
+		}, {
 			"iDataSort" : 5
 		}, {
 			"iDataSort" : 6
@@ -20,9 +19,10 @@ jQuery(document).ready(function() {
 			"bVisible" : false
 		} ],
 		aaSorting : [ [ 7, 'desc' ] ],
-		"bPaginate" : false,
+		"bPaginate" : true,
 		"bFilter" : false,
 		"bSort" : true,
-		"bInfo" : false
+		"bInfo" : true,
+		"pagingType": "full_numbers"
 	});
 });

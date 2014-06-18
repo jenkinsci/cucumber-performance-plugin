@@ -12,6 +12,7 @@ import com.castlemon.jenkins.performance.domain.Elements;
 import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.Result;
 import com.castlemon.jenkins.performance.domain.Step;
+import com.castlemon.jenkins.performance.domain.enums.SummaryType;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
@@ -30,6 +31,7 @@ public class PerformanceReporter {
 
 	public Summary getPerformanceData(List<ProjectRun> runs) {
 		Summary projectSummary = new Summary();
+		projectSummary.setSummaryType(SummaryType.PROJECT);
 		List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
 		int passedSteps = 0;
 		int failedSteps = 0;
@@ -102,7 +104,7 @@ public class PerformanceReporter {
 		Summary featureSummary = getRelevantSummary(feature.getId(),
 				feature.getId(), feature.getName(), featureSummaries,
 				higherOrderParam, feature.getElements().size(),
-				feature.getName());
+				feature.getName(), SummaryType.FEATURE);
 		PerformanceEntry featureEntry = new PerformanceEntry();
 		featureEntry.setRunDate(runDate);
 		featureEntry.setBuildNumber(buildNumber);
@@ -154,7 +156,8 @@ public class PerformanceReporter {
 			String featureName) {
 		Summary scenarioSummary = getRelevantSummary(scenario.getId(),
 				featureId, scenario.getName(), scenarioSummaries,
-				higherOrderParam, scenario.getSteps().size(), featureName);
+				higherOrderParam, scenario.getSteps().size(), featureName,
+				SummaryType.SCENARIO);
 		PerformanceEntry scenarioEntry = new PerformanceEntry();
 		scenarioEntry.setRunDate(runDate);
 		scenarioEntry.setBuildNumber(buildNumber);
@@ -205,7 +208,8 @@ public class PerformanceReporter {
 			int buildNumber, String scenarioId, int orderParam,
 			String scenarioName) {
 		Summary stepSummary = getRelevantSummary(step.getName(), scenarioId,
-				step.getName(), stepSummaries, orderParam, 1, scenarioName);
+				step.getName(), stepSummaries, orderParam, 1, scenarioName,
+				SummaryType.STEP);
 		if (StringUtils.isEmpty(stepSummary.getKeyword())) {
 			stepSummary.setKeyword(step.getKeyword());
 		}
@@ -242,7 +246,7 @@ public class PerformanceReporter {
 				stepEntry.setElapsedTime(result.getDuration());
 				stepEntry.setPassedSteps(1);
 				stepEntry.setPassed(true);
-				stepSummary.incrementFailedBuilds();
+				stepSummary.incrementPassedBuilds();
 			} else {
 				System.err.println("Unexpected build result: '" + status + "'");
 			}
@@ -286,15 +290,14 @@ public class PerformanceReporter {
 		summary.addToFailedSteps(entry.getFailedSteps());
 		summary.addToPassedSteps(entry.getPassedSteps());
 		summary.addToSkippedSteps(entry.getSkippedSteps());
-		// summary.addToTotalDuration(entry.getElapsedTime());
 	}
 
 	private Summary getRelevantSummary(String id, String seniorId, String name,
 			Map<String, Summary> summaries, int orderParam, int subItemCount,
-			String seniorName) {
+			String seniorName, SummaryType type) {
 		// generate the key for the map
 		String complexKey = seniorId + id;
-		// find the right step summary to use
+		// find the right summary to use
 		Summary summary = null;
 		if (summaries.containsKey(complexKey)) {
 			// exists - use it
@@ -306,13 +309,14 @@ public class PerformanceReporter {
 			summary.setSeniorId(seniorId);
 			summary.setSeniorName(seniorName);
 			summary.setName(name);
+			summary.setSummaryType(type);
 			summary.setOrder(orderParam);
 			summary.setNumberOfSubItems(subItemCount);
 			List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
 			summary.setEntries(entries);
+            // add the new entry to the list
 			summaries.put(complexKey, summary);
 		}
-		// add the new entry to the list
 		return summary;
 	}
 

@@ -1,47 +1,75 @@
 package com.castlemon.jenkins.performance.domain.reporting;
 
+import hudson.model.AbstractProject;
+
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import com.castlemon.jenkins.performance.domain.enums.SummaryType;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
+@XStreamAlias("summary")
 public class Summary {
+
+	private static final int nanosInAMilli = 1000000;
 
 	private String id;
 
 	private String name;
 
+	@XStreamAlias("summarytype")
+	private SummaryType summaryType;
+
 	private List<PerformanceEntry> entries;
 
+	@XStreamAlias("shortestduration")
 	private long shortestDuration = Long.MAX_VALUE;
 
+	@XStreamAlias("longestduration")
 	private long longestDuration;
 
+	@XStreamAlias("averageduration")
 	private long averageDuration;
 
+	@XStreamAlias("totalbuilds")
 	private int totalBuilds;
 
+	@XStreamAlias("passedbuilds")
 	private int passedBuilds;
 
+	@XStreamAlias("failedbuilds")
 	private int failedBuilds;
 
+	@XStreamAlias("reportedbuilds")
 	private int reportedBuilds;
 
+	@XStreamAlias("passedsteps")
 	private int passedSteps;
 
+	@XStreamAlias("failedsteps")
 	private int failedSteps;
 
+	@XStreamAlias("skippedsteps")
 	private int skippedSteps;
 
+	@XStreamAlias("seniorid")
 	private String seniorId;
 
+	@XStreamAlias("seniorname")
 	private String seniorName;
+
+    @XStreamAlias("seniorpagelink")
+    private String seniorPageLink;
 
 	private int order;
 
+	@XStreamAlias("numberofsubitems")
 	private int numberOfSubItems;
 
+	@XStreamAlias("pagelink")
 	private final String pageLink;
 
 	// only used for steps
@@ -49,12 +77,45 @@ public class Summary {
 
 	private List<List<String>> rows;
 
+	@XStreamOmitField
+	private List<Summary> subSummaries;
+
+	/*
+	 * this field is only used for display and should not be used in other
+	 * circumstances
+	 */
+	@XStreamOmitField
+	private AbstractProject<?, ?> project;
+
+	/*
+	 * this field is only used for display and should not be used in other
+	 * circumstances
+	 */
+	@XStreamOmitField
+	private String urlName;
+
+	public String getUrlName() {
+		return urlName;
+	}
+
+	public void setUrlName(String urlName) {
+		this.urlName = urlName;
+	}
+
+	public AbstractProject<?, ?> getProject() {
+		return project;
+	}
+
+	public void setProject(AbstractProject<?, ?> project) {
+		this.project = project;
+	}
+
 	public Summary() {
-		this.pageLink = RandomStringUtils.randomAlphabetic(5);
+		this.pageLink = RandomStringUtils.randomAlphabetic(10);
 	}
 
 	public String getPageLink() {
-		return pageLink + ".html";
+		return pageLink;
 	}
 
 	public boolean hasRows() {
@@ -265,5 +326,83 @@ public class Summary {
 	public void setRows(List<List<String>> rows) {
 		this.rows = rows;
 	}
+
+	public SummaryType getSummaryType() {
+		return summaryType;
+	}
+
+	public void setSummaryType(SummaryType summaryType) {
+		this.summaryType = summaryType;
+	}
+
+	public String getGraphData() {
+		StringBuilder output = new StringBuilder();
+		output.append("[");
+		int i = 1;
+		for (PerformanceEntry run : this.entries) {
+			if (run.isPassed()) {
+				output.append("["
+						+ run.getBuildNumber()
+						+ ", "
+						+ CucumberPerfUtils.getDurationInSeconds(run
+								.getElapsedTime() / nanosInAMilli) + "]");
+				if (i < this.entries.size()) {
+					output.append(",");
+				}
+			}
+			i++;
+		}
+		output.append("]");
+		return output.toString();
+	}
+
+	public String getAverageData() {
+		long totalDuration = 0l;
+		long executionCount = 0l;
+		StringBuilder output = new StringBuilder();
+		for (PerformanceEntry run : this.entries) {
+			if (run.isPassed()) {
+				totalDuration += run.getElapsedTime();
+				executionCount++;
+			}
+		}
+		long average = 0l;
+		if (executionCount > 0) {
+			average = totalDuration / executionCount;
+		}
+		output.append("[");
+		int i = 1;
+		for (PerformanceEntry run : this.entries) {
+			if (run.isPassed()) {
+				output.append("["
+						+ run.getBuildNumber()
+						+ ", "
+						+ CucumberPerfUtils.getDurationInSeconds(average
+								/ nanosInAMilli) + "]");
+				if (i < this.entries.size()) {
+					output.append(",");
+				}
+			}
+			i++;
+		}
+		output.append("]");
+		return output.toString();
+	}
+
+	public List<Summary> getSubSummaries() {
+		return subSummaries;
+	}
+
+	public void setSubSummaries(List<Summary> subSummaries) {
+		this.subSummaries = subSummaries;
+	}
+
+    public String getSeniorPageLink() {
+        return seniorPageLink;
+    }
+
+    public void setSeniorPageLink(String seniorPageLink) {
+        this.seniorPageLink = seniorPageLink;
+    }
 
 }
