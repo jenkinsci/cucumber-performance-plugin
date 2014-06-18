@@ -33,6 +33,19 @@ public enum SummaryType {
         }
     }
 
+    public String getSuperType() {
+        switch (this) {
+            case PROJECT:
+                return null;
+            case FEATURE:
+                return "Project";
+            case SCENARIO:
+                return "Feature";
+            default:
+                return "Scenario";
+        }
+    }
+
     public String getSubType() {
         switch (this) {
             case PROJECT:
@@ -56,6 +69,19 @@ public enum SummaryType {
                 return null;
             default:
                 return null;
+        }
+    }
+
+    public String getSuperLink() {
+        switch (this) {
+            case PROJECT:
+                return null;
+            case FEATURE:
+                return "project";
+            case SCENARIO:
+                return "feature";
+            default:
+                return "scenario";
         }
     }
 

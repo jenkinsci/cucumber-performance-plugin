@@ -82,8 +82,7 @@
                                 <tr>
                                     <j:choose>
                                         <j:when test="${it.summaryType.subType == 'Step'}">
-                                            <td><span class="bolded">${subSummary.keyword}</span> <a
-                                                    href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a>
+                                            <td><span class="bolded">${subSummary.keyword}</span> ${subSummary.name}
                                                 <j:if test="${subSummary.hasRows()}">
                                                     <div>
                                                         <table class="summaryTable">

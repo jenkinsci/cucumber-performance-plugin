@@ -290,7 +290,6 @@ public class PerformanceReporter {
 		summary.addToFailedSteps(entry.getFailedSteps());
 		summary.addToPassedSteps(entry.getPassedSteps());
 		summary.addToSkippedSteps(entry.getSkippedSteps());
-		// summary.addToTotalDuration(entry.getElapsedTime());
 	}
 
 	private Summary getRelevantSummary(String id, String seniorId, String name,
@@ -298,7 +297,7 @@ public class PerformanceReporter {
 			String seniorName, SummaryType type) {
 		// generate the key for the map
 		String complexKey = seniorId + id;
-		// find the right step summary to use
+		// find the right summary to use
 		Summary summary = null;
 		if (summaries.containsKey(complexKey)) {
 			// exists - use it
@@ -315,9 +314,9 @@ public class PerformanceReporter {
 			summary.setNumberOfSubItems(subItemCount);
 			List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
 			summary.setEntries(entries);
+            // add the new entry to the list
 			summaries.put(complexKey, summary);
 		}
-		// add the new entry to the list
 		return summary;
 	}
 
