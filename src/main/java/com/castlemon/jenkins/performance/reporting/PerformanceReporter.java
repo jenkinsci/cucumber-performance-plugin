@@ -248,7 +248,7 @@ public class PerformanceReporter {
 				stepEntry.setPassed(true);
 				stepSummary.incrementPassedBuilds();
 			} else {
-				System.err.println("Unexpected build result: '" + status + "'");
+				System.err.println("Unexpected step result: '" + status + "' for step " + step.getName());
 			}
 		}
 		// check the duration fields

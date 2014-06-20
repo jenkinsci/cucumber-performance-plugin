@@ -1,15 +1,15 @@
 package com.castlemon.jenkins.performance.reporting;
 
+import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
+import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
-import com.castlemon.jenkins.performance.domain.reporting.Summary;
-import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
 public class ReportBuilder {
 
@@ -21,14 +21,14 @@ public class ReportBuilder {
 		projectSummary.setOverallSummary(reporter
 				.getPerformanceData(projectRuns));
 		projectSummary.getOverallSummary().setName(buildProjectName);
-		// feature reports
-		projectSummary.setFeatureSummaries(reporter.getFeatureSummaries());
-		// scenario reports
+		// feature reports - re-do the map to have the pageLink as the key
+		projectSummary.setFeatureSummaries(getMapByPageLink(reporter.getFeatureSummaries()));
+		// scenario reports - update senior links and re-do the map to have the pageLink as the key
         updateSeniorPageLinks(reporter.getScenarioSummaries(),reporter.getFeatureSummaries());
-		projectSummary.setScenarioSummaries(reporter.getScenarioSummaries());
-		// step reports
+		projectSummary.setScenarioSummaries(getMapByPageLink(reporter.getScenarioSummaries()));
+		// step reports - update senior links and re-do the map to have the pageLink as the key
         updateSeniorPageLinks(reporter.getStepSummaries(),reporter.getScenarioSummaries());
-		projectSummary.setStepSummaries(reporter.getStepSummaries());
+		projectSummary.setStepSummaries(getMapByPageLink(reporter.getStepSummaries()));
 		// project reports
 		List<Summary> summaryList = new ArrayList<Summary>(reporter
 				.getFeatureSummaries().values());
@@ -36,6 +36,14 @@ public class ReportBuilder {
 		CucumberPerfUtils.writeSummaryToDisk(projectSummary, reportDirectory);
 		return true;
 	}
+
+    private Map<String,Summary> getMapByPageLink(Map<String,Summary> inputSummaries) {
+        Map<String,Summary> pageLinkSummaries = new HashMap<String,Summary>();
+        for(Summary summary : inputSummaries.values()) {
+            pageLinkSummaries.put(summary.getPageLink(),summary);
+        }
+        return pageLinkSummaries;
+    }
 
     private void updateSeniorPageLinks(Map<String, Summary> summaries, Map<String, Summary> seniorSummaries) {
         //create new map of senior summaries

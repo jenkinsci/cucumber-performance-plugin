@@ -9,5 +9,5 @@ Feature: SimpleTest2
     Then the answer should be 10
 
   Scenario: Scenario 3 of simpletest3 run
-    Given I calculate the difference between 2 and 7
-    Then the answer should be -5   
+    Given I calculate the difference between 7 and 2
+    Then the answer should be 5

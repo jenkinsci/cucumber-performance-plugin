@@ -9,7 +9,6 @@ import hudson.model.ProminentProjectAction;
 import hudson.model.Run;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("rawtypes")
@@ -45,35 +44,31 @@ public class CucumberProjectAction implements ProminentProjectAction {
         return "cucumber-perf-reports";
     }
 
-    public Map<String, Summary> getFeature() {
-        return getSummariesByUniqueId(projectSummary.getFeatureSummaries(),
+    public Summary getFeature(String pageLink) {
+        return getSpecificSummaryByPageLink(pageLink, projectSummary.getFeatureSummaries(),
                 projectSummary.getScenarioSummaries());
     }
 
-    public Map<String, Summary> getScenario() {
-        return getSummariesByUniqueId(projectSummary.getScenarioSummaries(),
+    public Summary getScenario(String pageLink) {
+        return getSpecificSummaryByPageLink(pageLink, projectSummary.getScenarioSummaries(),
                 projectSummary.getStepSummaries());
     }
 
-    public Map<String, Summary> getStep() {
-        return getSummariesByUniqueId(projectSummary.getStepSummaries(), null);
+    public Summary getStep(String pageLink) {
+        return getSpecificSummaryByPageLink(pageLink, projectSummary.getStepSummaries(), null);
     }
 
-    private Map<String, Summary> getSummariesByUniqueId(
-            Map<String, Summary> inputSummaries,
-            Map<String, Summary> subSummaries) {
-        Map<String, Summary> outputSummaries = new HashMap<String, Summary>();
-        for (Map.Entry<String, Summary> entry : inputSummaries.entrySet()) {
-            Summary summary = entry.getValue();
-            summary.setProject(this.project);
-            summary.setUrlName(getUrlName());
-            if (subSummaries != null) {
-                summary.setSubSummaries((CucumberPerfUtils.getRelevantSummaries(
-                        subSummaries, summary.getId())));
-            }
-            outputSummaries.put(entry.getValue().getPageLink(), summary);
+    private Summary getSpecificSummaryByPageLink(String pageLink,
+                                                 Map<String, Summary> inputSummaries,
+                                                 Map<String, Summary> subSummaries) {
+        Summary summary = inputSummaries.get(pageLink);
+        summary.setProject(this.project);
+        summary.setUrlName(getUrlName());
+        if (subSummaries != null) {
+            summary.setSubSummaries((CucumberPerfUtils.getRelevantSummaries(
+                    subSummaries, summary.getId())));
         }
-        return outputSummaries;
+        return summary;
     }
 
     public AbstractProject getProject() {

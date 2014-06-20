@@ -5,8 +5,8 @@ Feature: SimpleTest1
     Then the answer should be 6
 
   Scenario: Scenario 2 of simpletest1 run
-    Given I calculate the difference between 40 and 70
-    Then the answer should be -30
+    Given I calculate the difference between 70 and 40
+    Then the answer should be 30
 
   Scenario: Scenario 3 of simpletest1 run
     Given I calculate the difference between 222 and 123

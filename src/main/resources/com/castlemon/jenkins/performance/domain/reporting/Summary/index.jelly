@@ -11,7 +11,7 @@
                     src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.10.2.min.js"></script>
             <script type="text/javascript"
                     src="${rootURL}/plugin/cucumber-perf/javascript/highcharts-3.0.2/highcharts.js"></script>
-            <script type="text/javascript"
+           <script type="text/javascript"
                     src="${rootURL}/plugin/cucumber-perf/javascript/performanceGraph.js"></script>
             <script type="text/javascript">
                 var titleText = 'Project Performance'
@@ -82,7 +82,7 @@
                                 <tr>
                                     <j:choose>
                                         <j:when test="${it.summaryType.subType == 'Step'}">
-                                            <td><span class="bolded">${subSummary.keyword}</span> ${subSummary.name}
+                                            <td><span class="bolded">${subSummary.keyword}</span> <a href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a>
                                                 <j:if test="${subSummary.hasRows()}">
                                                     <div>
                                                         <table class="summaryTable">

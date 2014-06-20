@@ -23,7 +23,7 @@ public class Stepdefs {
 	}
 
 	private void performDelay() {
-		// delay between 30 seconds and 3 minutes randomly
+		// delay between 30 seconds and 1 minute randomly
 		try {
 			Thread.sleep(TestHelper.getRandomDelay(TestHelper.THIRTY_SECONDS,
 					TestHelper.ONE_MINUTES));
