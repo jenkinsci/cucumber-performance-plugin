@@ -7,26 +7,26 @@ jQuery(document).ready(function() {
                     plotBorderWidth: 1,//null,
                     plotShadow: false
                 },
-                title: {
+        title: {
                     text: 'Performance Breakdown'
                 },
-                tooltip: {
-            	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        tooltip: {
+            	    pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
                 },
-                plotOptions: {
+        plotOptions: {
                     pie: {
                         allowPointSelect: true,
                         cursor: 'pointer',
                         dataLabels: {
                             enabled: false,
-                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                            style: {
-                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                            }
+                            //format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            //style: {
+                            //    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            //}
                         }
                     }
-                },
-                series: [{
+        },
+        series: [{
                     type: 'pie',
                     name: 'Performance Breakdown',
                     data: pieChartData
