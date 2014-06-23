@@ -9,6 +9,7 @@ import hudson.model.ProminentProjectAction;
 import hudson.model.Run;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
 @SuppressWarnings("rawtypes")
@@ -29,6 +30,8 @@ public class CucumberProjectAction implements ProminentProjectAction {
     }
 
     public ProjectSummary getProjectSummary() {
+        projectSummary.getOverallSummary().setSubSummaries(
+                new ArrayList(projectSummary.getFeatureSummaries().values()));
         return projectSummary;
     }
 
@@ -56,6 +59,10 @@ public class CucumberProjectAction implements ProminentProjectAction {
 
     public Summary getStep(String pageLink) {
         return getSpecificSummaryByPageLink(pageLink, projectSummary.getStepSummaries(), null);
+    }
+
+    public String getPieChartData() {
+        return projectSummary.getOverallSummary().getPieChartData();
     }
 
     private Summary getSpecificSummaryByPageLink(String pageLink,

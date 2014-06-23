@@ -10,22 +10,29 @@
             <script type="text/javascript"
                     src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.10.2.min.js"></script>
             <script type="text/javascript"
-                    src="${rootURL}/plugin/cucumber-perf/javascript/highcharts-3.0.2/highcharts.js"></script>
-           <script type="text/javascript"
+                    src="${rootURL}/plugin/cucumber-perf/javascript/jquery/highcharts-4.0.1.js"></script>
+            <script type="text/javascript"
                     src="${rootURL}/plugin/cucumber-perf/javascript/performanceGraph.js"></script>
+            <script type="text/javascript"
+                    src="${rootURL}/plugin/cucumber-perf/javascript/pieChart.js"></script>
             <script type="text/javascript">
-                var titleText = 'Project Performance'
-                var perfData = ${it.graphData}
-                var averageData = ${it.averageData}
+				var titleText = 'Performance'
+				var perfData = ${it.graphData}
+				var averageData = ${it.averageData}
+                var pieChartData = ${it.pieChartData}
             </script>
         </l:header>
         <st:include it="${it.project}" page="sidepanel.jelly"/>
         <l:main-panel>
             <div id="cukeperfcontent">
                 <h1>Cucumber Performance Reporting</h1>
+
                 <h1>${it.summaryType} Report for ${it.name}</h1>
+
                 <h3>Performance Summary</h3>
+
                 <p/>
+
                 <div id="summaryArea">
                     <table class="summaryTable">
                         <tr>
@@ -45,12 +52,15 @@
                         </tr>
                     </table>
                     <p/>
+
                     <div class="emphasised">Only successful builds are included
                         in the details below.
                     </div>
                 </div>
                 <p/>
+
                 <h3>${it.summaryType} Performance</h3>
+
                 <div id="graphArea">
                     <noscript>
                         <p>This content requires JavaScript.</p>
@@ -59,6 +69,7 @@
                 <p/>
                 <j:if test="${it.summaryType.subType != null}">
                     <h3>${it.summaryType.subType} details</h3>
+
                     <div class="fullWidth">
                         <table id="subTable" class="summaryTable">
                             <thead>
@@ -82,7 +93,8 @@
                                 <tr>
                                     <j:choose>
                                         <j:when test="${it.summaryType.subType == 'Step'}">
-                                            <td><span class="bolded">${subSummary.keyword}</span> <a href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a>
+                                            <td><span class="bolded">${subSummary.keyword}</span> <a
+                                                    href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a>
                                                 <j:if test="${subSummary.hasRows()}">
                                                     <div>
                                                         <table class="summaryTable">
@@ -112,6 +124,11 @@
                             </j:forEach>
                             </tbody>
                         </table>
+                    </div>
+                    <div id="pieChartArea">
+                        <noscript>
+                            <p>This content requires JavaScript.</p>
+                        </noscript>
                     </div>
                 </j:if>
             </div>
