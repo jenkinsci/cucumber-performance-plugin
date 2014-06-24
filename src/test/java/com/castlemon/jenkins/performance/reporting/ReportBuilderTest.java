@@ -34,22 +34,4 @@ public class ReportBuilderTest {
 		Assert.assertEquals(1, testFolder.getRoot().listFiles().length);
 	}
 
-	/*
-	 * @Test public void testGenerateProjectReportsNullPlugin() {
-	 * List<ProjectRun> projectRuns = new ArrayList<ProjectRun>();
-	 * projectRuns.add(testUtils.generateRun("passed"));
-	 * projectRuns.add(testUtils.generateRun("failed"));
-	 * builder.generateProjectReports(projectRuns, testFolder.getRoot(),
-	 * "test build 1", "1", null); Assert.assertEquals(7,
-	 * testFolder.getRoot().listFiles().length); }
-	 * 
-	 * @Test public void testGenerateProjectReportsEmptyPlugin() {
-	 * List<ProjectRun> projectRuns = new ArrayList<ProjectRun>();
-	 * projectRuns.add(testUtils.generateRun("passed"));
-	 * projectRuns.add(testUtils.generateRun("failed"));
-	 * builder.generateProjectReports(projectRuns, testFolder.getRoot(),
-	 * "test build 1", "1", ""); Assert.assertEquals(7,
-	 * testFolder.getRoot().listFiles().length); }
-	 */
-
 }

@@ -22,13 +22,29 @@ public class SummaryTypeTest {
 		Assert.assertFalse(SummaryType.STEP.hasSubSummaries());
 	}
 
+    @Test
+    public void testGetSuperType() {
+        Assert.assertEquals(null, SummaryType.PROJECT.getSuperType());
+        Assert.assertEquals("Project", SummaryType.FEATURE.getSuperType());
+        Assert.assertEquals("Feature", SummaryType.SCENARIO.getSuperType());
+        Assert.assertEquals("Scenario", SummaryType.STEP.getSuperType());
+    }
+
+    @Test
+    public void testGetSuperLink() {
+        Assert.assertEquals(null, SummaryType.PROJECT.getSuperLink());
+        Assert.assertEquals("project", SummaryType.FEATURE.getSuperLink());
+        Assert.assertEquals("feature", SummaryType.SCENARIO.getSuperLink());
+        Assert.assertEquals("scenario", SummaryType.STEP.getSuperLink());
+    }
+
 	@Test
-	public void testGetSubType() {
-		Assert.assertEquals("Feature", SummaryType.PROJECT.getSubType());
-		Assert.assertEquals("Scenario", SummaryType.FEATURE.getSubType());
-		Assert.assertEquals("Step", SummaryType.SCENARIO.getSubType());
-		Assert.assertEquals(null, SummaryType.STEP.getSubType());
-	}
+     public void testGetSubType() {
+        Assert.assertEquals("Feature", SummaryType.PROJECT.getSubType());
+        Assert.assertEquals("Scenario", SummaryType.FEATURE.getSubType());
+        Assert.assertEquals("Step", SummaryType.SCENARIO.getSubType());
+        Assert.assertEquals(null, SummaryType.STEP.getSubType());
+    }
 
 	@Test
 	public void testGetSubSubType() {
