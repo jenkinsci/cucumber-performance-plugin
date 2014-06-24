@@ -16,10 +16,12 @@
             <script type="text/javascript"
                     src="${rootURL}/plugin/cucumber-perf/javascript/pieChart.js"></script>
             <script type="text/javascript">
+                var rootUrl = "${rootURL}"
 				var titleText = 'Performance'
 				var perfData = ${it.graphData}
 				var averageData = ${it.averageData}
                 var pieChartData = ${it.pieChartData}
+
             </script>
         </l:header>
         <st:include it="${it.project}" page="sidepanel.jelly"/>

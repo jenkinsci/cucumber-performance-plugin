@@ -16,6 +16,7 @@
             <script type="text/javascript"
                     src="${rootURL}/plugin/cucumber-perf/javascript/pieChart.js"></script>
             <script type="text/javascript">
+                var rootUrl = "${rootURL}"
 				var titleText = 'Project Performance'
 				var perfData = ${it.projectSummary.overallSummary.graphData}
 				var averageData = ${it.projectSummary.overallSummary.averageData}

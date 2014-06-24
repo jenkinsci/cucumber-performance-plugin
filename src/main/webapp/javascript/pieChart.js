@@ -19,17 +19,20 @@ jQuery(document).ready(function() {
                         cursor: 'pointer',
                         dataLabels: {
                             enabled: false,
-                            //format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                            //style: {
-                            //    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                            //}
                         }
                     }
         },
         series: [{
                     type: 'pie',
                     name: 'Performance Breakdown',
-                    data: pieChartData
+                    data: pieChartData,
+                    point:{
+                                  events:{
+                                      click: function (event) {
+                                          location.href = rootUrl +"/" + this.url;
+                                      }
+                                  }
+                              }
                 }]
             });
 });

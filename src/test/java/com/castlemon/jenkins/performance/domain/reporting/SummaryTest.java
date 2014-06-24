@@ -153,4 +153,102 @@ public class SummaryTest {
 		summary.incrementFailedBuilds();
 		Assert.assertEquals(1, summary.getFailedBuilds());
 	}
+
+    @Test
+    public void testBuildProjectGraphDataAllSuccess() {
+        PerformanceEntry entry1 = new PerformanceEntry();
+        entry1.setBuildNumber(1);
+        entry1.setElapsedTime(5000000000l);
+        entry1.setPassed(true);
+        PerformanceEntry entry2 = new PerformanceEntry();
+        entry2.setBuildNumber(2);
+        entry2.setElapsedTime(6000000000l);
+        entry2.setPassed(true);
+        List<PerformanceEntry> runs = new ArrayList<PerformanceEntry>();
+        runs.add(entry1);
+        runs.add(entry2);
+        Summary projectSummary = new Summary();
+        projectSummary.setEntries(runs);
+        String expectedReturn = "[[1,5],[2,6]]";
+        org.junit.Assert.assertEquals(expectedReturn, projectSummary.getGraphData());
+    }
+
+    @Test
+    public void testBuildProjectGraphDataOneFail() {
+        PerformanceEntry entry1 = new PerformanceEntry();
+        entry1.setBuildNumber(1);
+        entry1.setElapsedTime(5000000000l);
+        entry1.setPassed(false);
+        PerformanceEntry entry2 = new PerformanceEntry();
+        entry2.setBuildNumber(2);
+        entry2.setElapsedTime(6000000000l);
+        entry2.setPassed(true);
+        List<PerformanceEntry> runs = new ArrayList<PerformanceEntry>();
+        runs.add(entry1);
+        runs.add(entry2);
+        Summary projectSummary = new Summary();
+        projectSummary.setEntries(runs);
+        String expectedReturn = "[[2,6]]";
+        org.junit.Assert.assertEquals(expectedReturn, projectSummary.getGraphData());
+    }
+
+    @Test
+    public void testBuildAverageDataAllSuccess() {
+        PerformanceEntry entry1 = new PerformanceEntry();
+        entry1.setBuildNumber(1);
+        entry1.setElapsedTime(4000000000l);
+        entry1.setPassed(true);
+        PerformanceEntry entry2 = new PerformanceEntry();
+        entry2.setBuildNumber(2);
+        entry2.setElapsedTime(6000000000l);
+        entry2.setPassed(true);
+        List<PerformanceEntry> runs = new ArrayList<PerformanceEntry>();
+        runs.add(entry1);
+        runs.add(entry2);
+        Summary projectSummary = new Summary();
+        projectSummary.setEntries(runs);
+        String expectedReturn = "[[1,5],[2,5]]";
+        org.junit.Assert.assertEquals(expectedReturn, projectSummary.getAverageData());
+    }
+
+    @Test
+    public void testGetPieChartDataAllSuccess() {
+        Summary subSummary1 = new Summary();
+        subSummary1.setName("subSummary 1 Name");
+        PerformanceEntry entry1 = new PerformanceEntry();
+        entry1.setBuildNumber(1);
+        entry1.setElapsedTime(5000000000l);
+        entry1.setPassed(true);
+        PerformanceEntry entry2 = new PerformanceEntry();
+        entry2.setBuildNumber(2);
+        entry2.setElapsedTime(6000000000l);
+        entry2.setPassed(true);
+        List<PerformanceEntry> runs = new ArrayList<PerformanceEntry>();
+        runs.add(entry1);
+        runs.add(entry2);
+        subSummary1.setEntries(runs);
+        //
+        Summary subSummary2 = new Summary();
+        subSummary2.setName("subSummary 2 Name");
+        PerformanceEntry entry3 = new PerformanceEntry();
+        entry3.setBuildNumber(1);
+        entry3.setElapsedTime(8000000000l);
+        entry3.setPassed(true);
+        PerformanceEntry entry4 = new PerformanceEntry();
+        entry4.setBuildNumber(2);
+        entry4.setElapsedTime(7000000000l);
+        entry4.setPassed(true);
+        List<PerformanceEntry> runs2 = new ArrayList<PerformanceEntry>();
+        runs2.add(entry3);
+        runs2.add(entry4);
+        subSummary2.setEntries(runs2);
+        //
+        Summary projectSummary = new Summary();
+        List<Summary> subSummaries = new ArrayList<Summary>();
+        subSummaries.add(subSummary1);
+        subSummaries.add(subSummary2);
+        projectSummary.setSubSummaries(subSummaries);
+        String expectedReturn = "[{\"name\":\"subSummary 1 Name\",\"y\":5},{\"name\":\"subSummary 2 Name\",\"y\":7}]";
+        org.junit.Assert.assertEquals(expectedReturn, projectSummary.getPieChartData());
+    }
 }

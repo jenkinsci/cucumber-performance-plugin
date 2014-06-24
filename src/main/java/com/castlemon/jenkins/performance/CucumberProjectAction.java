@@ -32,6 +32,8 @@ public class CucumberProjectAction implements ProminentProjectAction {
     public ProjectSummary getProjectSummary() {
         projectSummary.getOverallSummary().setSubSummaries(
                 new ArrayList(projectSummary.getFeatureSummaries().values()));
+        projectSummary.getOverallSummary().setProject(this.project);
+        projectSummary.getOverallSummary().setUrlName(getUrlName());
         return projectSummary;
     }
 

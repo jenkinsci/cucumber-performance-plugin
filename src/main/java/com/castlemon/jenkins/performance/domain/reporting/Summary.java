@@ -349,27 +349,6 @@ public class Summary {
         this.summaryType = summaryType;
     }
 
-    /*public String getGraphData() {
-        StringBuilder output = new StringBuilder();
-        output.append("[");
-        int i = 1;
-        for (PerformanceEntry run : this.entries) {
-            if (run.isPassed()) {
-                output.append("["
-                        + run.getBuildNumber()
-                        + ", "
-                        + CucumberPerfUtils.getDurationInSeconds(run
-                        .getElapsedTime() / nanosInAMilli) + "]");
-                if (i < this.entries.size()) {
-                    output.append(",");
-                }
-            }
-            i++;
-        }
-        output.append("]");
-        return output.toString();
-    }*/
-
     public String getGraphData() {
         StringWriter writer = new StringWriter();
         JsonFactory jsonFactory = new JsonFactory();
@@ -392,39 +371,6 @@ public class Summary {
         }
         return writer.toString();
     }
-
-    /*public String getAverageData() {
-        long totalDuration = 0l;
-        long executionCount = 0l;
-        StringBuilder output = new StringBuilder();
-        for (PerformanceEntry run : this.entries) {
-            if (run.isPassed()) {
-                totalDuration += run.getElapsedTime();
-                executionCount++;
-            }
-        }
-        long average = 0l;
-        if (executionCount > 0) {
-            average = totalDuration / executionCount;
-        }
-        output.append("[");
-        int i = 1;
-        for (PerformanceEntry run : this.entries) {
-            if (run.isPassed()) {
-                output.append("["
-                        + run.getBuildNumber()
-                        + ", "
-                        + CucumberPerfUtils.getDurationInSeconds(average
-                        / nanosInAMilli) + "]");
-                if (i < this.entries.size()) {
-                    output.append(",");
-                }
-            }
-            i++;
-        }
-        output.append("]");
-        return output.toString();
-    }*/
 
     public String getAverageData() {
         long totalDuration = 0l;
@@ -484,10 +430,12 @@ public class Summary {
             jsonGenerator.writeStartArray();
             if (this.subSummaries != null) {
                 for (Summary subSummary : this.subSummaries) {
-                    jsonGenerator.writeStartArray();
-                    jsonGenerator.writeString(subSummary.getName());
-                    jsonGenerator.writeNumber(CucumberPerfUtils.getDurationInSeconds(subSummary.getAverageDuration() / nanosInAMilli));
-                    jsonGenerator.writeEndArray();
+                    jsonGenerator.writeStartObject();
+                    jsonGenerator.writeStringField("name", subSummary.getName());
+                    jsonGenerator.writeNumberField("y", CucumberPerfUtils.getDurationInSeconds(subSummary.getAverageDuration() / nanosInAMilli));
+                    String url = this.project.getUrl() + this.urlName + "/" + this.summaryType.getSubLink() + "/" + subSummary.getPageLink();
+                    jsonGenerator.writeStringField("url", url);
+                    jsonGenerator.writeEndObject();
                 }
             }
             jsonGenerator.writeEndArray();

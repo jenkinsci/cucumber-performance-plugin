@@ -95,62 +95,7 @@ public class CucumberPerfUtilsTest {
 		Assert.assertEquals(0, output.size());
 	}
 
-	@Test
-	public void testBuildProjectGraphDataAllSuccess() {
-		PerformanceEntry entry1 = new PerformanceEntry();
-		entry1.setBuildNumber(1);
-		entry1.setElapsedTime(5000000000l);
-		entry1.setPassed(true);
-		PerformanceEntry entry2 = new PerformanceEntry();
-		entry2.setBuildNumber(2);
-		entry2.setElapsedTime(6000000000l);
-		entry2.setPassed(true);
-		List<PerformanceEntry> runs = new ArrayList<PerformanceEntry>();
-		runs.add(entry1);
-		runs.add(entry2);
-		Summary projectSummary = new Summary();
-		projectSummary.setEntries(runs);
-		String expectedReturn = "[[1, 5],[2, 6]]";
-		Assert.assertEquals(expectedReturn, projectSummary.getGraphData());
-	}
 
-	@Test
-	public void testBuildProjectGraphDataOneFail() {
-		PerformanceEntry entry1 = new PerformanceEntry();
-		entry1.setBuildNumber(1);
-		entry1.setElapsedTime(5000000000l);
-		entry1.setPassed(false);
-		PerformanceEntry entry2 = new PerformanceEntry();
-		entry2.setBuildNumber(2);
-		entry2.setElapsedTime(6000000000l);
-		entry2.setPassed(true);
-		List<PerformanceEntry> runs = new ArrayList<PerformanceEntry>();
-		runs.add(entry1);
-		runs.add(entry2);
-		Summary projectSummary = new Summary();
-		projectSummary.setEntries(runs);
-		String expectedReturn = "[[2, 6]]";
-		Assert.assertEquals(expectedReturn, projectSummary.getGraphData());
-	}
-
-	@Test
-	public void testBuildAverageDataAllSuccess() {
-		PerformanceEntry entry1 = new PerformanceEntry();
-		entry1.setBuildNumber(1);
-		entry1.setElapsedTime(4000000000l);
-		entry1.setPassed(true);
-		PerformanceEntry entry2 = new PerformanceEntry();
-		entry2.setBuildNumber(2);
-		entry2.setElapsedTime(6000000000l);
-		entry2.setPassed(true);
-		List<PerformanceEntry> runs = new ArrayList<PerformanceEntry>();
-		runs.add(entry1);
-		runs.add(entry2);
-		Summary projectSummary = new Summary();
-		projectSummary.setEntries(runs);
-		String expectedReturn = "[[1, 5],[2, 5]]";
-		Assert.assertEquals(expectedReturn, projectSummary.getAverageData());
-	}
 
 	@Test
 	public void testFormatDuration() {
