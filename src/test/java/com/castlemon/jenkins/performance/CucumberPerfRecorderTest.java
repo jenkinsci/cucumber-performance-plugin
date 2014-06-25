@@ -40,6 +40,20 @@ public class CucumberPerfRecorderTest {
     }
 
     @Test
+    public void testConstructor() {
+        Assert.assertEquals(10,cucumberPerfRecorder.countOfSortedSummaries);
+        Assert.assertEquals(jsonReportDirectory, cucumberPerfRecorder.jsonReportDirectory);
+    }
+
+    @Test
+    public void testConstructorZeroSortedSummaries() {
+        CucumberPerfRecorder newCucumberPerfRecorder = new CucumberPerfRecorder(
+                "fred", 0);
+        Assert.assertEquals(20,newCucumberPerfRecorder.countOfSortedSummaries);
+        Assert.assertEquals("fred", newCucumberPerfRecorder.jsonReportDirectory);
+    }
+
+    @Test
     public void testGetRequiredMonitorService() {
         Assert.assertEquals(BuildStepMonitor.NONE,
                 cucumberPerfRecorder.getRequiredMonitorService());

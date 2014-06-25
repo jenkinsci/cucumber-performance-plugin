@@ -30,11 +30,14 @@ public class CucumberProjectAction implements ProminentProjectAction {
     }
 
     public ProjectSummary getProjectSummary() {
-        projectSummary.getOverallSummary().setSubSummaries(
-                new ArrayList(projectSummary.getFeatureSummaries().values()));
-        projectSummary.getOverallSummary().setProject(this.project);
-        projectSummary.getOverallSummary().setUrlName(getUrlName());
-        return projectSummary;
+        if (projectSummary != null) {
+            projectSummary.getOverallSummary().setSubSummaries(
+                    new ArrayList(projectSummary.getFeatureSummaries().values()));
+            projectSummary.getOverallSummary().setProject(this.project);
+            projectSummary.getOverallSummary().setUrlName(getUrlName());
+            return projectSummary;
+        }
+        return null;
     }
 
     public String getDisplayName() {
@@ -85,14 +88,11 @@ public class CucumberProjectAction implements ProminentProjectAction {
     }
 
     protected File dir() {
-        if (this.project instanceof AbstractProject) {
-            AbstractProject abstractProject = (AbstractProject) this.project;
-            Run run = abstractProject.getLastCompletedBuild();
-            if (run != null) {
-                File javadocDir = getBuildArchiveDir(run);
-                if (javadocDir.exists()) {
-                    return javadocDir;
-                }
+        Run run = this.project.getLastCompletedBuild();
+        if (run != null) {
+            File javadocDir = getBuildArchiveDir(run);
+            if (javadocDir.exists()) {
+                return javadocDir;
             }
         }
         return getProjectArchiveDir(this.project);
