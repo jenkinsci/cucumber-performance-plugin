@@ -19,7 +19,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class CucumberPerfRecorder extends Recorder {
@@ -33,7 +32,7 @@ public class CucumberPerfRecorder extends Recorder {
     // "DataBoundConstructor"
     @DataBoundConstructor
     public CucumberPerfRecorder(String jsonReportDirectory,
-                                int countOfSortedSummaries) {
+            int countOfSortedSummaries) {
         this.jsonReportDirectory = jsonReportDirectory;
         if (countOfSortedSummaries == 0) {
             this.countOfSortedSummaries = 20;
@@ -44,7 +43,7 @@ public class CucumberPerfRecorder extends Recorder {
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
-                           BuildListener listener) throws IOException, InterruptedException {
+            BuildListener listener) throws IOException, InterruptedException {
         listener.getLogger()
                 .println(
                         "[CucumberPerfRecorder] Starting Cucumber Performance Report generation...");
@@ -64,27 +63,30 @@ public class CucumberPerfRecorder extends Recorder {
     }
 
     private boolean generateProjectReport(AbstractBuild<?, ?> build,
-                                          BuildListener listener, File targetBuildDirectory,
-                                          String buildProjectName) throws IOException,
+            BuildListener listener, File targetBuildDirectory,
+            String buildProjectName) throws IOException,
             InterruptedException {
         List<ProjectRun> projectRuns = new ArrayList<ProjectRun>();
         RunMap<?> runMap = build.getProject()._getRuns();
-        Iterator<?> iterator = runMap.iterator();
-        while (iterator.hasNext()) {
-            Run<?, ?> thisBuild = (Run<?, ?>) iterator.next();
+        for (Run<?, ?> run : runMap) {
+            listener.getLogger().println("processing run " + run.getNumber());
             ProjectRun projectRun = new ProjectRun();
-            projectRun.setRunDate(thisBuild.getTime());
-            projectRun.setBuildNumber(thisBuild.getNumber());
-            File workspaceJsonReportDirectory = thisBuild.getArtifactsDir()
+            projectRun.setRunDate(run.getTime());
+            projectRun.setBuildNumber(run.getNumber());
+            File workspaceJsonReportDirectory = run.getArtifactsDir()
                     .getParentFile();
+            listener.getLogger().println("directory found " + workspaceJsonReportDirectory.getAbsolutePath());
             projectRun.setFeatures(CucumberPerfUtils.getData(CucumberPerfUtils
-                    .findJsonFiles(workspaceJsonReportDirectory,
-                            "**/cucumber-perf*.json"),
+                            .findJsonFiles(workspaceJsonReportDirectory,
+                                    "**/cucumber-perf*.json"),
                     workspaceJsonReportDirectory));
+            listener.getLogger().println("found files");
             // only report on runs that have been analysed
             if (!projectRun.getFeatures().isEmpty()) {
                 projectRuns.add(projectRun);
+                listener.getLogger().println("adding run " + run.getNumber());
             }
+
         }
         listener.getLogger().println(
                 "[CucumberPerfRecorder] running project reports on "
@@ -97,7 +99,7 @@ public class CucumberPerfRecorder extends Recorder {
     }
 
     private void gatherJsonResultFiles(AbstractBuild<?, ?> build,
-                                       BuildListener listener, File targetBuildDirectory)
+            BuildListener listener, File targetBuildDirectory)
             throws IOException, InterruptedException {
         File workspaceJsonReportDirectory = new File(build.getWorkspace()
                 .toURI().getPath());
@@ -130,7 +132,7 @@ public class CucumberPerfRecorder extends Recorder {
                     FileUtils.copyFile(
                             new File(workspaceJsonReportDirectory.getPath()
                                     + "/" + file), new File(
-                            targetBuildDirectory, file));
+                                    targetBuildDirectory, file));
                 }
             } else {
                 listener.getLogger().println(
