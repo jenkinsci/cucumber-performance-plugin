@@ -32,26 +32,6 @@
 				<h3>Performance Summary</h3>
 
 				<p />
-                <j:choose>
-                    <j:when test="${it.summaryType.superType == 'Project'}">
-                        <div>
-                            <a
-                                    href="${rootURL}/${it.project.url}${it.urlName}">Back
-                                to ${it.summaryType.superType}</a>
-
-                            <p/>
-                        </div>
-                    </j:when>
-                    <j:otherwise>
-                        <div>
-                            <a
-                                    href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.superLink}/${it.seniorPageLink}">Back
-                                to ${it.summaryType.superType}</a>
-
-                            <p/>
-                        </div>
-                    </j:otherwise>
-                </j:choose>
 				<div id="summaryArea">
 					<table class="summaryTable">
 						<tr>
