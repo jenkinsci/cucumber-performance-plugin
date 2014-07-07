@@ -248,7 +248,12 @@ public class PerformanceReporter {
 				stepEntry.setPassed(true);
 				stepSummary.incrementPassedBuilds();
 			} else {
-				System.err.println("Unexpected step result: '" + status + "' for step " + step.getName());
+				// treating this as a failure
+				System.err.println("Unexpected step result: '" + status
+						+ "' for step " + step.getName());
+				stepEntry.setElapsedTime(0);
+				stepEntry.setFailedSteps(1);
+				stepSummary.incrementFailedBuilds();
 			}
 		}
 		// check the duration fields
@@ -314,7 +319,7 @@ public class PerformanceReporter {
 			summary.setNumberOfSubItems(subItemCount);
 			List<PerformanceEntry> entries = new ArrayList<PerformanceEntry>();
 			summary.setEntries(entries);
-            // add the new entry to the list
+			// add the new entry to the list
 			summaries.put(complexKey, summary);
 		}
 		return summary;

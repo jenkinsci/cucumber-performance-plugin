@@ -11,7 +11,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 
@@ -20,7 +19,7 @@ import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 @SuppressWarnings("rawtypes")
 public class CucumberProjectActionTest {
 
-	private AbstractProject project = PowerMockito.mock(AbstractProject.class);
+	private AbstractProject project = Mockito.mock(AbstractProject.class);
 
 	@Rule
 	public TemporaryFolder testFolder = new TemporaryFolder();
