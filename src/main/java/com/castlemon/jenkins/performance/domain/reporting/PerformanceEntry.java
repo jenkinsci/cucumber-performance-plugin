@@ -91,6 +91,10 @@ public class PerformanceEntry {
 		this.passed = passed;
 	}
 
+	public boolean isFailed() {
+		return !passed;
+	}
+
 	public int getBuildNumber() {
 		return buildNumber;
 	}

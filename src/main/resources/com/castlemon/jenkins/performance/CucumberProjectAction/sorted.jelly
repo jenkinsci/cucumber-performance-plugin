@@ -111,7 +111,7 @@
 				<p />
 				<!-- step reporting -->
 				<div>
-					<h3>Worst-performing scenarios (by average duration)</h3>
+					<h3>Worst-performing steps (by average duration)</h3>
 					<p>Click on the column name to change the sorting.</p>
 					<div class="fullWidth">
 						<table id="sortedStepTable" class="summaryTable">

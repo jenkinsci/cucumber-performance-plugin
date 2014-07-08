@@ -27,10 +27,12 @@ public class CucumberPerfRecorderTest {
 
 	String jsonReportDirectory = "";
 
+	String jsonReportFileName = "";
+
 	int countOfSummaries = 10;
 
 	CucumberPerfRecorder cucumberPerfRecorder = new CucumberPerfRecorder(
-			jsonReportDirectory, countOfSummaries);
+			jsonReportDirectory, jsonReportFileName, countOfSummaries);
 
 	AbstractProject project = Mockito.mock(AbstractProject.class);
 
@@ -61,7 +63,7 @@ public class CucumberPerfRecorderTest {
 	@Test
 	public void testConstructorZeroSortedSummaries() {
 		CucumberPerfRecorder newCucumberPerfRecorder = new CucumberPerfRecorder(
-				"fred", 0);
+				"fred", "bill", 0);
 		Assert.assertEquals(20, newCucumberPerfRecorder.countOfSortedSummaries);
 		Assert.assertEquals("fred", newCucumberPerfRecorder.jsonReportDirectory);
 	}

@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.castlemon.jenkins.performance.TestUtils;
 import com.castlemon.jenkins.performance.domain.Feature;
+import com.castlemon.jenkins.performance.domain.Step;
 import com.castlemon.jenkins.performance.domain.reporting.PerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.Summary;
@@ -143,6 +144,26 @@ public class PerformanceReporterTest {
 		Assert.assertEquals(0, stepEntry.getFailedSteps());
 		Assert.assertEquals(0, stepEntry.getSkippedSteps());
 		Assert.assertTrue(stepEntry.isPassed());
+	}
+
+	@Test
+	public void testProcessStepUndefined() throws IOException {
+		String jsonString = testUtils.loadJsonFile("/cucumber-success.json");
+		Assert.assertNotNull(jsonString);
+		List<Feature> features = CucumberPerfUtils.getData(jsonString);
+		Assert.assertFalse(features.isEmpty());
+		Date date = new Date();
+		performanceReporter.initialiseEntryMaps();
+		Step step = features.get(0).getElements().get(0).getSteps().get(0);
+		step.getResult().setStatus("fred");
+		PerformanceEntry stepEntry = performanceReporter.processStep(step,
+				date, 115, features.get(0).getElements().get(0).getId(), 0,
+				features.get(0).getElements().get(0).getName());
+		Assert.assertEquals(0, stepEntry.getElapsedTime());
+		Assert.assertEquals(0, stepEntry.getPassedSteps());
+		Assert.assertEquals(1, stepEntry.getFailedSteps());
+		Assert.assertEquals(0, stepEntry.getSkippedSteps());
+		Assert.assertTrue(stepEntry.isFailed());
 	}
 
 	@Test

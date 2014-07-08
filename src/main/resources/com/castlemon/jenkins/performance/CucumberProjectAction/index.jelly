@@ -1,132 +1,127 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
-         xmlns:l="/lib/layout"
-        >
-    <l:layout title="Cucumber Performance Reporting">
-        <st:include page="header" optional="true"/>
-        <l:header>
-            <link rel="stylesheet"
-                  href="${rootURL}/plugin/cucumber-perf/css/main.css" type="text/css"
-                  media="screen"/>
-            <script type="text/javascript"
-                    src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.10.2.min.js"></script>
-            <script type="text/javascript"
-                    src="${rootURL}/plugin/cucumber-perf/javascript/jquery/highcharts-4.0.1.js"></script>
-            <script type="text/javascript"
-                    src="${rootURL}/plugin/cucumber-perf/javascript/performanceGraph.js"></script>
-            <script type="text/javascript"
-                    src="${rootURL}/plugin/cucumber-perf/javascript/pieChart.js"></script>
-            <script type="text/javascript">
-                var rootUrl = "${rootURL}"
+	xmlns:l="/lib/layout">
+	<l:layout title="Cucumber Performance Reporting">
+		<st:include page="header" optional="true" />
+		<l:header>
+			<link rel="stylesheet"
+				href="${rootURL}/plugin/cucumber-perf/css/main.css" type="text/css"
+				media="screen" />
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.10.2.min.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/jquery/highcharts-4.0.1.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/performanceGraph.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/pieChart.js"></script>
+			<script type="text/javascript">
+				var rootUrl = "${rootURL}"
 				var titleText = 'Project Performance'
 				var perfData = ${it.projectSummary.overallSummary.graphData}
 				var averageData = ${it.projectSummary.overallSummary.averageData}
-                var pieChartData = ${it.projectSummary.overallSummary.pieChartData}
-            </script>
-        </l:header>
-        <st:include it="${it.project}" page="sidepanel.jelly"/>
-        <l:main-panel>
-            <div id="cukeperfcontent">
-                <h1>Cucumber Performance Reporting</h1>
-                <j:choose>
-                    <j:when test="${it.projectSummary != null}">
-                        <h1>${it.projectSummary.overallSummary.summaryType} Report
-                            for ${it.projectSummary.overallSummary.name}</h1>
+				var pieChartData = ${it.projectSummary.overallSummary.pieChartData}
+			</script>
+		</l:header>
+		<st:include it="${it.project}" page="sidepanel.jelly" />
+		<l:main-panel>
+			<div id="cukeperfcontent">
+				<h1>Cucumber Performance Reporting</h1>
+				<j:choose>
+					<j:when test="${it.projectSummary != null}">
+						<h1>${it.projectSummary.overallSummary.summaryType} Report
+							for ${it.projectSummary.overallSummary.name}</h1>
 
-                        <h3>Summary</h3>
+						<h3>Summary</h3>
 
-                        <p/>
+						<p />
 
-                        <div id="summaryArea">
-                            <table class="summaryTable">
-                                <tr>
-                                    <th class="coloured" colspan="2">Build Summary for this
-                                        ${it.projectSummary.overallSummary.summaryType}
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>Number of Passed Builds:</td>
-                                    <td>${it.projectSummary.overallSummary.passedBuilds}</td>
-                                </tr>
-                                <tr>
-                                    <td>Number of Failed Builds:</td>
-                                    <td>${it.projectSummary.overallSummary.failedBuilds}</td>
-                                </tr>
-                                <tr>
-                                    <td>Number of Total Builds:</td>
-                                    <td>${it.projectSummary.overallSummary.totalBuilds}</td>
-                                </tr>
-                            </table>
-                            <p/>
+						<div id="summaryArea">
+							<table class="summaryTable">
+								<tr>
+									<th class="coloured" colspan="2">Build Summary for this
+										${it.projectSummary.overallSummary.summaryType}</th>
+								</tr>
+								<tr>
+									<td>Number of Passed Builds:</td>
+									<td>${it.projectSummary.overallSummary.passedBuilds}</td>
+								</tr>
+								<tr>
+									<td>Number of Failed Builds:</td>
+									<td>${it.projectSummary.overallSummary.failedBuilds}</td>
+								</tr>
+								<tr>
+									<td>Number of Total Builds:</td>
+									<td>${it.projectSummary.overallSummary.totalBuilds}</td>
+								</tr>
+							</table>
+							<p />
 
-                            <div class="emphasised">Only successful builds are included
-                                in the details below.
-                            </div>
-                        </div>
-                        <p/>
+							<div class="emphasised">Only successful builds are included
+								in the details below.</div>
+						</div>
+						<p />
 
-                        <h3>${it.projectSummary.overallSummary.summaryType}
-                            Performance</h3>
+						<h3>${it.projectSummary.overallSummary.summaryType}
+							Performance</h3>
 
-                        <div id="graphArea">
-                            <noscript>
-                                <p>This content requires JavaScript.</p>
-                            </noscript>
-                        </div>
-                        <p/>
+						<div id="graphArea">
+							<noscript>
+								<p>This content requires JavaScript.</p>
+							</noscript>
+						</div>
+						<p />
 
-                        <h3>Links to overall reports</h3>
+						<h3>Links to overall reports</h3>
 
-                        <div id="summaryReports">
-                            <a href="sorted">Reports sorted by performance</a>
-                        </div>
-                        <p/>
+						<div id="summaryReports">
+							<a href="sorted">Reports sorted by performance</a>
+						</div>
+						<p />
 
-                        <h3>${it.projectSummary.overallSummary.summaryType.subType}
-                            details</h3>
+						<h3>${it.projectSummary.overallSummary.summaryType.subType}
+							details</h3>
 
-                        <div class="fullWidth">
-                            <table id="subTable" class="summaryTable">
-                                <thead>
-                                <tr>
-                                    <th class="coloured">${it.projectSummary.overallSummary.summaryType.subType}
-                                        Name
-                                    </th>
-                                    <th class="coloured">Scenarios</th>
-                                    <th class="coloured">Shortest Duration</th>
-                                    <th class="coloured">Longest Duration</th>
-                                    <th class="coloured">Average Duration</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <j:forEach var="subSummary"
-                                           items="${it.projectSummary.featureSummaryList}">
-                                    <tr>
-                                        <td><a
-                                                href="${rootURL}/${it.project.url}${it.urlName}/${it.projectSummary.overallSummary.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a>
-                                        </td>
-                                        <td>${subSummary.numberOfSubItems}</td>
-                                        <td>${subSummary.formattedShortestDuration}</td>
-                                        <td>${subSummary.formattedLongestDuration}</td>
-                                        <td>${subSummary.formattedAverageDuration}</td>
-                                    </tr>
-                                </j:forEach>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="pieChartArea">
-                            <noscript>
-                                <p>This content requires JavaScript.</p>
-                            </noscript>
-                        </div>
-                    </j:when>
-                    <j:otherwise>
-                        <div class="emphasised">No data exists for Cucumber test
-                            runs. You may need to perform a build of your Cucumber testing
-                            project.
-                        </div>
-                    </j:otherwise>
-                </j:choose>
-            </div>
-        </l:main-panel>
-    </l:layout>
+						<div class="fullWidth">
+							<table id="subTable" class="summaryTable">
+								<thead>
+									<tr>
+										<th class="coloured">${it.projectSummary.overallSummary.summaryType.subType}
+											Name</th>
+										<th class="coloured">Scenarios</th>
+										<th class="coloured">Shortest Duration</th>
+										<th class="coloured">Longest Duration</th>
+										<th class="coloured">Average Duration</th>
+									</tr>
+								</thead>
+								<tbody>
+									<j:forEach var="subSummary"
+										items="${it.projectSummary.featureSummaryList}">
+										<tr>
+											<td><a
+												href="${rootURL}/${it.project.url}${it.urlName}/${it.projectSummary.overallSummary.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a>
+											</td>
+											<td>${subSummary.numberOfSubItems}</td>
+											<td>${subSummary.formattedShortestDuration}</td>
+											<td>${subSummary.formattedLongestDuration}</td>
+											<td>${subSummary.formattedAverageDuration}</td>
+										</tr>
+									</j:forEach>
+								</tbody>
+							</table>
+						</div>
+						<div id="pieChartArea">
+							<noscript>
+								<p>This content requires JavaScript.</p>
+							</noscript>
+						</div>
+					</j:when>
+					<j:otherwise>
+						<div class="emphasised">No data exists for Cucumber test
+							runs, or the job is currently building. You may need to perform a
+							build of your Cucumber testing project.</div>
+					</j:otherwise>
+				</j:choose>
+			</div>
+		</l:main-panel>
+	</l:layout>
 </j:jelly>

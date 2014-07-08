@@ -199,6 +199,8 @@ public class PerformanceReporter {
 		} else {
 			scenarioSummary.incrementFailedBuilds();
 		}
+		scenarioSummary.setTotalBuilds(scenarioSummary.getPassedBuilds()
+				+ scenarioSummary.getFailedBuilds());
 		scenarioSummary.getEntries().add(scenarioEntry);
 		return scenarioEntry;
 	}
@@ -268,6 +270,8 @@ public class PerformanceReporter {
 			}
 		}
 		stepSummary.getEntries().add(stepEntry);
+		stepSummary.setTotalBuilds(stepSummary.getPassedBuilds()
+				+ stepSummary.getFailedBuilds());
 		return stepEntry;
 	}
 

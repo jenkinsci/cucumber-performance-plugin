@@ -55,7 +55,8 @@ public class CucumberPerfUtils {
 			str = FileUtils.readFileToString(inputFile);
 			return ((ProjectSummary) xstream.fromXML(str));
 		} catch (Exception e) {
-			e.printStackTrace();
+			// returning null indicates that this file does not exist - either
+			// the job hasn't run or is currently running
 			return null;
 		}
 

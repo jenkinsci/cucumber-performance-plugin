@@ -32,6 +32,7 @@ import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 public class CucumberPerfRecorder extends Recorder {
 
 	public final String jsonReportDirectory;
+	public final String jsonReportFileName;
 	public final int countOfSortedSummaries;
 	private ReportBuilder reportBuilder;
 	private File targetBuildDirectory;
@@ -40,8 +41,13 @@ public class CucumberPerfRecorder extends Recorder {
 	// "DataBoundConstructor"
 	@DataBoundConstructor
 	public CucumberPerfRecorder(String jsonReportDirectory,
-			int countOfSortedSummaries) {
+			String jsonReportFileName, int countOfSortedSummaries) {
 		this.jsonReportDirectory = jsonReportDirectory;
+		if (StringUtils.isNotBlank(jsonReportFileName)) {
+			this.jsonReportFileName = jsonReportFileName;
+		} else {
+			this.jsonReportFileName = "cucumber.json";
+		}
 		if (countOfSortedSummaries == 0) {
 			this.countOfSortedSummaries = 20;
 		} else {
@@ -119,8 +125,8 @@ public class CucumberPerfRecorder extends Recorder {
 					.getSomeWorkspace();
 			FilePath masterJsonReportDirectory = new FilePath(
 					targetBuildDirectory);
-			projectWorkspaceOnSlave.copyRecursiveTo("**/cucumber.json", "",
-					masterJsonReportDirectory);
+			projectWorkspaceOnSlave.copyRecursiveTo("**/" + jsonReportFileName,
+					"", masterJsonReportDirectory);
 		} else {
 			// if we are on the master
 			listener.getLogger().println(
@@ -129,7 +135,7 @@ public class CucumberPerfRecorder extends Recorder {
 					"looking in "
 							+ workspaceJsonReportDirectory.getAbsolutePath());
 			String[] files = CucumberPerfUtils.findJsonFiles(
-					workspaceJsonReportDirectory, "cucumber.json");
+					workspaceJsonReportDirectory, jsonReportFileName);
 
 			if (files.length != 0) {
 				for (String file : files) {
