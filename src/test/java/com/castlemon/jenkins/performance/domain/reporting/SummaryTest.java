@@ -8,11 +8,7 @@ import junit.framework.Assert;
 import org.agileware.test.PropertiesTester;
 import org.junit.Test;
 
-//@RunWith(PowerMockRunner.class)
-//@PrepareForTest(AbstractProject.class)
 public class SummaryTest {
-
-	// final AbstractProject project = PowerMockito.mock(AbstractProject.class);
 
 	Summary projectSummary = new Summary();
 
@@ -220,54 +216,4 @@ public class SummaryTest {
 				projectSummary.getAverageData());
 	}
 
-	/*
-	 * @Test public void testGetPieChartDataAllSuccess() {
-	 * PowerMockito.when(project.getUrl()).thenReturn("dummyUrl/"); Summary
-	 * subSummary1 = new Summary(); subSummary1.setName("subSummary 1 Name");
-	 * subSummary1.setUrlName("fred"); subSummary1.setProject(project);
-	 * subSummary1.setSummaryType(SummaryType.SCENARIO); PerformanceEntry entry1
-	 * = new PerformanceEntry(); entry1.setBuildNumber(1);
-	 * entry1.setElapsedTime(5000000000l); entry1.setPassed(true);
-	 * PerformanceEntry entry2 = new PerformanceEntry();
-	 * entry2.setBuildNumber(2); entry2.setElapsedTime(6000000000l);
-	 * entry2.setPassed(true); List<PerformanceEntry> runs = new
-	 * ArrayList<PerformanceEntry>(); runs.add(entry1); runs.add(entry2);
-	 * subSummary1.setEntries(runs); // Summary subSummary2 = new Summary();
-	 * subSummary2.setUrlName("george");
-	 * subSummary2.setName("subSummary 2 Name");
-	 * subSummary2.setProject(project);
-	 * subSummary2.setSummaryType(SummaryType.SCENARIO); PerformanceEntry entry3
-	 * = new PerformanceEntry(); entry3.setBuildNumber(1);
-	 * entry3.setElapsedTime(8000000000l); entry3.setPassed(true);
-	 * PerformanceEntry entry4 = new PerformanceEntry();
-	 * entry4.setBuildNumber(2); entry4.setElapsedTime(7000000000l);
-	 * entry4.setPassed(true); List<PerformanceEntry> runs2 = new
-	 * ArrayList<PerformanceEntry>(); runs2.add(entry3); runs2.add(entry4);
-	 * subSummary2.setEntries(runs2); // List<Summary> subSummaries = new
-	 * ArrayList<Summary>(); subSummaries.add(subSummary1);
-	 * subSummaries.add(subSummary2);
-	 * projectSummary.setSubSummaries(subSummaries);
-	 * projectSummary.setSummaryType(SummaryType.FEATURE);
-	 * projectSummary.setProject(project); projectSummary.setUrlName("bill");
-	 * String url1 = project.getUrl() + projectSummary.getUrlName() + "/" +
-	 * projectSummary.getSummaryType().getSubLink() + "/" +
-	 * subSummary1.getPageLink(); String url2 = project.getUrl() +
-	 * projectSummary.getUrlName() + "/" +
-	 * projectSummary.getSummaryType().getSubLink() + "/" +
-	 * subSummary2.getPageLink(); String expectedReturn =
-	 * "[{\"name\":\"subSummary 1 Name\",\"y\":5,\"url\":\"" + url1 +
-	 * "\"},{\"name\":\"subSummary 2 Name\",\"y\":7,\"url\":\"" + url2 + "\"}]";
-	 * org.junit.Assert.assertEquals(expectedReturn,
-	 * projectSummary.getPieChartData()); }
-	 */
-
-	/*
-	 * @Test public void testGetPieChartDataNoSubSummaries() {
-	 * PowerMockito.when(project.getUrl()).thenReturn("dummyUrl/");
-	 * projectSummary.setSummaryType(SummaryType.FEATURE);
-	 * projectSummary.setProject(project); projectSummary.setUrlName("bill");
-	 * String expectedReturn = "[]";
-	 * org.junit.Assert.assertEquals(expectedReturn,
-	 * projectSummary.getPieChartData()); }
-	 */
 }

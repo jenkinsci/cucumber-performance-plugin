@@ -12,3 +12,4 @@ velocity.*
 /testingInfo/JavaTest/target/classes/com/castlemon/javatest
 /testingInfo/JavaTest/.gitignore
 /testingInfo/JavaTest/.settings
+/target
