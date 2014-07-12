@@ -5,7 +5,7 @@ A plugin for the Jenkins continuous integration tool which allows for reporting 
 
 <table>
 <tr><th>Version</th><th>Release Date</th></tr>
-<tr><td>2.0.0</td><td>imminent</td></tr>
+<tr><td>2.0.0</td><td>13th July 2014</td></tr>
 <tr><td>1.3.1</td><td>5th August 2013</td></tr>
 <tr><td>1.2</td><td>31st July 2013</td></tr>
 </table>
