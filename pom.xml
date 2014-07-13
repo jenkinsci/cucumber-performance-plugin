@@ -13,8 +13,8 @@
     <packaging>hpi</packaging>
 
     <scm>
-        <connection>scm:git:git@github.com/TrueDub/cucumber-performance.git</connection>
-        <developerConnection>scm:git:git@github.com/TrueDub/cucumber-performance.git</developerConnection>
+        <connection>scm:git:ssh://github.com/TrueDub/cucumber-performance.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/TrueDub/cucumber-performance.git</developerConnection>
         <url>http://github.com/TrueDub/cucumber-performance</url>
     </scm>
 
