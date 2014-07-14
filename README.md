@@ -5,7 +5,7 @@ A plugin for the Jenkins continuous integration tool which allows for reporting 
 
 <table>
 <tr><th>Version</th><th>Release Date</th></tr>
-<tr><td>2.0.1</td><td>13th July 2014</td></tr>
+<tr><td>2.0.6</td><td>14th July 2014</td></tr>
 <tr><td>1.3.1</td><td>5th August 2013</td></tr>
 <tr><td>1.2</td><td>31st July 2013</td></tr>
 </table>
@@ -58,7 +58,7 @@ The other form of information presented is the worst-performing one, indicating 
 Change History
 --------------
 
-This list starts with V2.0.1 only
+This list starts with V2.0.6 only
 
 <table>
 <tr><th>Version</th><th>Change Detail</th></tr>
@@ -72,4 +72,3 @@ This list starts with V2.0.1 only
 </td></tr>
 </table>
 
-End
