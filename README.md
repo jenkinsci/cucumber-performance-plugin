@@ -62,7 +62,7 @@ This list starts with V2.0.6 only
 
 <table>
 <tr><th>Version</th><th>Change Detail</th></tr>
-<tr><td>2.0.1</td><td>
+<tr><td>2.0.6</td><td>
 <ul>
    <li>changed the plugin processing to separate data generation from report presentation
    <li>introduced use of Jackson to produce JSON outputs where necessary
