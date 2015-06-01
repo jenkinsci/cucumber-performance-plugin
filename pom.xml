@@ -12,9 +12,9 @@
 	<packaging>hpi</packaging>
 
 	<scm>
-		<connection>scm:git:https://github.com/TrueDub/cucumber-performance.git</connection>
-		<developerConnection>scm:git:https://git@github.com/TrueDub/cucumber-performance.git</developerConnection>
-		<url>http://github.com/TrueDub/cucumber-performance</url>
+		<connection>scm:git:https://github.com/jenkinsci/cucumber-performance-plugin.git</connection>
+		<developerConnection>scm:git:https://github.com/jenkinsci/cucumber-performance-plugin.git</developerConnection>
+		<url>http://github.com/jenkinsci/cucumber-performance-plugin.git</url>
 	  <tag>HEAD</tag>
   </scm>
 
@@ -51,13 +51,6 @@
     </repository>
   </distributionManagement>
 
-	<distributionManagement>
-		<repository>
-			<id>maven.jenkins-ci.org</id>
-			<url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
-		</repository>
-	</distributionManagement>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -73,10 +66,6 @@
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.4.1</version>
-				<!-- <configuration>
-					<releaseProfiles>release</releaseProfiles>
-					<goals>install deploy</goals>
-				</configuration> -->
 				<dependencies>
 					<dependency>
 						<groupId>org.apache.maven.scm</groupId>
