@@ -3,6 +3,12 @@ cucumber-performance
 
 A plugin for the Jenkins continuous integration tool which allows for reporting over time of the performance of tests executed using the Cucumber-JVM framework.
 
+This project is now unmaintained
+--------------------------------
+Due to pressures of time, along with lack of access to a large-scale Cucumber project to facilitate testing, I'm no longer in a position to maintain this project. Thank you to everyone who provided feedback and assistance.
+
+Should anyone wish to take over as maintainer, please contact me on jegallagher@gmail.com - all welcome!
+
 <table>
 <tr><th>Version</th><th>Release Date</th></tr>
 <tr><td>2.0.6</td><td>14th July 2014</td></tr>
