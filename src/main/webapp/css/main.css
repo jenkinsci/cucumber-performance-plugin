@@ -1,0 +1,107 @@
+#cukeperfcontent h1 {
+	font-family: Trebuchet, Arial, sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+	color: #AD0000;
+}
+
+#cukeperfcontent h3 {
+	font-family: Trebuchet, Arial, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #AD0000;
+}
+
+#cukeperfcontent tr:nth-child(even) {
+	background-color: #EBEBEB;
+}
+
+#cukeperfcontent th.coloured {
+	font-size: 13px;
+	font-weight: bold;
+	color: #AD0000;
+	 background-color: #FAEEEE; 
+	/* background-color: #f0f0f0; */
+	text-align: center;
+	border: 1px solid black;
+}
+
+#cukeperfcontent td {
+	font-weight: normal;
+	color: #5C5C5C;
+	padding-left: 15px;
+	padding-right: 15px;
+	border: 1px solid black;
+}
+
+#cukeperfcontent .clear {
+	clear: both;
+}
+
+#cukeperfcontent #summaryArea {
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+}
+
+#cukeperfcontent #buildSummary {
+	width: 50%;
+	float: left;
+}
+
+#cukeperfcontent #stepSummary {
+	width: 50%;
+	float: left;
+}
+
+#cukeperfcontent #graphArea {
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+	border: solid 1px black;
+	text-align: center;
+	height: 400px;
+}
+
+#cukeperfcontent .fullWidth {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#cukeperfcontent .summaryTable {
+	border: 1px solid black;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+	border-collapse: collapse;
+}
+
+#cukeperfcontent .rowsTable {
+	border: 1px solid black;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+	border-collapse: collapse;
+}
+
+#cukeperfcontent .cellText {
+	font-size: 9px;
+	background-color: #ffffff;
+	align: left;
+}
+
+#cukeperfcontent .emphasised {
+	font-size: 12px;
+	font-weight: bold;
+	color: #AD0000;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	text-align: center;
+	font-style: italic;
+}
+
+#cukeperfcontent .bolded {
+	font-weight: bold;
+	font-style: italic;
+}

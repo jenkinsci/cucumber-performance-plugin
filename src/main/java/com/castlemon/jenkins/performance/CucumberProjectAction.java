@@ -1,71 +1,108 @@
 package com.castlemon.jenkins.performance;
 
-import hudson.FilePath;
-import hudson.model.ProminentProjectAction;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
+import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 import hudson.model.AbstractItem;
 import hudson.model.AbstractProject;
-import hudson.model.DirectoryBrowserSupport;
+import hudson.model.ProminentProjectAction;
 import hudson.model.Run;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
-import javax.servlet.ServletException;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
+@SuppressWarnings("rawtypes")
 public class CucumberProjectAction implements ProminentProjectAction {
 
-	private final AbstractItem project;
+    private final AbstractProject<?, ?> project;
+    private final ProjectSummary projectSummary;
 
-	public CucumberProjectAction(AbstractItem project) {
-		super();
-		this.project = project;
-	}
+    public CucumberProjectAction(AbstractProject<?, ?> project,
+                                 int countOfSortedSummaries) {
+        super();
+        this.project = project;
+        this.projectSummary = CucumberPerfUtils.readSummaryFromDisk(this.dir());
+        if (this.projectSummary != null) {
+            this.projectSummary
+                    .setNumberOfSummariesToDisplay(countOfSortedSummaries);
+        }
+    }
 
-	public String getDisplayName() {
-		return "Cucumber Project Performance Report";
-	}
+    public ProjectSummary getProjectSummary() {
+        if (projectSummary != null) {
+            projectSummary.getOverallSummary().setSubSummaries(
+                    new ArrayList(projectSummary.getFeatureSummaries().values()));
+            projectSummary.getOverallSummary().setProject(this.project);
+            projectSummary.getOverallSummary().setUrlName(getUrlName());
+            return projectSummary;
+        }
+        return null;
+    }
 
-	public String getIconFileName() {
-		return "/plugin/cucumber-perf/performance.png";
-	}
+    public String getDisplayName() {
+        return "Cucumber Project Performance Report";
+    }
 
-	public String getUrlName() {
-		return "cucumber-perf-reports";
-	}
+    public String getIconFileName() {
+        return "/plugin/cucumber-perf/performance.png";
+    }
 
-	public void doDynamic(StaplerRequest req, StaplerResponse rsp)
-			throws IOException, ServletException {
-		DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this,
-				new FilePath(this.dir()), "title", null, false);
-		dbs.setIndexFileName("projectview.html");
-		dbs.generateResponse(req, rsp, this);
-	}
+    public String getUrlName() {
+        return "cucumber-perf-reports";
+    }
 
-	protected File dir() {
-		if (this.project instanceof AbstractProject) {
-			AbstractProject abstractProject = (AbstractProject) this.project;
+    public Summary getFeature(String pageLink) {
+        return getSpecificSummaryByPageLink(pageLink, projectSummary.getFeatureSummaries(),
+                projectSummary.getScenarioSummaries());
+    }
 
-			Run run = abstractProject.getLastCompletedBuild();
-			if (run != null) {
-				File javadocDir = getBuildArchiveDir(run);
+    public Summary getScenario(String pageLink) {
+        return getSpecificSummaryByPageLink(pageLink, projectSummary.getScenarioSummaries(),
+                projectSummary.getStepSummaries());
+    }
 
-				if (javadocDir.exists()) {
-					return javadocDir;
-				}
-			}
-		}
+    public Summary getStep(String pageLink) {
+        return getSpecificSummaryByPageLink(pageLink, projectSummary.getStepSummaries(), null);
+    }
 
-		return getProjectArchiveDir(this.project);
-	}
+    public String getPieChartData() {
+        return projectSummary.getOverallSummary().getPieChartData();
+    }
 
-	private File getProjectArchiveDir(AbstractItem project) {
-		return new File(project.getRootDir(), "cucumber-perf-reports");
-	}
+    private Summary getSpecificSummaryByPageLink(String pageLink,
+                                                 Map<String, Summary> inputSummaries,
+                                                 Map<String, Summary> subSummaries) {
+        Summary summary = inputSummaries.get(pageLink);
+        summary.setProject(this.project);
+        summary.setUrlName(getUrlName());
+        if (subSummaries != null) {
+            summary.setSubSummaries((CucumberPerfUtils.getRelevantSummaries(
+                    subSummaries, summary.getId())));
+        }
+        return summary;
+    }
 
-	private File getBuildArchiveDir(Run run) {
-		return new File(run.getRootDir(), "cucumber-perf-reports");
-	}
+    public AbstractProject getProject() {
+        return (AbstractProject) this.project;
+    }
+
+    protected File dir() {
+        Run run = this.project.getLastCompletedBuild();
+        if (run != null) {
+            File javadocDir = getBuildArchiveDir(run);
+            if (javadocDir.exists()) {
+                return javadocDir;
+            }
+        }
+        return getProjectArchiveDir(this.project);
+    }
+
+    private File getProjectArchiveDir(AbstractItem project) {
+        return new File(project.getRootDir(), "cucumber-perf-reports");
+    }
+
+    private File getBuildArchiveDir(Run run) {
+        return new File(run.getRootDir(), "cucumber-perf-reports");
+    }
 }

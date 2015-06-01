@@ -1,0 +1,135 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+	xmlns:l="/lib/layout">
+	<l:layout title="Cucumber Performance Reporting">
+		<st:include page="header" optional="true" />
+		<l:header>
+			<link rel="stylesheet"
+				href="${rootURL}/plugin/cucumber-perf/css/main.css" type="text/css"
+				media="screen" />
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/jquery/jquery-1.10.2.min.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/jquery/highcharts-4.0.1.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/performanceGraph.js"></script>
+			<script type="text/javascript"
+				src="${rootURL}/plugin/cucumber-perf/javascript/pieChart.js"></script>
+			<script type="text/javascript">
+				var rootUrl = "${rootURL}"
+				var titleText = 'Performance'
+				var perfData = ${it.graphData}
+				var averageData = ${it.averageData}
+				var pieChartData = ${it.pieChartData}
+			</script>
+		</l:header>
+		<st:include it="${it.project}" page="sidepanel.jelly" />
+		<l:main-panel>
+			<div id="cukeperfcontent">
+				<h1>Cucumber Performance Reporting</h1>
+
+				<h1>${it.summaryType} Report for ${it.name}</h1>
+
+				<h3>Performance Summary</h3>
+
+				<p />
+				<div id="summaryArea">
+					<table class="summaryTable">
+						<tr>
+							<th class="coloured" colspan="2">Build Summary for this
+								${it.summaryType}</th>
+						</tr>
+						<tr>
+							<td>Number of Passed Builds:</td>
+							<td>${it.passedBuilds}</td>
+						</tr>
+						<tr>
+							<td>Number of Failed Builds:</td>
+							<td>${it.failedBuilds}</td>
+						</tr>
+						<tr>
+							<td>Number of Total Builds:</td>
+							<td>${it.totalBuilds}</td>
+						</tr>
+					</table>
+					<p />
+
+					<div class="emphasised">Only successful builds are included
+						in the details below.</div>
+				</div>
+				<p />
+
+				<h3>${it.summaryType} Performance</h3>
+
+				<div id="graphArea">
+					<noscript>
+						<p>This content requires JavaScript.</p>
+					</noscript>
+				</div>
+				<p />
+				<j:if test="${it.summaryType.subType != null}">
+					<h3>${it.summaryType.subType} details</h3>
+
+					<div class="fullWidth">
+						<table id="subTable" class="summaryTable">
+							<thead>
+								<tr>
+									<j:choose>
+										<j:when test="${it.summaryType.subType == 'Step'}">
+											<th class="coloured">Steps</th>
+										</j:when>
+										<j:otherwise>
+											<th class="coloured">${it.summaryType.subType} Name</th>
+											<th class="coloured">${it.summaryType.subSubType}s</th>
+										</j:otherwise>
+									</j:choose>
+									<th class="coloured">Shortest Duration</th>
+									<th class="coloured">Longest Duration</th>
+									<th class="coloured">Average Duration</th>
+								</tr>
+							</thead>
+							<tbody>
+								<j:forEach var="subSummary" items="${it.subSummaries}">
+									<tr>
+										<j:choose>
+											<j:when test="${it.summaryType.subType == 'Step'}">
+												<td><span class="bolded">${subSummary.keyword}</span> <a
+													href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a>
+													<j:if test="${subSummary.hasRows()}">
+														<div>
+															<table class="summaryTable">
+																<j:forEach var="row" items="${subSummary.rows}">
+																	<tr>
+																		<j:forEach var="cell" items="${row}">
+																			<td class="cellText">${cell}</td>
+																		</j:forEach>
+																	</tr>
+																</j:forEach>
+															</table>
+														</div>
+													</j:if></td>
+											</j:when>
+											<j:otherwise>
+												<td><a
+													href="${rootURL}/${it.project.url}${it.urlName}/${it.summaryType.subLink}/${subSummary.pageLink}">${subSummary.name}</a>
+												</td>
+												<td>${subSummary.numberOfSubItems}</td>
+											</j:otherwise>
+										</j:choose>
+										<td>${subSummary.formattedShortestDuration}</td>
+										<td>${subSummary.formattedLongestDuration}</td>
+										<td>${subSummary.formattedAverageDuration}</td>
+									</tr>
+								</j:forEach>
+							</tbody>
+						</table>
+					</div>
+					<div id="pieChartArea">
+						<noscript>
+							<p>This content requires JavaScript.</p>
+						</noscript>
+					</div>
+				</j:if>
+			</div>
+		</l:main-panel>
+	</l:layout>
+</j:jelly>

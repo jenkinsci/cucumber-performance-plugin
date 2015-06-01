@@ -19,7 +19,6 @@ import hudson.tasks.Recorder;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -27,23 +26,33 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
-import com.castlemon.jenkins.performance.processor.ReportGenerator;
+import com.castlemon.jenkins.performance.reporting.ReportBuilder;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
 
-@SuppressWarnings("unchecked")
 public class CucumberPerfRecorder extends Recorder {
 
 	public final String jsonReportDirectory;
-	public final String pluginUrlPath;
-
-	private ReportGenerator generator;
+	public final String jsonReportFileName;
+	public final int countOfSortedSummaries;
+	private ReportBuilder reportBuilder;
+	private File targetBuildDirectory;
 
 	// Fields in config.jelly must match the parameter names in the
 	// "DataBoundConstructor"
 	@DataBoundConstructor
-	public CucumberPerfRecorder(String jsonReportDirectory, String pluginUrlPath) {
+	public CucumberPerfRecorder(String jsonReportDirectory,
+			String jsonReportFileName, int countOfSortedSummaries) {
 		this.jsonReportDirectory = jsonReportDirectory;
-		this.pluginUrlPath = pluginUrlPath;
+		if (StringUtils.isNotBlank(jsonReportFileName)) {
+			this.jsonReportFileName = jsonReportFileName;
+		} else {
+			this.jsonReportFileName = "cucumber.json";
+		}
+		if (countOfSortedSummaries == 0) {
+			this.countOfSortedSummaries = 20;
+		} else {
+			this.countOfSortedSummaries = countOfSortedSummaries;
+		}
 	}
 
 	@Override
@@ -52,59 +61,62 @@ public class CucumberPerfRecorder extends Recorder {
 		listener.getLogger()
 				.println(
 						"[CucumberPerfRecorder] Starting Cucumber Performance Report generation...");
-		generator = new ReportGenerator();
-		File targetBuildDirectory = new File(build.getRootDir(),
+		reportBuilder = new ReportBuilder();
+		targetBuildDirectory = new File(build.getRootDir(),
 				"cucumber-perf-reports");
 		if (!targetBuildDirectory.exists()) {
 			targetBuildDirectory.mkdirs();
 		}
-		String buildNumber = Integer.toString(build.getNumber());
-		String buildProject = build.getProject().getName();
+		String buildProjectName = build.getProject().getName();
 		listener.getLogger().println(
 				"[CucumberPerfRecorder] Reporting on performance for "
-						+ buildProject + " #" + buildNumber);
-		generateBuildReport(build, listener, targetBuildDirectory, buildNumber,
-				buildProject);
-		generateProjectReport(build, listener, targetBuildDirectory,
-				buildNumber, buildProject);
-		return true;
+						+ buildProjectName + " #"
+						+ Integer.toString(build.getNumber()));
+		gatherJsonResultFiles(build, listener, targetBuildDirectory);
+		return generateProjectReport(build, listener, targetBuildDirectory,
+				buildProjectName);
 	}
 
-	private void generateProjectReport(AbstractBuild<?, ?> build,
+	private boolean generateProjectReport(AbstractBuild<?, ?> build,
 			BuildListener listener, File targetBuildDirectory,
-			String buildNumber, String buildProject) throws IOException,
-			InterruptedException {
+			String buildProjectName) throws IOException, InterruptedException {
 		List<ProjectRun> projectRuns = new ArrayList<ProjectRun>();
 		RunMap<?> runMap = build.getProject()._getRuns();
-		Iterator<?> iterator = runMap.iterator();
-		while (iterator.hasNext()) {
-			Run<?, ?> thisBuild = (Run<?, ?>) iterator.next();
+		for (Run<?, ?> run : runMap) {
 			ProjectRun projectRun = new ProjectRun();
-			projectRun.setRunDate(thisBuild.getTime());
-			projectRun.setBuildNumber(thisBuild.getNumber());
-			File workspaceJsonReportDirectory = thisBuild.getArtifactsDir()
+			projectRun.setRunDate(run.getTime());
+			projectRun.setBuildNumber(run.getNumber());
+			File workspaceJsonReportDirectory = run.getArtifactsDir()
 					.getParentFile();
-			projectRun.setScenarios(CucumberPerfUtils.getData(CucumberPerfUtils
+			projectRun.setFeatures(CucumberPerfUtils.getData(CucumberPerfUtils
 					.findJsonFiles(workspaceJsonReportDirectory,
-							"**/cucumber-perf.json"),
+							"**/cucumber-perf*.json"),
 					workspaceJsonReportDirectory));
-			projectRuns.add(projectRun);
+			listener.getLogger().println("found files");
+			// only report on runs that have been analysed
+			if (!projectRun.getFeatures().isEmpty()) {
+				projectRuns.add(projectRun);
+			}
 		}
-		generator.generateProjectReports(projectRuns, listener,
-				targetBuildDirectory, buildProject, buildNumber, pluginUrlPath);
+		listener.getLogger().println(
+				"[CucumberPerfRecorder] running project reports on "
+						+ projectRuns.size() + " builds");
+		boolean success = reportBuilder.generateProjectReports(projectRuns,
+				targetBuildDirectory, buildProjectName);
+		listener.getLogger().println(
+				"[CucumberPerfRecorder] project report generation complete");
+		return success;
 	}
 
-	private void generateBuildReport(AbstractBuild<?, ?> build,
-			BuildListener listener, File targetBuildDirectory,
-			String buildNumber, String buildProject) throws IOException,
-			InterruptedException {
+	private void gatherJsonResultFiles(AbstractBuild<?, ?> build,
+			BuildListener listener, File targetBuildDirectory)
+			throws IOException, InterruptedException {
 		File workspaceJsonReportDirectory = new File(build.getWorkspace()
 				.toURI().getPath());
 		if (StringUtils.isNotBlank(jsonReportDirectory)) {
 			workspaceJsonReportDirectory = new File(build.getWorkspace()
 					.toURI().getPath(), jsonReportDirectory);
 		}
-
 		// if we are on a slave
 		if (Computer.currentComputer() instanceof SlaveComputer) {
 			listener.getLogger().println(
@@ -113,14 +125,17 @@ public class CucumberPerfRecorder extends Recorder {
 					.getSomeWorkspace();
 			FilePath masterJsonReportDirectory = new FilePath(
 					targetBuildDirectory);
-			projectWorkspaceOnSlave.copyRecursiveTo("**/cucumber.json", "",
-					masterJsonReportDirectory);
+			projectWorkspaceOnSlave.copyRecursiveTo("**/" + jsonReportFileName,
+					"", masterJsonReportDirectory);
 		} else {
 			// if we are on the master
 			listener.getLogger().println(
 					"[CucumberPerfRecorder] detected master build ");
+			listener.getLogger().println(
+					"looking in "
+							+ workspaceJsonReportDirectory.getAbsolutePath());
 			String[] files = CucumberPerfUtils.findJsonFiles(
-					workspaceJsonReportDirectory, "cucumber.json");
+					workspaceJsonReportDirectory, jsonReportFileName);
 
 			if (files.length != 0) {
 				for (String file : files) {
@@ -138,16 +153,27 @@ public class CucumberPerfRecorder extends Recorder {
 		// rename the json file in the performance report directory
 		String[] oldJsonReportFiles = CucumberPerfUtils.findJsonFiles(
 				targetBuildDirectory, "*.json");
+		int i = 0;
 		for (String fileName : oldJsonReportFiles) {
 			File file = new File(targetBuildDirectory, fileName);
-			String newFileName = "cucumber-perf.json";
+			String newFileName = "cucumber-perf" + i + ".json";
 			File newFile = new File(targetBuildDirectory, newFileName);
 			try {
 				FileUtils.moveFile(file, newFile);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			i++;
 		}
+	}
+
+	public BuildStepMonitor getRequiredMonitorService() {
+		return BuildStepMonitor.NONE;
+	}
+
+	@Override
+	public Action getProjectAction(AbstractProject<?, ?> project) {
+		return new CucumberProjectAction(project, countOfSortedSummaries);
 	}
 
 	@Extension
@@ -167,12 +193,4 @@ public class CucumberPerfRecorder extends Recorder {
 
 	}
 
-	public BuildStepMonitor getRequiredMonitorService() {
-		return BuildStepMonitor.NONE;
-	}
-
-	@Override
-	public Action getProjectAction(AbstractProject<?, ?> project) {
-		return new CucumberProjectAction(project);
-	}
 }

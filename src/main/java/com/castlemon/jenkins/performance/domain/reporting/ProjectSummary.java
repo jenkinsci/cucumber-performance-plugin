@@ -1,58 +1,113 @@
 package com.castlemon.jenkins.performance.domain.reporting;
 
-import java.util.List;
+import com.castlemon.jenkins.performance.domain.reporting.comparator.SummaryAverageDurationDescComparator;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
+import java.util.*;
+
+@XStreamAlias("projectsummary")
 public class ProjectSummary {
 
-	private int totalBuilds;
+    @XStreamAlias("overallsummary")
+    private Summary overallSummary;
 
-	private int passedBuilds;
+    @XStreamAlias("featuresummaries")
+    private Map<String, Summary> featureSummaries;
 
-	private int failedBuilds;
+    @XStreamAlias("scenariosummaries")
+    private Map<String, Summary> scenarioSummaries;
 
-	private int reportedBuilds;
+    @XStreamAlias("stepsummaries")
+    private Map<String, Summary> stepSummaries;
 
-	private List<ProjectPerformanceEntry> performanceEntries;
+    @XStreamOmitField
+    private int numberOfSummariesToDisplay;
 
-	public int getTotalBuilds() {
-		return totalBuilds;
-	}
+    public Summary getOverallSummary() {
+        return overallSummary;
+    }
 
-	public void setTotalBuilds(int totalBuilds) {
-		this.totalBuilds = totalBuilds;
-	}
+    public void setOverallSummary(Summary overallSummary) {
+        this.overallSummary = overallSummary;
+    }
 
-	public int getPassedBuilds() {
-		return passedBuilds;
-	}
+    public Map<String, Summary> getFeatureSummaries() {
+        return featureSummaries;
+    }
 
-	public void setPassedBuilds(int passedBuilds) {
-		this.passedBuilds = passedBuilds;
-	}
+    public void setFeatureSummaries(Map<String, Summary> featureSummaries) {
+        this.featureSummaries = featureSummaries;
+    }
 
-	public int getFailedBuilds() {
-		return failedBuilds;
-	}
+    public Map<String, Summary> getScenarioSummaries() {
+        return scenarioSummaries;
+    }
 
-	public void setFailedBuilds(int failedBuilds) {
-		this.failedBuilds = failedBuilds;
-	}
+    public void setScenarioSummaries(Map<String, Summary> scenarioSummaries) {
+        this.scenarioSummaries = scenarioSummaries;
+    }
 
-	public int getReportedBuilds() {
-		return reportedBuilds;
-	}
+    public Map<String, Summary> getStepSummaries() {
+        return stepSummaries;
+    }
 
-	public void setReportedBuilds(int reportedBuilds) {
-		this.reportedBuilds = reportedBuilds;
-	}
+    public void setStepSummaries(Map<String, Summary> stepSummaries) {
+        this.stepSummaries = stepSummaries;
+    }
 
-	public List<ProjectPerformanceEntry> getPerformanceEntries() {
-		return performanceEntries;
-	}
+    public Collection<Summary> getFeatureSummaryList() {
+        return this.featureSummaries.values();
+    }
 
-	public void setPerformanceEntries(
-			List<ProjectPerformanceEntry> performanceEntries) {
-		this.performanceEntries = performanceEntries;
-	}
+    public Collection<Summary> getScenarioSummaryList() {
+        return this.scenarioSummaries.values();
+    }
+
+    public Collection<Summary> getStepSummaryList() {
+        return this.stepSummaries.values();
+    }
+
+    public Map<String, Summary> assembleAllSummaries() {
+        Map<String, Summary> allSummaries = new HashMap<String, Summary>();
+        allSummaries.putAll(this.featureSummaries);
+        allSummaries.putAll(this.scenarioSummaries);
+        allSummaries.putAll(this.stepSummaries);
+        return allSummaries;
+    }
+
+    public Collection<Summary> getSortedFeatureSummaryList() {
+        return extractSlowestSummaries(numberOfSummariesToDisplay,
+                this.featureSummaries.values());
+    }
+
+    public Collection<Summary> getSortedScenarioSummaryList() {
+        return extractSlowestSummaries(numberOfSummariesToDisplay,
+                this.scenarioSummaries.values());
+    }
+
+    public Collection<Summary> getSortedStepSummaryList() {
+        return extractSlowestSummaries(numberOfSummariesToDisplay,
+                this.stepSummaries.values());
+    }
+
+    private List<Summary> extractSlowestSummaries(int count,
+                                                  Collection<Summary> interimSummaries) {
+        List<Summary> interimList = new ArrayList<Summary>(interimSummaries);
+        Collections.sort(interimList,
+                new SummaryAverageDurationDescComparator());
+        if (interimList.size() <= count) {
+            return interimList;
+        }
+        return (new ArrayList<Summary>(interimList.subList(0, count)));
+    }
+
+    public int getNumberOfSummariesToDisplay() {
+        return numberOfSummariesToDisplay;
+    }
+
+    public void setNumberOfSummariesToDisplay(int numberOfSummariesToDisplay) {
+        this.numberOfSummariesToDisplay = numberOfSummariesToDisplay;
+    }
 
 }

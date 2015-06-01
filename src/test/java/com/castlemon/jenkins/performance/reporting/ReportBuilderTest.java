@@ -1,15 +1,14 @@
 package com.castlemon.jenkins.performance.reporting;
 
-import java.io.PrintStream;
+import hudson.model.BuildListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.castlemon.jenkins.performance.TestUtils;
@@ -17,9 +16,7 @@ import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 
 public class ReportBuilderTest {
 
-	@Mock
-	private PrintStream stream = Mockito.mock(PrintStream.class);
-
+	BuildListener listener = Mockito.mock(BuildListener.class);
 	private ReportBuilder builder = new ReportBuilder();
 
 	@Rule
@@ -33,27 +30,8 @@ public class ReportBuilderTest {
 		projectRuns.add(testUtils.generateRun("passed"));
 		projectRuns.add(testUtils.generateRun("failed"));
 		builder.generateProjectReports(projectRuns, testFolder.getRoot(),
-				"test build 1", "1", "pluginPath");
-		Assert.assertEquals(2, testFolder.getRoot().listFiles().length);
+				"test build 1");
+		Assert.assertEquals(1, testFolder.getRoot().listFiles().length);
 	}
 
-	@Test
-	public void testGenerateProjectReportsNullPlugin() {
-		List<ProjectRun> projectRuns = new ArrayList<ProjectRun>();
-		projectRuns.add(testUtils.generateRun("passed"));
-		projectRuns.add(testUtils.generateRun("failed"));
-		builder.generateProjectReports(projectRuns, testFolder.getRoot(),
-				"test build 1", "1", null);
-		Assert.assertEquals(2, testFolder.getRoot().listFiles().length);
-	}
-
-	@Test
-	public void testGenerateProjectReportsEmptyPlugin() {
-		List<ProjectRun> projectRuns = new ArrayList<ProjectRun>();
-		projectRuns.add(testUtils.generateRun("passed"));
-		projectRuns.add(testUtils.generateRun("failed"));
-		builder.generateProjectReports(projectRuns, testFolder.getRoot(),
-				"test build 1", "1", "");
-		Assert.assertEquals(2, testFolder.getRoot().listFiles().length);
-	}
 }

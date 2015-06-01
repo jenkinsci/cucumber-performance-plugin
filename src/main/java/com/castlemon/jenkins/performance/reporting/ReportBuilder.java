@@ -1,127 +1,59 @@
 package com.castlemon.jenkins.performance.reporting;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-
-import com.castlemon.jenkins.performance.domain.reporting.ProjectPerformanceEntry;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ReportBuilder {
 
-	ProjectReporter reporter = new ProjectReporter();
-
 	public boolean generateProjectReports(List<ProjectRun> projectRuns,
-			File reportDirectory, String buildProject, String buildNumber,
-			String pluginUrlPath) {
-		copyCSSFile(reportDirectory);
-		ProjectSummary projectSummary = getPerformanceData(projectRuns);
-		VelocityEngine velocityEngine = new VelocityEngine();
-		velocityEngine.setProperty("resource.loader", "class");
-		velocityEngine
-				.setProperty("class.resource.loader.class",
-						"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-		velocityEngine.init();
-		Template template = velocityEngine.getTemplate("/templates/project.vm");
-		VelocityContext context = new VelocityContext();
-		context.put("genDate", new Date());
-		context.put("projectSummary", projectSummary);
-		context.put("perfData",
-				CucumberPerfUtils.buildProjectGraphData(projectSummary));
-		context.put("build_project", buildProject);
-		context.put("build_number", buildNumber);
-		context.put("jenkins_base", getPluginUrlPath(pluginUrlPath));
-		return (generateReport("projectview.html", reportDirectory, template,
-				context));
-	}
-
-	private ProjectSummary getPerformanceData(List<ProjectRun> runs) {
+			File reportDirectory, String buildProjectName) {
+		PerformanceReporter reporter = new PerformanceReporter();
+		reporter.initialiseEntryMaps();
 		ProjectSummary projectSummary = new ProjectSummary();
-		List<ProjectPerformanceEntry> entries = new ArrayList<ProjectPerformanceEntry>();
-		int passedSteps = 0;
-		int failedSteps = 0;
-		int skippedSteps = 0;
-		int passedBuilds = 0;
-		int failedBuilds = 0;
-		for (ProjectRun run : runs) {
-			ProjectPerformanceEntry performanceEntry = reporter
-					.generateBasicProjectPerformanceData(run);
-			passedSteps += performanceEntry.getPassedSteps();
-			failedSteps += performanceEntry.getFailedSteps();
-			skippedSteps += performanceEntry.getSkippedSteps();
-			if (performanceEntry.isPassedBuild()) {
-				passedBuilds++;
-			} else {
-				failedBuilds++;
-			}
-			entries.add(performanceEntry);
-		}
-		projectSummary.setPassedBuilds(passedBuilds);
-		projectSummary.setFailedBuilds(failedBuilds);
-		projectSummary.setTotalBuilds(passedBuilds + failedBuilds);
-		projectSummary.setPerformanceEntries(entries);
-		return projectSummary;
+		projectSummary.setOverallSummary(reporter
+				.getPerformanceData(projectRuns));
+		projectSummary.getOverallSummary().setName(buildProjectName);
+		// feature reports - re-do the map to have the pageLink as the key
+		projectSummary.setFeatureSummaries(getMapByPageLink(reporter.getFeatureSummaries()));
+		// scenario reports - update senior links and re-do the map to have the pageLink as the key
+        updateSeniorPageLinks(reporter.getScenarioSummaries(),reporter.getFeatureSummaries());
+		projectSummary.setScenarioSummaries(getMapByPageLink(reporter.getScenarioSummaries()));
+		// step reports - update senior links and re-do the map to have the pageLink as the key
+        updateSeniorPageLinks(reporter.getStepSummaries(),reporter.getScenarioSummaries());
+		projectSummary.setStepSummaries(getMapByPageLink(reporter.getStepSummaries()));
+		// project reports
+		List<Summary> summaryList = new ArrayList<Summary>(reporter
+				.getFeatureSummaries().values());
+		CucumberPerfUtils.sortSummaryList(summaryList);
+		CucumberPerfUtils.writeSummaryToDisk(projectSummary, reportDirectory);
+		return true;
 	}
 
-	private boolean generateReport(String fileName, File reportDirectory,
-			Template featureResult, VelocityContext context) {
-		try {
-			File file = new File(reportDirectory, fileName);
-			FileOutputStream fileStream = new FileOutputStream(file);
-			OutputStreamWriter writer = new OutputStreamWriter(fileStream,
-					"UTF-8");
-			featureResult.merge(context, writer);
-			writer.flush();
-			writer.close();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
+    private Map<String,Summary> getMapByPageLink(Map<String,Summary> inputSummaries) {
+        Map<String,Summary> pageLinkSummaries = new HashMap<String,Summary>();
+        for(Summary summary : inputSummaries.values()) {
+            pageLinkSummaries.put(summary.getPageLink(),summary);
+        }
+        return pageLinkSummaries;
+    }
 
-	private String getPluginUrlPath(String path) {
-		if (path == null || path.isEmpty()) {
-			return "/";
-		}
-		return path;
-	}
-
-	private void copyCSSFile(File reportDirectory) {
-		InputStream resourceArchiveInputStream = null;
-		FileOutputStream cssOutStream = null;
-		try {
-			resourceArchiveInputStream = ReportBuilder.class
-					.getResourceAsStream("css/main.css");
-			if (resourceArchiveInputStream == null) {
-				resourceArchiveInputStream = ReportBuilder.class
-						.getResourceAsStream("/css/main.css");
-			}
-			File file = new File(reportDirectory, "main.css");
-			cssOutStream = new FileOutputStream(file);
-
-			IOUtils.copy(resourceArchiveInputStream, cssOutStream);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(resourceArchiveInputStream);
-			IOUtils.closeQuietly(cssOutStream);
-		}
-
-	}
+    private void updateSeniorPageLinks(Map<String, Summary> summaries, Map<String, Summary> seniorSummaries) {
+        //create new map of senior summaries
+        Map<String, Summary> seniors = new HashMap<String, Summary>();
+        for (Summary seniorSummary : seniorSummaries.values()) {
+         seniors.put(seniorSummary.getId(),seniorSummary);
+        }
+        //update the lower summaries with the pagelinks from the relevant senior one
+        for (Summary summary : summaries.values()) {
+            summary.setSeniorPageLink(seniors.get(summary.getSeniorId()).getPageLink());
+        }
+    }
 }

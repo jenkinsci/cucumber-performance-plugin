@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.castlemon.jenkins.performance.domain.Elements;
 import com.castlemon.jenkins.performance.domain.Result;
-import com.castlemon.jenkins.performance.domain.Scenario;
+import com.castlemon.jenkins.performance.domain.Feature;
 import com.castlemon.jenkins.performance.domain.Step;
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 
@@ -38,13 +38,15 @@ public class TestUtils {
 		steps.add(generateStep(outcome));
 		Elements element = new Elements();
 		element.setSteps(steps);
+		element.setId("elem1");
 		List<Elements> elementsList = new ArrayList<Elements>();
 		elementsList.add(element);
-		Scenario scenario = new Scenario();
-		scenario.setElements(elementsList);
-		List<Scenario> scenarios = new ArrayList<Scenario>();
-		scenarios.add(scenario);
-		run.setScenarios(scenarios);
+		Feature feature = new Feature();
+		feature.setId("feat1");
+		feature.setElements(elementsList);
+		List<Feature> features = new ArrayList<Feature>();
+		features.add(feature);
+		run.setFeatures(features);
 
 		return run;
 	}
@@ -54,6 +56,7 @@ public class TestUtils {
 		result.setStatus(outcome);
 		result.setDuration(3456l);
 		Step step = new Step();
+		step.setName("test step");
 		step.setResult(result);
 		return step;
 	}
