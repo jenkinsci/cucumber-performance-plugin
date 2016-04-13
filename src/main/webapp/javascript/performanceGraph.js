@@ -1,7 +1,7 @@
 /* performance graph */
-jQuery(document).ready(function() {
+$(document).ready(function() {
 
-	jQuery('#graphArea').highcharts({
+	$('#graphArea').highcharts({
 		chart : {
 			type : 'line'
 		},
