@@ -67,7 +67,7 @@ public class CucumberPerfUtils {
 		List<Summary> summaryList = new ArrayList<Summary>();
 		for (Map.Entry<String, Summary> entry : summaries.entrySet()) {
 			Summary summary = entry.getValue();
-			if (summary.getSeniorId().equals(seniorId)) {
+			if (summary.getSeniorId() != null && summary.getSeniorId().equals(seniorId)) {
 				summaryList.add(summary);
 			}
 		}
