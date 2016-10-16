@@ -1,6 +1,6 @@
-jQuery(document).ready(function() {
+$(document).ready(function() {
 	/* Step-level table */
-	jQuery('#sortedStepTable').dataTable({
+	$('#sortedStepTable').dataTable({
 		"aoColumns" : [ {
 			"sType" : "string"
 		}, {

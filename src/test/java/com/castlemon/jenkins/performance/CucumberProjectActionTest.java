@@ -35,8 +35,7 @@ public class CucumberProjectActionTest {
 
 	@Test
 	public void checkConstructorNullSummary() throws IOException {
-		FileUtils.forceDelete(testFolder
-				.newFile("cucumber-perf-reports/cukeperf.xml"));
+		FileUtils.forceDelete(testFolder.getRoot());
 		cucumberProjectAction = new CucumberProjectAction(project, 20);
 		Assert.assertNull(cucumberProjectAction.getProjectSummary());
 	}

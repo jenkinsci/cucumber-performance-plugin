@@ -1,20 +1,24 @@
 package com.castlemon.jenkins.performance.util;
 
-import com.castlemon.jenkins.performance.TestUtils;
-import com.castlemon.jenkins.performance.domain.Feature;
-import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
-import com.castlemon.jenkins.performance.domain.reporting.Summary;
-import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.mockito.Mockito;
+import com.castlemon.jenkins.performance.CucumberProjectAction;
+import com.castlemon.jenkins.performance.TestUtils;
+import com.castlemon.jenkins.performance.domain.Feature;
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
+import com.castlemon.jenkins.performance.domain.reporting.Summary;
+
+import hudson.model.AbstractProject;
 
 public class CucumberPerfUtilsTest {
 
@@ -161,6 +165,21 @@ public class CucumberPerfUtilsTest {
         List<Feature> features = CucumberPerfUtils.getData(jsonReportFiles,
                 f.getParentFile());
         Assert.assertEquals(2, features.size());
+    }
+
+    @Test
+    public void getRelevantSummariesWorksWithOutSeniorIdDefined() throws IOException {
+        testFolder.newFolder("cucumber-perf-reports");
+        FileUtils.copyFile(
+                FileUtils.toFile(this.getClass().getResource("/cukeperf.xml")),
+                testFolder.newFile("cucumber-perf-reports/cukeperf.xml"));
+        AbstractProject project = Mockito.mock(AbstractProject.class);
+        Mockito.when(project.getLastCompletedBuild()).thenReturn(null);
+        Mockito.when(project.getRootDir()).thenReturn(testFolder.getRoot());
+        CucumberProjectAction tempCucumberProjectAction = new CucumberProjectAction(
+                project, 20);
+        ProjectSummary summary = tempCucumberProjectAction.getProjectSummary();
+        CucumberPerfUtils.getRelevantSummaries(summary.getStepSummaries(), "");
     }
 
 }

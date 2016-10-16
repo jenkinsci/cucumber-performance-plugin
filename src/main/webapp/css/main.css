@@ -105,3 +105,11 @@
 	font-weight: bold;
 	font-style: italic;
 }
+
+#main-panel {
+	margin-left: 0 !important;
+}
+
+#page-body {
+	display: flex;
+}

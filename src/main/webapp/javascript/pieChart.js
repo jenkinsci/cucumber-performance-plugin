@@ -1,7 +1,7 @@
 /* performance pie chart */
-jQuery(document).ready(function() {
+$(document).ready(function() {
 
-	jQuery('#pieChartArea').highcharts({
+	$('#pieChartArea').highcharts({
 		chart: {
                     plotBackgroundColor: null,
                     plotBorderWidth: 1,//null,
