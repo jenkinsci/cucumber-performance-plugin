@@ -33,7 +33,7 @@ Many thanks to them for their hard work!
 Jenkins build status for master branch
 --------------------------------------
 
-[![Build Status](https://buildhive.cloudbees.com/job/TrueDub/job/cucumber-performance/badge/icon)](https://buildhive.cloudbees.com/job/TrueDub/job/cucumber-performance/)
+[![Build Status](https://jenkins.ci.cloudbees.com/job/plugins/job/cucumber-performance-plugin/badge/icon)](https://buildhive.cloudbees.com/job/TrueDub/job/cucumber-performance/)
 
 How to use this plugin
 ----------------------
