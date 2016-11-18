@@ -8,14 +8,14 @@
 
 	<groupId>com.castlemon.hudson</groupId>
 	<artifactId>cucumber-perf</artifactId>
-	<version>2.0.7</version>
+	<version>2.0.8-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 
 	<scm>
 		<connection>scm:git:https://github.com/jenkinsci/cucumber-performance-plugin.git</connection>
 		<developerConnection>scm:git:https://github.com/jenkinsci/cucumber-performance-plugin.git</developerConnection>
 		<url>http://github.com/jenkinsci/cucumber-performance-plugin.git</url>
-	  <tag>cucumber-perf-2.0.7</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/Cucumber+Performance+Reports+Plugin</url>
