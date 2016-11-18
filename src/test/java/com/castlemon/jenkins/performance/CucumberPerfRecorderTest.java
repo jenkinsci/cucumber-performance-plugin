@@ -1,20 +1,20 @@
 package com.castlemon.jenkins.performance;
 
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.AbstractProject;
-import hudson.tasks.BuildStepMonitor;
-
 import java.io.IOException;
 
-import junit.framework.Assert;
-
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
+
+import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.BuildListener;
+import hudson.tasks.BuildStepMonitor;
+import junit.framework.Assert;
 
 @SuppressWarnings("rawtypes")
 public class CucumberPerfRecorderTest {
@@ -43,6 +43,11 @@ public class CucumberPerfRecorderTest {
 				testFolder.newFile("cucumber-perf-reports/cukeperf.xml"));
 		Mockito.when(project.getName()).thenReturn("TestP");
 		Mockito.when(listener.getLogger()).thenReturn(System.out);
+	}
+
+	@After
+	public void tearDown(){
+		testFolder.delete();
 	}
 
 	@Test

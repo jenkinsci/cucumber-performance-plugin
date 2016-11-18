@@ -1,10 +1,10 @@
 package com.castlemon.jenkins.performance;
 
-import hudson.model.AbstractProject;
-
 import java.io.IOException;
 
+import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
-import com.castlemon.jenkins.performance.domain.reporting.ProjectSummary;
+import hudson.model.AbstractProject;
 
 @SuppressWarnings("rawtypes")
 public class CucumberProjectActionTest {
@@ -31,6 +31,11 @@ public class CucumberProjectActionTest {
 				FileUtils.toFile(this.getClass().getResource("/cukeperf.xml")),
 				testFolder.newFile("cucumber-perf-reports/cukeperf.xml"));
 		cucumberProjectAction = new CucumberProjectAction(project, 20);
+	}
+
+	@After
+	public void tearDown(){
+		testFolder.delete();
 	}
 
 	@Test
