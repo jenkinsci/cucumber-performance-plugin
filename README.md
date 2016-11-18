@@ -68,6 +68,14 @@ This list starts with V2.0.6 only
 
 <table>
 <tr><th>Version</th><th>Change Detail</th></tr>
+<tr><td>2.0.7</td><td>
+<ul>
+   <li>Fixed issues with how jQuery is called. jQuery() -> $()</li>
+   <li>Updated jelly files to escape by default</li>
+   <li>Fixed styling issues on sorted page</li>
+   <li>Upgraded junit to 4.12</li>
+   <li>Bumped minimum jenkins version to 1.557 so tests work with java 8</li>
+</td></tr>
 <tr><td>2.0.6</td><td>
 <ul>
    <li>changed the plugin processing to separate data generation from report presentation
