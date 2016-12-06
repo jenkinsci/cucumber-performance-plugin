@@ -1,30 +1,29 @@
 package com.castlemon.jenkins.performance;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.RunMap;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.BuildListener;
 import hudson.model.Computer;
 import hudson.model.Run;
+import hudson.model.RunMap;
 import hudson.slaves.SlaveComputer;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
-
 import com.castlemon.jenkins.performance.domain.reporting.ProjectRun;
 import com.castlemon.jenkins.performance.reporting.ReportBuilder;
 import com.castlemon.jenkins.performance.util.CucumberPerfUtils;
@@ -65,7 +64,10 @@ public class CucumberPerfRecorder extends Recorder {
 		targetBuildDirectory = new File(build.getRootDir(),
 				"cucumber-perf-reports");
 		if (!targetBuildDirectory.exists()) {
-			targetBuildDirectory.mkdirs();
+			boolean success = targetBuildDirectory.mkdirs();
+			if(!success) {
+				listener.getLogger().println("[CucumberPerfRecorder] FAILED to create " + targetBuildDirectory.getAbsolutePath());
+			}
 		}
 		String buildProjectName = build.getProject().getName();
 		listener.getLogger().println(
@@ -111,18 +113,15 @@ public class CucumberPerfRecorder extends Recorder {
 	private void gatherJsonResultFiles(AbstractBuild<?, ?> build,
 			BuildListener listener, File targetBuildDirectory)
 			throws IOException, InterruptedException {
-		File workspaceJsonReportDirectory = new File(build.getWorkspace()
-				.toURI().getPath());
+		File workspaceJsonReportDirectory = new File(getWorkspacePath(build));
 		if (StringUtils.isNotBlank(jsonReportDirectory)) {
-			workspaceJsonReportDirectory = new File(build.getWorkspace()
-					.toURI().getPath(), jsonReportDirectory);
+			workspaceJsonReportDirectory = new File(getWorkspacePath(build), jsonReportDirectory);
 		}
 		// if we are on a slave
 		if (Computer.currentComputer() instanceof SlaveComputer) {
 			listener.getLogger().println(
 					"[CucumberPerfRecorder] detected slave build ");
-			FilePath projectWorkspaceOnSlave = build.getProject()
-					.getSomeWorkspace();
+			FilePath projectWorkspaceOnSlave = getSlaveWorkSpace(build, listener);
 			FilePath masterJsonReportDirectory = new FilePath(
 					targetBuildDirectory);
 			projectWorkspaceOnSlave.copyRecursiveTo("**/" + jsonReportFileName,
@@ -165,6 +164,29 @@ public class CucumberPerfRecorder extends Recorder {
 			}
 			i++;
 		}
+	}
+
+	private FilePath getSlaveWorkSpace(AbstractBuild<?, ?> build, BuildListener listener) {
+		AbstractProject<?, ?> project = build.getProject();
+		FilePath filePath = null;
+		if(project != null){
+			filePath = project.getSomeWorkspace();
+			if(filePath == null){
+				listener.error("Cannot get workspace on slave");
+			}
+		}
+		return filePath;
+	}
+
+	private String getWorkspacePath(AbstractBuild<?, ?> build) throws IOException, InterruptedException {
+		if(build == null){
+			return "";
+		}
+		FilePath workspace = build.getWorkspace();
+		if(workspace == null){
+			return "";
+		}
+		return workspace.toURI().getPath();
 	}
 
 	public BuildStepMonitor getRequiredMonitorService() {

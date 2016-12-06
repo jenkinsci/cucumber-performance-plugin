@@ -14,11 +14,19 @@ public class ProjectRun {
 	private List<Feature> features;
 
 	public Date getRunDate() {
-		return runDate;
+		if (runDate == null) {
+			return null;
+		} else {
+			return new Date(runDate.getTime());
+		}
 	}
 
-	public void setRunDate(Date runDate) {
-		this.runDate = runDate;
+	public void setRunDate(final Date runDate) {
+		if (runDate == null) {
+			this.runDate = null;
+		} else {
+			this.runDate = new Date(runDate.getTime());
+		}
 	}
 
 	public List<Feature> getFeatures() {
