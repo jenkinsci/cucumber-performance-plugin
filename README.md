@@ -70,6 +70,14 @@ This list starts with V2.0.6 only
 <table>
 <tr><th>Version</th><th>Change Detail</th></tr>
 <tr>
+    <td>2.0.9</td>
+    <td>
+        <ul>
+            <li>Remove distributionManagement from pom.xml</li>
+        </ul>
+    </td>
+</tr>
+<tr>
     <td>2.0.8</td>
     <td>
         <ul>
